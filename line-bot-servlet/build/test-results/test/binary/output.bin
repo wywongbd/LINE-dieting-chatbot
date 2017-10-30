@@ -1,0 +1,60 @@
+a14:53:16.668 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: {}
+a14:53:16.978 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: {}
+`14:53:16.982 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: {
+  "events": [
+    {
+6      "replyToken": "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA",
+      "type": "message",
+"      "timestamp": 1462629479859,
+      "source": {
+        "type": "user",
+6        "userId": "u206d25c2ea6bd87c17655609a1c37cb8"
+	      },
+      "message": {
+        "id": "325708",
+        "type": "text",
+        "text": "Hello, world"
+      }
+    },
+    {
+6      "replyToken": "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA",
+      "type": "follow",
+"      "timestamp": 1462629479859,
+      "source": {
+        "type": "user",
+6        "userId": "u206d25c2ea6bd87c17655609a1c37cb8"
+      }
+    }
+  ]
+}
+
+c14:53:17.128 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: null
+`14:53:17.133 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: {
+  "events": [
+    {
+6      "replyToken": "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA",
+      "type": "message",
+"      "timestamp": 1462629479859,
+      "source": {
+        "type": "user",
+6        "userId": "u206d25c2ea6bd87c17655609a1c37cb8"
+	      },
+      "message": {
+        "id": "325708",
+        "type": "text",
+        "text": "Hello, world"
+      }
+    },
+    {
+6      "replyToken": "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA",
+      "type": "follow",
+"      "timestamp": 1462629479859,
+      "source": {
+        "type": "user",
+6        "userId": "u206d25c2ea6bd87c17655609a1c37cb8"
+      }
+    }
+  ]
+}
+
+	c14:53:17.145 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: null

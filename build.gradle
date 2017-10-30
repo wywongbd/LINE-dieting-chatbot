@@ -1,0 +1,212 @@
+/*
+ * Copyright 2016 LINE Corporation
+ *
+ * LINE Corporation licenses this file to you under the Apache License,
+ * version 2.0 (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at:
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+
+// ./gradlew clean && ./gradlew uploadArchives -Prelease
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://plugins.gradle.org/m2/' }
+        maven { url 'https://repo.spring.io/plugins-release' }
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.17'
+        classpath 'io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.4.2.RELEASE'
+        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
+    }
+}
+
+apply plugin: 'idea'
+
+group = 'com.linecorp.bot'
+version = '1.9.0'
+
+//set build variables based on build type (release, continuous integration, development)
+def isDevBuild
+def isReleaseBuild
+def sonatypeRepositoryUrl
+if (hasProperty('release')) {
+    isReleaseBuild = true
+    sonatypeRepositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+} else if (hasProperty('ci')) {
+    version += '-SNAPSHOT'
+    sonatypeRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+} else {
+    isDevBuild = true
+    version += '-SNAPSHOT'
+}
+
+subprojects {
+    repositories {
+        mavenCentral();
+    }
+
+    apply plugin: 'propdeps'
+    apply plugin: 'propdeps-maven'
+    apply plugin: 'propdeps-idea'
+    apply plugin: 'propdeps-eclipse'
+    
+//  disable this to speed up deploying a test      
+//    apply plugin: 'findbugs'
+    apply plugin: 'java'
+    if (new File("${project.rootDir}/.git").exists()) {
+        logger.info("There's .git directory. Create git.properties.")
+        apply plugin: 'com.gorylenko.gradle-git-properties'
+    } else {
+        logger.warn("There's no .git directory. Can't create git.properties.");
+    }
+    apply plugin: 'io.spring.dependency-management'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    group = rootProject.group
+    version = rootProject.version
+
+    ext['guava.version'] = '21.0'
+    ext['okhttp3.version'] = '3.6.0'
+
+    dependencyManagement {
+        imports {
+            mavenBom 'io.spring.platform:platform-bom:Brussels-SR1'
+        }
+
+        dependencies {
+            dependency 'com.github.stefanbirkner:system-rules:1.16.1'
+            dependency 'com.squareup.okhttp3:logging-interceptor:' + ext['okhttp3.version']
+            dependency 'com.squareup.okhttp3:mockwebserver:' + ext['okhttp3.version']
+            dependency 'com.squareup.retrofit2:converter-jackson:2.2.0'
+            dependency 'com.squareup.retrofit2:retrofit:2.2.0'
+            dependency 'org.assertj:assertj-core:3.6.2'
+            dependency 'org.projectlombok:lombok:1.16.12'
+            dependency 'com.fasterxml.jackson.core:jackson-databind:2.8.8.1'
+        }
+    }
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        testCompileOnly 'org.projectlombok:lombok'
+
+        compileOnly "org.springframework.boot:spring-boot-configuration-processor" // http://docs.spring.io/spring-boot/docs/current/reference/html/configuration-metadata.html#configuration-metadata-annotation-processor
+
+        testCompile 'com.google.guava:guava'
+        testCompile 'com.github.stefanbirkner:system-rules'
+        testCompile 'com.squareup.okhttp3:mockwebserver'
+        testCompile 'org.hibernate:hibernate-validator'
+        testCompile 'org.springframework.boot:spring-boot-starter-test' // MockHttpServletRequest
+        testCompile 'org.springframework.boot:spring-boot-starter-logging'
+    }
+
+    compileJava.dependsOn(processResources) // http://docs.spring.io/spring-boot/docs/current/reference/html/configuration-metadata.html#configuration-metadata-annotation-processor
+
+    jar {
+        manifest {
+            attributes 'Implementation-Title': project.name,
+                    'Implementation-Version': version
+        }
+    }
+
+    if (!project.name.startsWith('sample-')) {
+        task javadocJar(type: Jar) {
+            classifier = 'javadoc'
+            from "${buildDir}/javadoc"
+        }
+
+        task sourcesJar(type: Jar) {
+            classifier = 'sources'
+            from sourceSets.main.allSource
+        }
+
+        artifacts {
+            archives javadocJar, sourcesJar
+        }
+    }
+
+    compileJava {
+        options.compilerArgs << '-Xlint:all' << '-Werror' << '-Xlint:-processing' << '-parameters'
+    }
+
+    project.plugins.withType(org.springframework.boot.gradle.plugin.SpringBootPlugin) {
+        bootRun {
+            systemProperties System.properties
+        }
+    }
+}
+
+[':line-bot-api-client', ':line-bot-model', ':line-bot-servlet', ':line-bot-spring-boot'].each { projectName ->
+    project(projectName) { project ->
+        apply plugin: 'signing'
+        apply plugin: 'maven'
+
+        signing {
+            required { isReleaseBuild }
+            sign configurations.archives
+        }
+
+        uploadArchives {
+            repositories {
+                if (isDevBuild) {
+                    mavenLocal()
+                } else {
+                    mavenDeployer {
+                        if (isReleaseBuild) {
+                            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+                        }
+
+                        repository(url: sonatypeRepositoryUrl) {
+                            authentication(userName: sonatypeUsername, password: sonatypePassword)
+                        }
+
+                        pom.project {
+                            name project.name
+                            packaging 'jar'
+                            description project.description
+                            url 'https://github.com/line/line-bot-sdk-java'
+
+                            scm {
+                                url 'scm:git@github.com:line/line-bot-sdk-java.git'
+                                connection 'scm:git@github.com:line/line-bot-sdk-java.git'
+                                developerConnection 'scm:git@github.com:line/line-bot-sdk-java.git'
+                            }
+                            licenses {
+                                license {
+                                    name 'Apache'
+                                    url 'https://opensource.org/licenses/Apache-2.0'
+                                }
+                            }
+                            developers {
+                                developer {
+                                    id 'tokuhirom'
+                                    name 'Tokuhiro Matsuno'
+                                    email 'tokuhirom@gmail.com'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.0'
+}

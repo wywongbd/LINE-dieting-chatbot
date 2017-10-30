@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Implementation-Title: sample-spring-boot-kitchensink
+Implementation-Version: 1.9.0-SNAPSHOT
+

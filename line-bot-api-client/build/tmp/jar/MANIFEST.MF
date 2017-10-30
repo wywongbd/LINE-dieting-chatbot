@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Implementation-Title: line-bot-api-client
+Implementation-Version: 1.9.0-SNAPSHOT
+

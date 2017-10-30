@@ -1,0 +1,65 @@
+™14:53:12.502 [OkHttp http://localhost:62806/...] INFO com.linecorp.bot.client.wire - --> GET http://localhost:62806/v2/bot/message/TEST/content http/1.1
+o14:53:12.509 [OkHttp http://localhost:62806/...] INFO com.linecorp.bot.client.wire - Authorization: Bearer 1st
+w14:53:12.509 [OkHttp http://localhost:62806/...] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
+a14:53:12.509 [OkHttp http://localhost:62806/...] INFO com.linecorp.bot.client.wire - --> END GET
+™14:53:12.567 [OkHttp http://localhost:62806/...] INFO com.linecorp.bot.client.wire - --> GET http://localhost:62806/v2/bot/message/TEST/content http/1.1
+o14:53:12.568 [OkHttp http://localhost:62806/...] INFO com.linecorp.bot.client.wire - Authorization: Bearer 2nd
+w14:53:12.568 [OkHttp http://localhost:62806/...] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
+a14:53:12.568 [OkHttp http://localhost:62806/...] INFO com.linecorp.bot.client.wire - --> END GET
+š14:53:12.725 [OkHttp http://localhost:62811/...] INFO com.linecorp.bot.client.wire - --> GET http://localhost:62811/v2/bot/message/TOKEN/content http/1.1
+q14:53:12.725 [OkHttp http://localhost:62811/...] INFO com.linecorp.bot.client.wire - Authorization: Bearer token
+w14:53:12.725 [OkHttp http://localhost:62811/...] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
+a14:53:12.725 [OkHttp http://localhost:62811/...] INFO com.linecorp.bot.client.wire - --> END GET
+¤14:53:12.731 [OkHttp http://localhost:62811/...] INFO com.linecorp.bot.client.wire - <-- 500 Server Error http://localhost:62811/v2/bot/message/TOKEN/content (5ms)
+h14:53:12.731 [OkHttp http://localhost:62811/...] INFO com.linecorp.bot.client.wire - Content-Length: 55
+V14:53:12.732 [OkHttp http://localhost:62811/...] INFO com.linecorp.bot.client.wire - 
+14:53:12.732 [OkHttp http://localhost:62811/...] INFO com.linecorp.bot.client.wire - {"message":"Error on the internal server","details":[]}
+q14:53:12.732 [OkHttp http://localhost:62811/...] INFO com.linecorp.bot.client.wire - <-- END HTTP (55-byte body)
+š14:53:12.755 [OkHttp http://localhost:62813/...] INFO com.linecorp.bot.client.wire - --> GET http://localhost:62813/v2/bot/message/TOKEN/content http/1.1
+q14:53:12.755 [OkHttp http://localhost:62813/...] INFO com.linecorp.bot.client.wire - Authorization: Bearer token
+w14:53:12.755 [OkHttp http://localhost:62813/...] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
+a14:53:12.755 [OkHttp http://localhost:62813/...] INFO com.linecorp.bot.client.wire - --> END GET
+¤14:53:12.756 [OkHttp http://localhost:62813/...] INFO com.linecorp.bot.client.wire - <-- 403 Client Error http://localhost:62813/v2/bot/message/TOKEN/content (1ms)
+h14:53:12.757 [OkHttp http://localhost:62813/...] INFO com.linecorp.bot.client.wire - Content-Length: 57
+V14:53:12.757 [OkHttp http://localhost:62813/...] INFO com.linecorp.bot.client.wire - 
+14:53:12.757 [OkHttp http://localhost:62813/...] INFO com.linecorp.bot.client.wire - {"message":"Not authorized to use the API.","details":[]}
+q14:53:12.757 [OkHttp http://localhost:62813/...] INFO com.linecorp.bot.client.wire - <-- END HTTP (57-byte body)
+š14:53:12.762 [OkHttp http://localhost:62815/...] INFO com.linecorp.bot.client.wire - --> GET http://localhost:62815/v2/bot/message/TOKEN/content http/1.1
+q14:53:12.762 [OkHttp http://localhost:62815/...] INFO com.linecorp.bot.client.wire - Authorization: Bearer token
+w14:53:12.762 [OkHttp http://localhost:62815/...] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
+a14:53:12.762 [OkHttp http://localhost:62815/...] INFO com.linecorp.bot.client.wire - --> END GET
+¤14:53:12.764 [OkHttp http://localhost:62815/...] INFO com.linecorp.bot.client.wire - <-- 401 Client Error http://localhost:62815/v2/bot/message/TOKEN/content (1ms)
+h14:53:12.764 [OkHttp http://localhost:62815/...] INFO com.linecorp.bot.client.wire - Content-Length: 70
+V14:53:12.764 [OkHttp http://localhost:62815/...] INFO com.linecorp.bot.client.wire - 
+œ14:53:12.764 [OkHttp http://localhost:62815/...] INFO com.linecorp.bot.client.wire - {"message":"Valid Channel access token is not specified","details":[]}
+q14:53:12.764 [OkHttp http://localhost:62815/...] INFO com.linecorp.bot.client.wire - <-- END HTTP (70-byte body)
+š14:53:12.770 [OkHttp http://localhost:62817/...] INFO com.linecorp.bot.client.wire - --> GET http://localhost:62817/v2/bot/message/TOKEN/content http/1.1
+q14:53:12.770 [OkHttp http://localhost:62817/...] INFO com.linecorp.bot.client.wire - Authorization: Bearer token
+w14:53:12.771 [OkHttp http://localhost:62817/...] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
+a14:53:12.771 [OkHttp http://localhost:62817/...] INFO com.linecorp.bot.client.wire - --> END GET
+¤14:53:12.772 [OkHttp http://localhost:62817/...] INFO com.linecorp.bot.client.wire - <-- 400 Client Error http://localhost:62817/v2/bot/message/TOKEN/content (1ms)
+h14:53:12.772 [OkHttp http://localhost:62817/...] INFO com.linecorp.bot.client.wire - Content-Length: 51
+V14:53:12.772 [OkHttp http://localhost:62817/...] INFO com.linecorp.bot.client.wire - 
+‰14:53:12.773 [OkHttp http://localhost:62817/...] INFO com.linecorp.bot.client.wire - {"message":"Problem with the request","details":[]}
+q14:53:12.773 [OkHttp http://localhost:62817/...] INFO com.linecorp.bot.client.wire - <-- END HTTP (51-byte body)
+š14:53:12.778 [OkHttp http://localhost:62819/...] INFO com.linecorp.bot.client.wire - --> GET http://localhost:62819/v2/bot/message/TOKEN/content http/1.1
+q14:53:12.778 [OkHttp http://localhost:62819/...] INFO com.linecorp.bot.client.wire - Authorization: Bearer token
+w14:53:12.778 [OkHttp http://localhost:62819/...] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
+a14:53:12.778 [OkHttp http://localhost:62819/...] INFO com.linecorp.bot.client.wire - --> END GET
+¤14:53:12.779 [OkHttp http://localhost:62819/...] INFO com.linecorp.bot.client.wire - <-- 429 Client Error http://localhost:62819/v2/bot/message/TOKEN/content (1ms)
+h14:53:12.780 [OkHttp http://localhost:62819/...] INFO com.linecorp.bot.client.wire - Content-Length: 64
+V14:53:12.780 [OkHttp http://localhost:62819/...] INFO com.linecorp.bot.client.wire - 
+–14:53:12.780 [OkHttp http://localhost:62819/...] INFO com.linecorp.bot.client.wire - {"message":"Exceeded the rate limit for API calls","details":[]}
+q14:53:12.780 [OkHttp http://localhost:62819/...] INFO com.linecorp.bot.client.wire - <-- END HTTP (64-byte body)
+‚14:53:12.785 [MockWebServer 62821] INFO okhttp3.mockwebserver.MockWebServer - MockWebServer[62821] starting to accept connections
+•14:53:12.791 [Test worker] INFO com.linecorp.bot.client.wire - --> GET http://localhost:62821/CanContainsRelative/v2/bot/profile/USER_TOKEN http/1.1
+\14:53:12.794 [Test worker] INFO com.linecorp.bot.client.wire - Authorization: Bearer SECRET
+a14:53:12.794 [Test worker] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
+K14:53:12.795 [Test worker] INFO com.linecorp.bot.client.wire - --> END GET
+Û14:53:12.796 [MockWebServer /127.0.0.1:62822] INFO okhttp3.mockwebserver.MockWebServer - MockWebServer[62821] received request: GET /CanContainsRelative/v2/bot/profile/USER_TOKEN HTTP/1.1 and responded: HTTP/1.1 200 OK
+•14:53:12.796 [Test worker] INFO com.linecorp.bot.client.wire - <-- 200 OK http://localhost:62821/CanContainsRelative/v2/bot/profile/USER_TOKEN (1ms)
+S14:53:12.796 [Test worker] INFO com.linecorp.bot.client.wire - Content-Length: 116
+@14:53:12.796 [Test worker] INFO com.linecorp.bot.client.wire - 
+´14:53:12.797 [Test worker] INFO com.linecorp.bot.client.wire - {"displayName":"name","userId":"userId","pictureUrl":"https://line.me/picture_url","statusMessage":"Status message"}
+\14:53:12.797 [Test worker] INFO com.linecorp.bot.client.wire - <-- END HTTP (116-byte body)
+14:53:12.801 [MockWebServer 62821] INFO okhttp3.mockwebserver.MockWebServer - MockWebServer[62821] done accepting connections: Socket closed

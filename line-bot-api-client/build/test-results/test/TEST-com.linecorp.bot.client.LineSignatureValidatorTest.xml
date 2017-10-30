@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.linecorp.bot.client.LineSignatureValidatorTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2017-10-30T06:53:12" hostname="Ignaviers-MacBook-Pro.local" time="0.072">
+  <properties/>
+  <testcase name="validateSignature" classname="com.linecorp.bot.client.LineSignatureValidatorTest" time="0.059"/>
+  <testcase name="generateSignature" classname="com.linecorp.bot.client.LineSignatureValidatorTest" time="0.013"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

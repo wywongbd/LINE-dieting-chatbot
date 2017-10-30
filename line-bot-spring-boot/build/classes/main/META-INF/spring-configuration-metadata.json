@@ -1,0 +1,72 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.linecorp.bot.spring.boot.LineBotProperties",
+      "name": "line.bot",
+      "type": "com.linecorp.bot.spring.boot.LineBotProperties"
+    },
+    {
+      "sourceType": "com.linecorp.bot.spring.boot.LineBotProperties",
+      "name": "line.bot.handler",
+      "type": "com.linecorp.bot.spring.boot.LineBotProperties$Handler"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.linecorp.bot.spring.boot.LineBotProperties",
+      "name": "line.bot.api-end-point",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.linecorp.bot.spring.boot.LineBotProperties",
+      "name": "line.bot.channel-secret",
+      "description": "Channel secret",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.linecorp.bot.spring.boot.LineBotProperties",
+      "name": "line.bot.channel-token",
+      "description": "Channel acccess token.",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.linecorp.bot.spring.boot.LineBotProperties",
+      "name": "line.bot.channel-token-supply-mode",
+      "description": "Channel token supply mode.\n\n @see ChannelTokenSupplyMode",
+      "type": "com.linecorp.bot.spring.boot.LineBotProperties$ChannelTokenSupplyMode"
+    },
+    {
+      "sourceType": "com.linecorp.bot.spring.boot.LineBotProperties",
+      "name": "line.bot.connect-timeout",
+      "description": "Connection timeout in milliseconds",
+      "type": "java.lang.Long"
+    },
+    {
+      "sourceType": "com.linecorp.bot.spring.boot.LineBotProperties$Handler",
+      "defaultValue": true,
+      "name": "line.bot.handler.enabled",
+      "description": "Flag to enable\/disable {@link LineMessageHandler} and {@link EventMapping}.\n\n Default: {@code true}",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.linecorp.bot.spring.boot.LineBotProperties$Handler",
+      "defaultValue": "\/callback",
+      "name": "line.bot.handler.path",
+      "description": "REST endpoint path of dispatcher.",
+      "type": "java.net.URI"
+    },
+    {
+      "sourceType": "com.linecorp.bot.spring.boot.LineBotProperties",
+      "name": "line.bot.read-timeout",
+      "description": "Read timeout in milliseconds",
+      "type": "java.lang.Long"
+    },
+    {
+      "sourceType": "com.linecorp.bot.spring.boot.LineBotProperties",
+      "name": "line.bot.write-timeout",
+      "description": "Write timeout in milliseconds",
+      "type": "java.lang.Long"
+    }
+  ]
+}
