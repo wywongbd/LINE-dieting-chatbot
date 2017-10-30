@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.linecorp.bot.spring.boot.BotPropertiesValidatorTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2017-10-30T07:36:57" hostname="Ignaviers-MacBook-Pro.local" time="0.34">
+<testsuite name="com.linecorp.bot.spring.boot.BotPropertiesValidatorTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2017-10-30T14:15:23" hostname="Ignaviers-MacBook-Pro.local" time="0.294">
   <properties/>
-  <testcase name="ngForSupplierTest" classname="com.linecorp.bot.spring.boot.BotPropertiesValidatorTest" time="0.306"/>
-  <testcase name="okForFixedTest" classname="com.linecorp.bot.spring.boot.BotPropertiesValidatorTest" time="0.015"/>
+  <testcase name="ngForSupplierTest" classname="com.linecorp.bot.spring.boot.BotPropertiesValidatorTest" time="0.253"/>
+  <testcase name="okForFixedTest" classname="com.linecorp.bot.spring.boot.BotPropertiesValidatorTest" time="0.02"/>
   <testcase name="ngForFixedTest" classname="com.linecorp.bot.spring.boot.BotPropertiesValidatorTest" time="0.011"/>
-  <testcase name="okForSupplierTest" classname="com.linecorp.bot.spring.boot.BotPropertiesValidatorTest" time="0.006"/>
-  <system-out><![CDATA[15:36:57.223 [Test worker] DEBUG org.jboss.logging - Logging Provider: org.jboss.logging.Slf4jLoggerProvider
-15:36:57.229 [Test worker] INFO org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.3.4.Final
-15:36:57.269 [Test worker] DEBUG org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
-15:36:57.272 [Test worker] DEBUG org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
-15:36:57.274 [Test worker] DEBUG org.hibernate.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via TCCL
-15:36:57.275 [Test worker] DEBUG org.hibernate.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via Hibernate Validator's class loader
-15:36:57.276 [Test worker] DEBUG org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
-15:36:57.505 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - ValidationMessages not found.
-15:36:57.511 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - ContributorValidationMessages not found.
-15:36:57.515 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - org.hibernate.validator.ValidationMessages found.
-15:36:57.531 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - ValidationMessages not found.
-15:36:57.532 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - ContributorValidationMessages not found.
-15:36:57.532 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - org.hibernate.validator.ValidationMessages found.
-15:36:57.668 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - ValidationMessages not found.
-15:36:57.668 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - ContributorValidationMessages not found.
-15:36:57.669 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - org.hibernate.validator.ValidationMessages found.
+  <testcase name="okForSupplierTest" classname="com.linecorp.bot.spring.boot.BotPropertiesValidatorTest" time="0.008"/>
+  <system-out><![CDATA[22:15:23.341 [Test worker] DEBUG org.jboss.logging - Logging Provider: org.jboss.logging.Slf4jLoggerProvider
+22:15:23.347 [Test worker] INFO org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.3.4.Final
+22:15:23.390 [Test worker] DEBUG org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+22:15:23.394 [Test worker] DEBUG org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+22:15:23.396 [Test worker] DEBUG org.hibernate.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via TCCL
+22:15:23.397 [Test worker] DEBUG org.hibernate.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via Hibernate Validator's class loader
+22:15:23.398 [Test worker] DEBUG org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+22:15:23.612 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - ValidationMessages not found.
+22:15:23.614 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - ContributorValidationMessages not found.
+22:15:23.617 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - org.hibernate.validator.ValidationMessages found.
+22:15:23.625 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - ValidationMessages not found.
+22:15:23.625 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - ContributorValidationMessages not found.
+22:15:23.625 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - org.hibernate.validator.ValidationMessages found.
+22:15:23.763 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - ValidationMessages not found.
+22:15:23.764 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - ContributorValidationMessages not found.
+22:15:23.764 [Test worker] DEBUG org.hibernate.validator.resourceloading.PlatformResourceBundleLocator - org.hibernate.validator.ValidationMessages found.
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
