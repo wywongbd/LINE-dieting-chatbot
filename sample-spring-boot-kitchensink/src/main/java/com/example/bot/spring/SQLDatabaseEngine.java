@@ -24,7 +24,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			connection = this.getConnection();
 			stmtQuery = connection.prepareStatement(
-				"SELECT response, num_hits FROM keyword_response "
+				"SELECT response, hits FROM automatedreply "
 				+ "WHERE ? LIKE concat('%', LOWER(keyword), '%')"
 			);
 			stmtQuery.setString(1, text.toLowerCase());
@@ -37,8 +37,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				// Perform update for number of hits in db
 				try {
 					stmtUpdate = connection.prepareStatement(
-						"UPDATE keyword_response "
-						+ "SET num_hits = num_hits + 1 "
+						"UPDATE automatedreply "
+						+ "SET hits = hits + 1 "
 						+ "WHERE ? LIKE concat('%', LOWER(keyword), '%')"
 					);
 					stmtUpdate.setString(1, text.toLowerCase());
