@@ -17,7 +17,13 @@ public class RecommendationState extends State {
      * @return A bool data type
      */
 	public boolean checkTrigger(String text) {
-		return true;
+		// Just for testing
+		if(text.equals("RecommendationState")) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
     /**
