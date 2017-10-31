@@ -12,6 +12,7 @@ public class RecommendationState extends State {
 
     /**
      * Check if input message will trigger this state
+     * Inherited from abstract base class
      * @param text A String data type
      * @return A bool data type
      */
@@ -21,6 +22,7 @@ public class RecommendationState extends State {
 
     /**
      * Reply a message for input text
+     * Inherited from abstract base class
      * @param text A String data type
      * @return A String data type
      */

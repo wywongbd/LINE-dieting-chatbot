@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.linecorp.bot.model.error.ErrorResponseTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2017-10-30T14:15:14" hostname="Ignaviers-MacBook-Pro.local" time="0.275">
+<testsuite name="com.linecorp.bot.model.error.ErrorResponseTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2017-10-30T16:04:11" hostname="Ignaviers-MacBook-Pro.local" time="0.308">
   <properties/>
-  <testcase name="complexErrorResponseTest" classname="com.linecorp.bot.model.error.ErrorResponseTest" time="0.271"/>
+  <testcase name="complexErrorResponseTest" classname="com.linecorp.bot.model.error.ErrorResponseTest" time="0.305"/>
   <testcase name="simpleErrorResponseTest" classname="com.linecorp.bot.model.error.ErrorResponseTest" time="0.003"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

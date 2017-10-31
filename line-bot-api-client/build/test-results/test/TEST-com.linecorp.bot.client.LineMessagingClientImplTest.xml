@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.linecorp.bot.client.LineMessagingClientImplTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2017-10-30T14:15:11" hostname="Ignaviers-MacBook-Pro.local" time="0.038">
+<testsuite name="com.linecorp.bot.client.LineMessagingClientImplTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2017-10-30T16:04:08" hostname="Ignaviers-MacBook-Pro.local" time="0.033">
   <properties/>
-  <testcase name="getProfileTest" classname="com.linecorp.bot.client.LineMessagingClientImplTest" time="0.022"/>
+  <testcase name="getProfileTest" classname="com.linecorp.bot.client.LineMessagingClientImplTest" time="0.019"/>
   <testcase name="pushMessageTest" classname="com.linecorp.bot.client.LineMessagingClientImplTest" time="0.001"/>
-  <testcase name="leaveRoomTest" classname="com.linecorp.bot.client.LineMessagingClientImplTest" time="0.002"/>
-  <testcase name="replyMessageTest" classname="com.linecorp.bot.client.LineMessagingClientImplTest" time="0.001"/>
+  <testcase name="leaveRoomTest" classname="com.linecorp.bot.client.LineMessagingClientImplTest" time="0.001"/>
+  <testcase name="replyMessageTest" classname="com.linecorp.bot.client.LineMessagingClientImplTest" time="0.002"/>
   <testcase name="getMessageContentTest" classname="com.linecorp.bot.client.LineMessagingClientImplTest" time="0.006"/>
-  <testcase name="multicastTest" classname="com.linecorp.bot.client.LineMessagingClientImplTest" time="0.002"/>
-  <testcase name="leaveGroupTest" classname="com.linecorp.bot.client.LineMessagingClientImplTest" time="0.002"/>
-  <system-out><![CDATA[22:15:11.703 [OkHttp http://localhost:50087/...] INFO com.linecorp.bot.client.wire - <-- HTTP FAILED: java.net.ConnectException: Failed to connect to localhost/0:0:0:0:0:0:0:1:50087
-22:15:11.703 [OkHttp http://localhost:50087/...] INFO com.linecorp.bot.client.wire - <-- HTTP FAILED: java.net.ConnectException: Failed to connect to localhost/0:0:0:0:0:0:0:1:50087
+  <testcase name="multicastTest" classname="com.linecorp.bot.client.LineMessagingClientImplTest" time="0.001"/>
+  <testcase name="leaveGroupTest" classname="com.linecorp.bot.client.LineMessagingClientImplTest" time="0.001"/>
+  <system-out><![CDATA[00:04:08.179 [OkHttp http://localhost:50673/...] INFO com.linecorp.bot.client.wire - <-- HTTP FAILED: java.net.ConnectException: Failed to connect to localhost/0:0:0:0:0:0:0:1:50673
+00:04:08.179 [OkHttp http://localhost:50673/...] INFO com.linecorp.bot.client.wire - <-- HTTP FAILED: java.net.ConnectException: Failed to connect to localhost/0:0:0:0:0:0:0:1:50673
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

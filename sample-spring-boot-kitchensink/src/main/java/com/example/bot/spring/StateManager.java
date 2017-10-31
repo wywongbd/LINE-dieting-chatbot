@@ -39,7 +39,8 @@ public class StateManager {
      */
 	public String chat(DownloadedContent jpg) {
 		// Add exception handling if the input jpg is not recognized as menu
-		return "Your image has been well received!";
+		String replyText = ((InputMenuState) states[INPUT_MENU_STATE]).reply(jpg);
+		return replyText;
 	}
 
     /**

@@ -12,6 +12,7 @@ public class InputMenuState extends State {
 
     /**
      * Check if input message will trigger this state
+     * Inherited from abstract base class
      * @param text A String data type
      * @return A bool data type
      */
@@ -21,6 +22,7 @@ public class InputMenuState extends State {
 
     /**
      * Reply a message for input text
+     * Inherited from abstract base class
      * @param text A String data type
      * @return A String data type
      */
@@ -29,10 +31,11 @@ public class InputMenuState extends State {
 	}
     /**
      * Reply a message for input text
+     * Overload the function inherited from abstract base class
      * @param jpg A DownloadedContent data type
      * @return A String data type
      */
-	public String replyJPG(DownloadedContent jpg) {
+	public String reply(DownloadedContent jpg) {
 		return "Your image has been well received!";
 	}
 }
