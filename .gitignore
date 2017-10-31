@@ -1,3 +1,12 @@
+*.idx
+*.xml
+*.properties
+*.html
+*.original
+
+# Binary file
+*.bin
+
 # . files
 .*
 
