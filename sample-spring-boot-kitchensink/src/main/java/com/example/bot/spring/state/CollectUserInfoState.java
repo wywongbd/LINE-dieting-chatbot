@@ -17,7 +17,13 @@ public class CollectUserInfoState extends State {
      * @return A bool data type
      */
 	public boolean checkTrigger(String text) {
-		return true;
+		// Just for testing
+		if(text.equals("CollectUserInfoState")) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
     /**

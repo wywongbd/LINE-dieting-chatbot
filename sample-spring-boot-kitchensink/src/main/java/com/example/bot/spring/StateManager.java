@@ -48,7 +48,8 @@ public class StateManager {
 			replyText = "Your text is not recognized by us!";
 		}
 		if(replyText != null) {
-			return replyText;
+			// Just for testing
+			return replyText + " Current state is " +  Integer.toString(currentState);
 		}
 		throw new Exception("NOT FOUND");
 	}
@@ -70,7 +71,8 @@ public class StateManager {
 			replyText = "Your image is not recognized by us!";
 		}
 		if(replyText != null) {
-			return replyText;
+			// Just for testing
+			return replyText + " Current state is " +  Integer.toString(currentState);
 		}
 		throw new Exception("NOT FOUND");
 	}
