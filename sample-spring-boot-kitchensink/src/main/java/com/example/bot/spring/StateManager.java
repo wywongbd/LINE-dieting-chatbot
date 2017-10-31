@@ -33,29 +33,50 @@ public class StateManager {
 	}
 
     /**
-     * Get output message after inputting image
-     * @param jpg A DownloadedContent data type
-     * @return A String data type
-     */
-	public String chat(DownloadedContent jpg) {
-		// Add exception handling if the input jpg is not recognized as menu
-		String replyText = ((InputMenuState) states[INPUT_MENU_STATE]).reply(jpg);
-		return replyText;
-	}
-
-    /**
      * Get output message after inputting text
      * @param text A String data type
      * @return A String data type
      */
-	public String chat(String text) {
-		currentState = nextState(text);
-		String replyText = states[currentState].reply(text);
-		return replyText;
+	public String chat(String text) throws Exception {
+		String replyText = null;
+		try{
+			// Get the next state after current message
+			currentState = nextState(text);    // Check trigger
+			replyText = states[currentState].reply(text);
+		} catch (Exception e) {    // Modify to custom exception TextNotRecognized later
+			// Text is not recognized, does not modify current state
+			replyText = "Your text is not recognized by us!";
+		}
+		if(replyText != null) {
+			return replyText;
+		}
+		throw new Exception("NOT FOUND");
 	}
 
     /**
-     * Get the next state
+     * Get output message after inputting image
+     * @param jpg A DownloadedContent data type
+     * @return A String data type
+     */
+	public String chat(DownloadedContent jpg) throws Exception {
+		String replyText = null;
+		try{
+			// Pass the image into InputMenuState to check if the image is recognized as menu
+			replyText = ((InputMenuState) states[INPUT_MENU_STATE]).reply(jpg);
+			// If above line does not return exception, then the image is recognized as menu
+			currentState = INPUT_MENU_STATE;
+		} catch (Exception e) {    // Modify to custom exception ImageNotRecognized later
+			// Image is not recognized as menu, does not modify current state
+			replyText = "Your image is not recognized by us!";
+		}
+		if(replyText != null) {
+			return replyText;
+		}
+		throw new Exception("NOT FOUND");
+	}
+
+    /**
+     * Get the next state after inputting text
      * @param text A String data type
      * @return A int data type
      */

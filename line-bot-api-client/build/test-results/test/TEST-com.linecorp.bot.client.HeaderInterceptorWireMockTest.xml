@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.linecorp.bot.client.HeaderInterceptorWireMockTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2017-10-30T16:04:07" hostname="Ignaviers-MacBook-Pro.local" time="0.475">
+<testsuite name="com.linecorp.bot.client.HeaderInterceptorWireMockTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2017-10-31T06:11:59" hostname="Ignaviers-MacBook-Pro.local" time="0.44">
   <properties/>
-  <testcase name="forChannelTokenSupplier" classname="com.linecorp.bot.client.HeaderInterceptorWireMockTest" time="0.475"/>
-  <system-out><![CDATA[00:04:08.139 [OkHttp http://localhost:50673/...] INFO com.linecorp.bot.client.wire - --> GET http://localhost:50673/v2/bot/message/TEST/content http/1.1
-00:04:08.144 [OkHttp http://localhost:50673/...] INFO com.linecorp.bot.client.wire - Authorization: Bearer 1st
-00:04:08.144 [OkHttp http://localhost:50673/...] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
-00:04:08.144 [OkHttp http://localhost:50673/...] INFO com.linecorp.bot.client.wire - --> END GET
-00:04:08.174 [OkHttp http://localhost:50673/...] INFO com.linecorp.bot.client.wire - --> GET http://localhost:50673/v2/bot/message/TEST/content http/1.1
-00:04:08.174 [OkHttp http://localhost:50673/...] INFO com.linecorp.bot.client.wire - Authorization: Bearer 2nd
-00:04:08.174 [OkHttp http://localhost:50673/...] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
-00:04:08.174 [OkHttp http://localhost:50673/...] INFO com.linecorp.bot.client.wire - --> END GET
+  <testcase name="forChannelTokenSupplier" classname="com.linecorp.bot.client.HeaderInterceptorWireMockTest" time="0.44"/>
+  <system-out><![CDATA[14:12:00.197 [OkHttp http://localhost:54176/...] INFO com.linecorp.bot.client.wire - --> GET http://localhost:54176/v2/bot/message/TEST/content http/1.1
+14:12:00.202 [OkHttp http://localhost:54176/...] INFO com.linecorp.bot.client.wire - Authorization: Bearer 1st
+14:12:00.202 [OkHttp http://localhost:54176/...] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
+14:12:00.202 [OkHttp http://localhost:54176/...] INFO com.linecorp.bot.client.wire - --> END GET
+14:12:00.231 [OkHttp http://localhost:54176/...] INFO com.linecorp.bot.client.wire - --> GET http://localhost:54176/v2/bot/message/TEST/content http/1.1
+14:12:00.232 [OkHttp http://localhost:54176/...] INFO com.linecorp.bot.client.wire - Authorization: Bearer 2nd
+14:12:00.232 [OkHttp http://localhost:54176/...] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
+14:12:00.232 [OkHttp http://localhost:54176/...] INFO com.linecorp.bot.client.wire - --> END GET
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

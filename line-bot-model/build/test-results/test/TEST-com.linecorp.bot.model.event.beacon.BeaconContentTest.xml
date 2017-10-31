@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.linecorp.bot.model.event.beacon.BeaconContentTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2017-10-30T16:04:11" hostname="Ignaviers-MacBook-Pro.local" time="0.012">
+<testsuite name="com.linecorp.bot.model.event.beacon.BeaconContentTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2017-10-31T06:12:03" hostname="Ignaviers-MacBook-Pro.local" time="0.011">
   <properties/>
   <testcase name="beaconContentEqualityTest" classname="com.linecorp.bot.model.event.beacon.BeaconContentTest" time="0.007"/>
   <testcase name="beaconContentArrayProtectedTest" classname="com.linecorp.bot.model.event.beacon.BeaconContentTest" time="0.004"/>

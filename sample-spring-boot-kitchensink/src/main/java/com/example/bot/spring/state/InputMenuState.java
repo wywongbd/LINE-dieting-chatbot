@@ -29,6 +29,7 @@ public class InputMenuState extends State {
 	public String reply(String text) {
 		return "Your text has been well received!"; 
 	}
+
     /**
      * Reply a message for input text
      * Overload the function inherited from abstract base class

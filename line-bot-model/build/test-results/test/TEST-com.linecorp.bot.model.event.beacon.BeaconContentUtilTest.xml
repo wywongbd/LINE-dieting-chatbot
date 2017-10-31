@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.linecorp.bot.model.event.beacon.BeaconContentUtilTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2017-10-30T16:04:11" hostname="Ignaviers-MacBook-Pro.local" time="0.003">
+<testsuite name="com.linecorp.bot.model.event.beacon.BeaconContentUtilTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2017-10-31T06:12:03" hostname="Ignaviers-MacBook-Pro.local" time="0.003">
   <properties/>
   <testcase name="parseBytesOrNullTestForValidValue" classname="com.linecorp.bot.model.event.beacon.BeaconContentUtilTest" time="0.0"/>
-  <testcase name="printHexBinaryForActualValue" classname="com.linecorp.bot.model.event.beacon.BeaconContentUtilTest" time="0.0"/>
+  <testcase name="printHexBinaryForActualValue" classname="com.linecorp.bot.model.event.beacon.BeaconContentUtilTest" time="0.001"/>
   <testcase name="parseBytesOrNullTestForNull" classname="com.linecorp.bot.model.event.beacon.BeaconContentUtilTest" time="0.0"/>
   <testcase name="printHexBinaryForNull" classname="com.linecorp.bot.model.event.beacon.BeaconContentUtilTest" time="0.0"/>
-  <testcase name="parseBytesOrNullTestForInvalidValue" classname="com.linecorp.bot.model.event.beacon.BeaconContentUtilTest" time="0.001"/>
+  <testcase name="parseBytesOrNullTestForInvalidValue" classname="com.linecorp.bot.model.event.beacon.BeaconContentUtilTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

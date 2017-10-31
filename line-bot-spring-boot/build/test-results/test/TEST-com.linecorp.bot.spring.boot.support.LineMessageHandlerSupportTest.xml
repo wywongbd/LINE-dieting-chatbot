@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2017-10-30T16:04:24" hostname="Ignaviers-MacBook-Pro.local" time="0.212">
+<testsuite name="com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2017-10-31T06:12:15" hostname="Ignaviers-MacBook-Pro.local" time="0.241">
   <properties/>
-  <testcase name="dispatchAndReplyMessageTest" classname="com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest" time="0.175"/>
-  <testcase name="testRefreshForOneItem" classname="com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest" time="0.008"/>
-  <testcase name="testPrioritySelection" classname="com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest" time="0.028"/>
-  <system-out><![CDATA[2017-10-31 00:04:24.302  INFO 10098 --- [    Test worker] c.l.b.s.b.s.LineMessageHandlerSupport    : Registered LINE Messaging API event handler: count = 1
-2017-10-31 00:04:24.303  INFO 10098 --- [    Test worker] c.l.b.s.b.s.LineMessageHandlerSupport    : Mapped "[ReplyEvent]" onto public com.linecorp.bot.model.message.TextMessage com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest$ReplyHandler.reply(com.linecorp.bot.model.event.ReplyEvent)
-2017-10-31 00:04:24.317  INFO 10098 --- [    Test worker] c.l.b.s.b.s.LineMessageHandlerSupport    : Registered LINE Messaging API event handler: count = 1
-2017-10-31 00:04:24.317  INFO 10098 --- [    Test worker] c.l.b.s.b.s.LineMessageHandlerSupport    : Mapped "[MessageEvent]" onto public void com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest$MessageHandler.generalMessageHandler(com.linecorp.bot.model.event.MessageEvent)
-2017-10-31 00:04:24.351  INFO 10098 --- [    Test worker] c.l.b.s.b.s.LineMessageHandlerSupport    : Registered LINE Messaging API event handler: count = 3
-2017-10-31 00:04:24.351  INFO 10098 --- [    Test worker] c.l.b.s.b.s.LineMessageHandlerSupport    : Mapped "[MessageEvent<TextMessageContent>]" onto public void com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest$AnotherMessageHandler.textMessageEventHandler(com.linecorp.bot.model.event.MessageEvent<com.linecorp.bot.model.event.message.TextMessageContent>)
-2017-10-31 00:04:24.351  INFO 10098 --- [    Test worker] c.l.b.s.b.s.LineMessageHandlerSupport    : Mapped "[MessageEvent]" onto public void com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest$MessageHandler.generalMessageHandler(com.linecorp.bot.model.event.MessageEvent)
-2017-10-31 00:04:24.351  INFO 10098 --- [    Test worker] c.l.b.s.b.s.LineMessageHandlerSupport    : Mapped "[Event]" onto public void com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest$AnotherMessageHandler.defaultEventHandler(com.linecorp.bot.model.event.Event)
+  <testcase name="dispatchAndReplyMessageTest" classname="com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest" time="0.199"/>
+  <testcase name="testRefreshForOneItem" classname="com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest" time="0.006"/>
+  <testcase name="testPrioritySelection" classname="com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest" time="0.036"/>
+  <system-out><![CDATA[2017-10-31 14:12:15.376  INFO 15402 --- [    Test worker] c.l.b.s.b.s.LineMessageHandlerSupport    : Registered LINE Messaging API event handler: count = 1
+2017-10-31 14:12:15.377  INFO 15402 --- [    Test worker] c.l.b.s.b.s.LineMessageHandlerSupport    : Mapped "[ReplyEvent]" onto public com.linecorp.bot.model.message.TextMessage com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest$ReplyHandler.reply(com.linecorp.bot.model.event.ReplyEvent)
+2017-10-31 14:12:15.394  INFO 15402 --- [    Test worker] c.l.b.s.b.s.LineMessageHandlerSupport    : Registered LINE Messaging API event handler: count = 1
+2017-10-31 14:12:15.394  INFO 15402 --- [    Test worker] c.l.b.s.b.s.LineMessageHandlerSupport    : Mapped "[MessageEvent]" onto public void com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest$MessageHandler.generalMessageHandler(com.linecorp.bot.model.event.MessageEvent)
+2017-10-31 14:12:15.433  INFO 15402 --- [    Test worker] c.l.b.s.b.s.LineMessageHandlerSupport    : Registered LINE Messaging API event handler: count = 3
+2017-10-31 14:12:15.434  INFO 15402 --- [    Test worker] c.l.b.s.b.s.LineMessageHandlerSupport    : Mapped "[MessageEvent<TextMessageContent>]" onto public void com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest$AnotherMessageHandler.textMessageEventHandler(com.linecorp.bot.model.event.MessageEvent<com.linecorp.bot.model.event.message.TextMessageContent>)
+2017-10-31 14:12:15.434  INFO 15402 --- [    Test worker] c.l.b.s.b.s.LineMessageHandlerSupport    : Mapped "[MessageEvent]" onto public void com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest$MessageHandler.generalMessageHandler(com.linecorp.bot.model.event.MessageEvent)
+2017-10-31 14:12:15.434  INFO 15402 --- [    Test worker] c.l.b.s.b.s.LineMessageHandlerSupport    : Mapped "[Event]" onto public void com.linecorp.bot.spring.boot.support.LineMessageHandlerSupportTest$AnotherMessageHandler.defaultEventHandler(com.linecorp.bot.model.event.Event)
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
