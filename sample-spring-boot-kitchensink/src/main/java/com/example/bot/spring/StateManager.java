@@ -76,6 +76,36 @@ public class StateManager {
 		}
 		throw new Exception("NOT FOUND");
 	}
+	
+    /**
+     * Get the next state after inputting text if current state
+     * is StanbyState
+     * @param text A String data type
+     * @return A int data type
+     */
+	public int nextStateFromStanby(String text) {
+		switch(text) {
+			case "CollectUserInfoState":  return 1;
+			case "ProvideInfoState":  return 2;
+			case "InputMenuState":  return 3;
+			case "PostEatingState":  return 5;
+			default: return currentState;
+			
+		}
+	}
+
+    /**
+     * Get the next state after inputting text if current state
+     * is one of state number {1, 2, 3, 5}
+     * @param text A String data type
+     * @return A int data type
+     */
+	public int nextStateToStanby(String text) {
+		switch(text) {
+			case "StanbyState":  return 0;
+			default: return currentState;
+		}
+	}
 
     /**
      * Get the next state after inputting text
@@ -83,27 +113,9 @@ public class StateManager {
      * @return A int data type
      */
 	public int nextState(String text) {
-		// Abit of hardcoding
-		// To do: add all transitions in 2D arrays in constructor
-		if(currentState != STANDBY_STATE) {
-			// Current state is not stanby state
-			if(states[STANDBY_STATE].checkTrigger(text)) {
-				// Transition from any state to stanby state
-				return STANDBY_STATE;
-			}
-			else if(currentState == INPUT_MENU_STATE && states[RECOMMEND_STATE].checkTrigger(text)) {
-				// Transition from input menu to recommendation
-				return RECOMMEND_STATE;
-			}
+		switch(currentState) {
+			case STANDBY_STATE:  return nextStateFromStanby(text);
+			default: return nextStateToStanby(text);
 		}
-		else {    // Current state is stanby state
-			for(int state: FROM_STANBY_STATE) {
-				if(states[state].checkTrigger(text)) {
-					// Transition from stanby state to other state
-					return state;
-				}
-			}
-		}
-		return currentState;
 	}
 }

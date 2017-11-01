@@ -1,6 +1,6 @@
-a16:14:54.033 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: {}
-a16:14:54.323 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: {}
-`16:14:54.331 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: {
+a11:58:27.527 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: {}
+a11:58:27.797 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: {}
+`11:58:27.804 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: {
   "events": [
     {
 6      "replyToken": "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA",
@@ -28,8 +28,8 @@
   ]
 }
 
-c16:14:54.476 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: null
-`16:14:54.481 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: {
+c11:58:27.958 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: null
+`11:58:27.962 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: {
   "events": [
     {
 6      "replyToken": "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA",
@@ -57,4 +57,4 @@
   ]
 }
 
-	c16:14:54.498 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: null
+	c11:58:27.974 [Test worker] DEBUG com.linecorp.bot.servlet.LineBotCallbackRequestParser - got: null
