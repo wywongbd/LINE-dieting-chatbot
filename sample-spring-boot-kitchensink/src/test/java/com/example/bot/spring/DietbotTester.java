@@ -44,15 +44,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.example.bot.spring.DatabaseEngine;
 
-<<<<<<< HEAD
-=======
 import com.rivescript.Config;
 import com.rivescript.RiveScript;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
->>>>>>> added more test cases to verify how to use RiveScript and modified test.rive for testing
 
 @RunWith(SpringRunner.class)
 //@SpringBootTest(classes = { DietbotTester.class, DatabaseEngine.class })
@@ -60,6 +56,8 @@ import java.util.Map;
 public class DietbotTester {
 	@Autowired
 	private SQLDatabaseEngine databaseEngine;
+
+	private RiveScript bot;
 	
 	@Test
 	public void writeUserInfoNonExisting() throws Exception {
