@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.linecorp.bot.model.message.ImagemapMessageTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2017-11-01T03:58:24" hostname="Ignaviers-MacBook-Pro.local" time="0.008">
+<testsuite name="com.linecorp.bot.model.message.ImagemapMessageTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2017-11-01T07:30:46" hostname="Ignaviers-MacBook-Pro.local" time="0.015">
   <properties/>
-  <testcase name="test" classname="com.linecorp.bot.model.message.ImagemapMessageTest" time="0.008"/>
+  <testcase name="test" classname="com.linecorp.bot.model.message.ImagemapMessageTest" time="0.015"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
