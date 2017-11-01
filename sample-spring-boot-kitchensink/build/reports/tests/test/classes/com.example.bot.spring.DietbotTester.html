@@ -23,7 +23,7 @@
 <tr>
 <td>
 <div class="infoBox" id="tests">
-<div class="counter">3</div>
+<div class="counter">2</div>
 <p>tests</p>
 </div>
 </td>
@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.250s</div>
+<div class="counter">8.249s</div>
 <p>duration</p>
 </div>
 </td>
@@ -78,18 +78,13 @@
 </tr>
 </thead>
 <tr>
-<td class="success">testFound</td>
-<td>0.002s</td>
+<td class="success">writeUserInfoExisting</td>
+<td>2.454s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">testNewRivescript</td>
-<td>0.147s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">testNotFound</td>
-<td>0.101s</td>
+<td class="success">writeUserInfoNonExisting</td>
+<td>5.795s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -97,32 +92,32 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>15:31:02.853 [Test worker] DEBUG org.springframework.test.context.junit4.SpringJUnit4ClassRunner - SpringJUnit4ClassRunner constructor called with [class com.example.bot.spring.DietbotTester]
-15:31:02.860 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
-15:31:02.872 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
-15:31:02.905 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [com.example.bot.spring.DietbotTester] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
-15:31:02.921 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.example.bot.spring.DietbotTester], using SpringBootContextLoader
-15:31:02.925 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.example.bot.spring.DietbotTester]: class path resource [com/example/bot/spring/DietbotTester-context.xml] does not exist
-15:31:02.926 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.example.bot.spring.DietbotTester]: class path resource [com/example/bot/spring/DietbotTesterContext.groovy] does not exist
-15:31:02.926 [Test worker] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.example.bot.spring.DietbotTester]: no resource found for suffixes {-context.xml, Context.groovy}.
-15:31:02.990 [Test worker] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [com.example.bot.spring.DietbotTester]
-15:31:02.996 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [com.example.bot.spring.DietbotTester]: using defaults.
-15:31:03.002 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]
-15:31:03.015 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Could not instantiate TestExecutionListener [org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
-15:31:03.016 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Could not instantiate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [org/springframework/transaction/interceptor/TransactionAttributeSource]
-15:31:03.021 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@3ad3a219, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@66a629ed, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@6276593d, org.springframework.test.context.support.DirtiesContextTestExecutionListener@bd71969, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@2c33b160, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@7b8d1c4a, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@2b621db7, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@18cd55e3, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@29c44f2b, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@3ab86915]
-15:31:03.025 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.example.bot.spring.DietbotTester]
-15:31:03.026 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.example.bot.spring.DietbotTester]
-15:31:03.027 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.example.bot.spring.DietbotTester]
-15:31:03.028 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.example.bot.spring.DietbotTester]
-15:31:03.032 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@751602cc testClass = DietbotTester, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@53a70882 testClass = DietbotTester, locations = '{}', classes = '{class com.example.bot.spring.DietbotTester, class com.example.bot.spring.SQLDatabaseEngine, class com.example.bot.spring.DietbotTester, class com.example.bot.spring.SQLDatabaseEngine}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.context.SpringBootTestContextCustomizer@44521d78, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@7d2d0857, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@381d48e3], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]]], class annotated with @DirtiesContext [false] with mode [null].
-15:31:03.033 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.example.bot.spring.DietbotTester]
-15:31:03.034 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.example.bot.spring.DietbotTester]
-15:31:03.120 [Test worker] DEBUG org.springframework.core.env.StandardEnvironment - Adding [systemProperties] PropertySource with lowest search precedence
-15:31:03.120 [Test worker] DEBUG org.springframework.core.env.StandardEnvironment - Adding [systemEnvironment] PropertySource with lowest search precedence
-15:31:03.121 [Test worker] DEBUG org.springframework.core.env.StandardEnvironment - Initialized StandardEnvironment with PropertySources [systemProperties,systemEnvironment]
-15:31:03.122 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true, server.port=-1}
-15:31:03.123 [Test worker] DEBUG org.springframework.core.env.StandardEnvironment - Adding [Inlined Test Properties] PropertySource with highest search precedence
+<pre>16:18:53.662 [Test worker] DEBUG org.springframework.test.context.junit4.SpringJUnit4ClassRunner - SpringJUnit4ClassRunner constructor called with [class com.example.bot.spring.DietbotTester]
+16:18:53.671 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+16:18:53.682 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+16:18:53.706 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [com.example.bot.spring.DietbotTester] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
+16:18:53.719 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.example.bot.spring.DietbotTester], using SpringBootContextLoader
+16:18:53.722 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.example.bot.spring.DietbotTester]: class path resource [com/example/bot/spring/DietbotTester-context.xml] does not exist
+16:18:53.723 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.example.bot.spring.DietbotTester]: class path resource [com/example/bot/spring/DietbotTesterContext.groovy] does not exist
+16:18:53.723 [Test worker] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.example.bot.spring.DietbotTester]: no resource found for suffixes {-context.xml, Context.groovy}.
+16:18:53.772 [Test worker] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [com.example.bot.spring.DietbotTester]
+16:18:53.778 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [com.example.bot.spring.DietbotTester]: using defaults.
+16:18:53.782 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]
+16:18:53.799 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Could not instantiate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [org/springframework/transaction/interceptor/TransactionAttributeSource]
+16:18:53.800 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Could not instantiate TestExecutionListener [org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
+16:18:53.801 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@6a1a6472, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@284b7add, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@434eaaad, org.springframework.test.context.support.DirtiesContextTestExecutionListener@3ee4238, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@3a6e8fc3, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@490097c1, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@7fad478e, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@e2325c1, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@40fdb351, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@d0e9a10]
+16:18:53.804 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.example.bot.spring.DietbotTester]
+16:18:53.805 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.example.bot.spring.DietbotTester]
+16:18:53.806 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.example.bot.spring.DietbotTester]
+16:18:53.806 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.example.bot.spring.DietbotTester]
+16:18:53.810 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@33277907 testClass = DietbotTester, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@252b5d08 testClass = DietbotTester, locations = '{}', classes = '{class com.example.bot.spring.DietbotTester, class com.example.bot.spring.SQLDatabaseEngine, class com.example.bot.spring.DietbotTester, class com.example.bot.spring.SQLDatabaseEngine}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.context.SpringBootTestContextCustomizer@a3c7592, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@d96c4c7, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@527e9cbc], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]]], class annotated with @DirtiesContext [false] with mode [null].
+16:18:53.811 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.example.bot.spring.DietbotTester]
+16:18:53.811 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.example.bot.spring.DietbotTester]
+16:18:53.887 [Test worker] DEBUG org.springframework.core.env.StandardEnvironment - Adding [systemProperties] PropertySource with lowest search precedence
+16:18:53.888 [Test worker] DEBUG org.springframework.core.env.StandardEnvironment - Adding [systemEnvironment] PropertySource with lowest search precedence
+16:18:53.888 [Test worker] DEBUG org.springframework.core.env.StandardEnvironment - Initialized StandardEnvironment with PropertySources [systemProperties,systemEnvironment]
+16:18:53.890 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true, server.port=-1}
+16:18:53.891 [Test worker] DEBUG org.springframework.core.env.StandardEnvironment - Adding [Inlined Test Properties] PropertySource with highest search precedence
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -132,12 +127,26 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::        (v1.4.2.RELEASE)
 
-2017-11-01 15:31:04.100  INFO 33280 --- [    Test worker] com.example.bot.spring.DietbotTester     : Starting DietbotTester on Ignaviers-MacBook-Pro.local with PID 33280 (started by Ignavier in /Users/Ignavier/workspace/java/eclipse-sts/hkust_cs3111h/sample-spring-boot-kitchensink)
-2017-11-01 15:31:04.103  INFO 33280 --- [    Test worker] com.example.bot.spring.DietbotTester     : No active profile set, falling back to default profiles: default
-2017-11-01 15:31:04.222  INFO 33280 --- [    Test worker] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@283acf01: startup date [Wed Nov 01 15:31:04 MYT 2017]; root of context hierarchy
-2017-11-01 15:31:04.823  INFO 33280 --- [    Test worker] com.example.bot.spring.DietbotTester     : Started DietbotTester in 1.688 seconds (JVM running for 2.848)
-2017-11-01 15:31:05.050  WARN 33280 --- [    Test worker] com.rivescript.RiveScript                : Object 'setvar' not loaded as no handler was found for programming language 'javascript'
-2017-11-01 15:31:05.056  WARN 33280 --- [    Test worker] com.rivescript.RiveScript                : Object 'add' not loaded as no handler was found for programming language 'javascript'
+2017-11-01 16:18:54.524  INFO 34396 --- [    Test worker] com.example.bot.spring.DietbotTester     : Starting DietbotTester on Ignaviers-MacBook-Pro.local with PID 34396 (started by Ignavier in /Users/Ignavier/workspace/java/eclipse-sts/hkust_cs3111h/sample-spring-boot-kitchensink)
+2017-11-01 16:18:54.525  INFO 34396 --- [    Test worker] com.example.bot.spring.DietbotTester     : No active profile set, falling back to default profiles: default
+2017-11-01 16:18:54.579  INFO 34396 --- [    Test worker] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@1ab05ba3: startup date [Wed Nov 01 16:18:54 MYT 2017]; root of context hierarchy
+2017-11-01 16:18:54.903  INFO 34396 --- [    Test worker] com.example.bot.spring.DietbotTester     : Started DietbotTester in 0.991 seconds (JVM running for 2.009)
+2017-11-01 16:18:54.975  INFO 34396 --- [    Test worker] c.example.bot.spring.SQLDatabaseEngine   : Username: bmbayfplhrhhmo Password: a7f74df68ddd67590ba67907ffbe469abfac4ea9d42674acc3ec152f8bfd0082
+2017-11-01 16:18:54.978  INFO 34396 --- [    Test worker] c.example.bot.spring.SQLDatabaseEngine   : dbUrl: jdbc:postgresql://ec2-23-23-248-162.compute-1.amazonaws.com:5432/d8kdgmt1kqm7pl?ssl=true&amp;sslfactory=org.postgresql.ssl.NonValidatingFactory
+2017-11-01 16:18:57.551  INFO 34396 --- [    Test worker] c.example.bot.spring.SQLDatabaseEngine   : Exception while deleting existing user info from database: org.postgresql.util.PSQLException: ERROR: relation &quot;userinfo&quot; does not exist
+  Position: 13
+2017-11-01 16:18:57.973  INFO 34396 --- [    Test worker] c.example.bot.spring.SQLDatabaseEngine   : Exception while inserting user info into database: org.postgresql.util.PSQLException: ERROR: relation &quot;userinfo&quot; does not exist
+  Position: 13
+2017-11-01 16:18:57.975  INFO 34396 --- [    Test worker] c.example.bot.spring.SQLDatabaseEngine   : Username: bmbayfplhrhhmo Password: a7f74df68ddd67590ba67907ffbe469abfac4ea9d42674acc3ec152f8bfd0082
+2017-11-01 16:18:57.976  INFO 34396 --- [    Test worker] c.example.bot.spring.SQLDatabaseEngine   : dbUrl: jdbc:postgresql://ec2-23-23-248-162.compute-1.amazonaws.com:5432/d8kdgmt1kqm7pl?ssl=true&amp;sslfactory=org.postgresql.ssl.NonValidatingFactory
+2017-11-01 16:19:00.680  INFO 34396 --- [    Test worker] c.example.bot.spring.SQLDatabaseEngine   : Exception while deleting existing user info from database: org.postgresql.util.PSQLException: ERROR: relation &quot;userinfo&quot; does not exist
+  Position: 13
+2017-11-01 16:19:00.740  INFO 34396 --- [    Test worker] c.example.bot.spring.SQLDatabaseEngine   : Username: bmbayfplhrhhmo Password: a7f74df68ddd67590ba67907ffbe469abfac4ea9d42674acc3ec152f8bfd0082
+2017-11-01 16:19:00.740  INFO 34396 --- [    Test worker] c.example.bot.spring.SQLDatabaseEngine   : dbUrl: jdbc:postgresql://ec2-23-23-248-162.compute-1.amazonaws.com:5432/d8kdgmt1kqm7pl?ssl=true&amp;sslfactory=org.postgresql.ssl.NonValidatingFactory
+2017-11-01 16:19:02.875  INFO 34396 --- [    Test worker] c.example.bot.spring.SQLDatabaseEngine   : Exception while deleting existing user info from database: org.postgresql.util.PSQLException: ERROR: relation &quot;userinfo&quot; does not exist
+  Position: 13
+2017-11-01 16:19:03.191  INFO 34396 --- [    Test worker] c.example.bot.spring.SQLDatabaseEngine   : Exception while inserting user info into database: org.postgresql.util.PSQLException: ERROR: relation &quot;userinfo&quot; does not exist
+  Position: 13
 </pre>
 </span>
 </div>
@@ -149,7 +158,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 3.5</a> at Nov 1, 2017 3:31:05 PM</p>
+<a href="http://www.gradle.org">Gradle 3.5</a> at Nov 1, 2017 4:19:03 PM</p>
 </div>
 </div>
 </body>
