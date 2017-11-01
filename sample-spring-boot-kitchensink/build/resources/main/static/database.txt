@@ -1,3 +1,0 @@
-Hi:Hey, how things going?
-I want to eat something:What do you want to eat?
-I am having lunch:What do you want to eat?

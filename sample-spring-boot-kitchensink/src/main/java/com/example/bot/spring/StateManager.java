@@ -27,16 +27,20 @@ public class StateManager {
             new RecommendationState(),
             new PostEatingState()
         };
-
-    // Rivescript object
-    RiveScript bot = new RiveScript();
+    
+    private RiveScript bot;
+    
     
     /**
      * Default constructor for StateManager
      */
     public StateManager() {
+
+    	// Rivescript object
+        bot = new RiveScript();
+        
     	// Load rive files for Rivescript object
-    	File resourcesDirectory = new File("src/resources/rivescript/trigger.rive");
+    	File resourcesDirectory = new File("src/main/resources/rivescript/trigger.rive");
     	bot.loadFile(resourcesDirectory.getAbsolutePath());
     	bot.sortReplies();
     }
