@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.linecorp.bot.client.CallbackAdaptorTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2017-11-01T07:51:02" hostname="Ignaviers-MacBook-Pro.local" time="0.548">
-  <properties/>
-  <testcase name="onResponseSuccessfullyTest" classname="com.linecorp.bot.client.CallbackAdaptorTest" time="0.221"/>
-  <testcase name="onFailureTest" classname="com.linecorp.bot.client.CallbackAdaptorTest" time="0.032"/>
-  <testcase name="onResponseWithErrorTest" classname="com.linecorp.bot.client.CallbackAdaptorTest" time="0.293"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
