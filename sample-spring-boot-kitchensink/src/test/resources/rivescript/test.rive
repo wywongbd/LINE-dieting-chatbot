@@ -7,3 +7,6 @@
 
 + my name is *
 - <set name=<formal>>Hello, <formal>.
+
++ mytestingsubroutine *
+- <call>MyTestingSubroutine <star> <star> </call>
