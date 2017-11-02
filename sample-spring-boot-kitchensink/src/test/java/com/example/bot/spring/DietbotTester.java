@@ -145,7 +145,8 @@ public class DietbotTester {
 		assertThat(weight).isEqualTo("200");
 	}
 
-public class MyTestingSubroutine implements Subroutine {
+	public class MyTestingSubroutine implements Subroutine {
+		
  		public String call(RiveScript rs, String[] args) {
  			assertThat(args.length).isEqualTo(2);
  			assertThat(args[0]).isEqualTo("abc");
