@@ -6,7 +6,7 @@
 	+ *
 	- Hi! I am your personal Dieting Chatbot!
         ^ First, I need to ask you a few questions about your physical information.
-        ^ What is your name?{topic=collect_user_name}<set state=collect_user_info>
+        ^ What is your name?<set state=collect_user_info>{topic=collect_user_name}
 
 < topic
 
@@ -45,68 +45,115 @@
 < topic
 
 ///////////////////////////////////////collect_user_info
+
+
+
 > topic collect_user_name
 
     + (i am|my name is|this is) *
-    - <set name={formal}<star2>{/formal}>Is {formal}<star2>{/formal} your name?
+    - <set name={formal}<star2>{/formal}>Is {formal}<star2>{/formal} your name? {topic=collect_user_name_confirmation}
 
     + *
-    - <set name=<Formal>>Is <Formal> your name?
-
-    + @yes [*]
-    - Ok. Nice to meet to <get name>! Next question! What is your age?{topic=collect_user_age}
-
-    + @no [*]
-    - Can you enter your name again? Pls~
+    - <set name={formal}<star>{/formal}>Is {formal}<star>{/formal} your name? {topic=collect_user_name_confirmation}
 
 < topic
+> topic collect_user_name_confirmation
+
+    + @yes [*]
+    - Ok. Nice to meet you <get name>! Next question! What is your age? {topic=collect_user_age}
+
+    + *
+    - Can you enter your name again? Pls~ {topic=collect_user_name}
+
+< topic
+
 
 
 > topic collect_user_age
 
     + [*] # [*]
-    - <set age=<star>>Alright, then what is your sex?{topic=collect_user_sex}
+    - <set age=<star>>Are you <star> years old? {topic=collect_user_age_confirmation}
 
     + *
     - I do not understand. Can you please input a number? What is your age?
 
 < topic
+> topic collect_user_age_confirmation
+
+    + @yes [*]
+    - Alright, what is your gender? {topic=collect_user_gender}
+
+    + @no [*]
+    - Can you enter your age again? Pls~ {topic=collect_user_age}
+
+    + *
+    - I don't understand. Are you <get age> years old?
+
+< topic
 
 
->topic collect_user_sex
+
+> topic collect_user_gender
 
     + [i] [am] [a] (@malenoun)
-    - <set gender=male>You are a <star>. Ok, so what is your weight (in kg)?{topic=collect_user_weight}
+    - <set gender=male>You are a <star>. Ok, so what is your weight (in kg)? Please input an integer. {topic=collect_user_weight}
 
     + [i] [am] [a] (@femalenoun)
-    - <set gender=female>You are a <star>. Ok, so what is your weight (in kg)?{topic=collect_user_weight}
+    - <set gender=female>You are a <star>. Ok, so what is your weight (in kg)? Please input an integer. {topic=collect_user_weight}
 
     + *
-    - I am sorry. I do not understand. What is your sex?
+    - I am sorry. I do not understand. What is your gender?
 
 < topic
 
 
->topic collect_user_weight
+
+> topic collect_user_weight
 
     + [*] # [*]
-    - <set age=<star>>Alright, then what is your height?{topic=collect_user_height}
+    - <set weight=<star>>Is your weight <star>kg? {topic=collect_user_weight_confirmation}
 
     + *
-    - I am sorry. I do not understand. Can you input a number? What is your weight (in kg)?
+    - I am sorry. I do not understand. Can you input a number? What is your weight (in kg)? Please input an integer.
+
+< topic
+> topic collect_user_weight_confirmation
+
+    + @yes [*]
+    - Alright, then what is your height?{topic=collect_user_height}
+
+    + @no [*]
+    - Can you enter your weight again? Please input an integer.
+
+    + *
+    - I don't understand. Is your weight <get weight>kg?
     
 < topic
 
 
->topic collect_user_height
+> topic collect_user_height
 
 	+ [*] # [*]
-    - <set height=<star>>Great. Are you allergic to milk? (Yes/No) {topic=collect_user_allergy_milk}
+    - <set height=<star>>Is your height <star>cm? {topic=collect_user_height_confirmation}
 
     + *
-    - I do not understand. Can you please input a number? What is your height?
+    - I do not understand. Can you please input a number? What is your height (in cm)? Please input an integer.
+
+< topic
+> topic collect_user_height_confirmation
+
+    + @yes [*]
+    - Great. Are you allergic to milk? (Yes/No){topic=collect_user_allergy_milk}
+
+    + @no [*]
+    - Can you enter your height again? Please input an integer. {topic=collect_user_height}
+
+    + *
+    - I don't understand. Is your height <get height>cm?
     
 < topic
+
+
 
 >topic collect_user_allergy_milk
 
@@ -122,6 +169,8 @@
 
 < topic
 
+
+
 >topic collect_user_allergy_eggs
 
     + @yes [*]
@@ -136,6 +185,8 @@
 
 < topic
 
+
+
 >topic collect_user_allergy_nuts
 
     + @yes [*]
@@ -148,8 +199,9 @@
     + *
     - I am sorry. I do not understand. Are you allergic to nuts? (Yes/No)
 
-
 < topic
+
+
 
 >topic collect_user_allergy_seafood
 
@@ -164,6 +216,8 @@
     - I am sorry. I do not understand. Are you allergic to seafood? (Yes/No)
 
 < topic
+
+
 
 //////////////////////////////////////collect_user_info
 
