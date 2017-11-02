@@ -241,12 +241,62 @@ public class SQLDatabaseEngine {
 				);
 				stmtUpdate.executeUpdate();
 			} catch (SQLException e) {
-				log.info("Exception while deleting records from menu table: {}", e.toString());
+				log.info("Exception while deleting records from recommendations table: {}", e.toString());
 			}
 		} catch (SQLException e) {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (SQLException e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+	}
+	
+	
+	// Removes recommendations that the user is allergic to
+	public void processRecommendationsByAllergies(String userId) throws Exception {
+		Connection connection = null;
+		PreparedStatement stmtQuery = null;
+		PreparedStatement stmtUpdate = null;
+		String update = null;
+		ResultSet rs = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Removes recommendations from recommendations table that the user is allergic to
+			try {
+				// Retrieves user allergies
+				stmtQuery = connection.prepareStatement(
+					"SELECT allergy " + 
+					"FROM userallergies " + 
+					"WHERE userid = ?"
+				);
+				stmtQuery.setString(1, userId);
+				rs = stmtQuery.executeQuery();
+				
+				// Removes recommendations that the user is allergic to			
+				stmtUpdate = connection.prepareStatement(
+					"DELETE FROM recommendations " + 
+					"WHERE description LIKE CONCAT('%', ?, '%')"
+				);				
+				while (rs.next()) {							
+					stmtUpdate.setString(1, rs.getString(1));
+					stmtUpdate.addBatch();
+				}
+				stmtUpdate.executeBatch();
+			} catch (SQLException e) {
+				log.info("Exception while removing recommendations from recommendations table: {}", e.toString());
+			}
+		} catch (SQLException e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
 				if (stmtUpdate != null) {stmtUpdate.close();}
 				if (connection != null) {connection.close();}
 			} catch (SQLException e) {
@@ -267,7 +317,7 @@ public class SQLDatabaseEngine {
 			connection = this.getConnection();
 			stmtQuery = connection.prepareStatement(
 				"SELECT meal_name FROM menu " +
-				"WHERE ? LIKE concat('%', meal_name, '%')"
+				"WHERE meal_name LIKE CONCAT('%', ?, '%')"
 			);
 			stmtQuery.setString(1, text);
 			rs = stmtQuery.executeQuery(); 
@@ -305,7 +355,7 @@ public class SQLDatabaseEngine {
 			connection = this.getConnection();
 			stmtQuery = connection.prepareStatement(
 				"SELECT meal_name FROM recommendations " +
-				"WHERE ? LIKE concat('%', meal_name, '%')"
+				"WHERE meal_name LIKE CONCAT('%', ?, '%')"
 			);
 			stmtQuery.setString(1, text);
 			rs = stmtQuery.executeQuery(); 

@@ -104,8 +104,8 @@ public class DietbotTester {
 		try {
 			this.databaseEngine.addMenu(menu);
 			this.databaseEngine.addRecommendations();
-			resultMenu = this.databaseEngine.searchMenu("frozen water");
-			resultRecommendations = this.databaseEngine.searchRecommendations("frozen water");
+			resultMenu = this.databaseEngine.searchMenu("frozen");
+			resultRecommendations = this.databaseEngine.searchRecommendations("frozen");
 			this.databaseEngine.resetMenu();
 			this.databaseEngine.resetRecommendations();
 		} catch (Exception e) {
@@ -134,6 +134,21 @@ public class DietbotTester {
 		String result = "";
 		try {
 			result = this.databaseEngine.searchRecommendations("asdf");
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(true);
+	}
+	
+	@Test
+	public void testRemoveAllergies() throws Exception {
+		boolean thrown = false;
+		String[] menu = {"grilled salmon"};
+		try {
+			this.databaseEngine.addMenu(menu);
+			this.databaseEngine.addRecommendations();
+			this.databaseEngine.processRecommendationsByAllergies("testUser");
+			this.databaseEngine.searchRecommendations("salmon");
 		} catch (Exception e) {
 			thrown = true;
 		}
