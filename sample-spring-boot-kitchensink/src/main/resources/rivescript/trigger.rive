@@ -1,10 +1,10 @@
-! local concat = newline
+! local concat = space
 
 > topic new_user
 	+ *
 	- Hi! I am your personal Dieting Chatbot!
         ^ First, I need to ask you a few questions about your physical information.
-        ^ What is your age?{topic=collect_user_info} <set state=collect_user_info>
+        ^ What is your age?{topic=collect_user_info}<set state=collect_user_info>
 < topic
 
 
