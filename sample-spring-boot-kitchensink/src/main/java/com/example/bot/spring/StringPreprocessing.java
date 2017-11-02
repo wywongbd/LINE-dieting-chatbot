@@ -24,7 +24,14 @@ public class StringPreprocessing {
 			"item", "details", "select", "for", "have", "has", "had", "available",
 			"premium", "seasoned", "less", "additional", "menus", "ultimate",
 			"terms", "conditions", "privacy", "policy", "condition",
-			"tomorrow", "today", "yesterday", "subject", "based"
+			"tomorrow", "today", "yesterday", "subject", "based",
+			"currently", "viewing", "website", "book", "stay", "signup", "find", "the",
+			"type", "book", "reserve", "reservation", "booking", "desktop", "version", "website",
+			"when", "will", "numbers", "how", "many", "adults", "children", "guests", "hotel",
+			"season", "seasons", "hong", "kong", "nights", "days",
+			"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+			"traditional", "fresh", "buffet", "eat", "meal", "download", "food", "phone", "specialties",
+			"set", "alacarte", "table"
 	};
 
 	/**
