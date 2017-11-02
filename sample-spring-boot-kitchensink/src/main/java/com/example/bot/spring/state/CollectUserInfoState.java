@@ -25,6 +25,7 @@ public class CollectUserInfoState extends State {
 		
 		if (currentState != afterState) {
 			// write to DB
+			System.out.println("Writing to DB....");
 			SQLDatabaseEngine sql = new SQLDatabaseEngine();
 			int age = Integer.parseInt(bot.getUservar(userId, "age"));
 			Double weight = Double.parseDouble(bot.getUservar(userId, "weight"));
