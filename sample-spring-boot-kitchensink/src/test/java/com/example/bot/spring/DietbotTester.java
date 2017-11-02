@@ -144,4 +144,27 @@ public class DietbotTester {
 		String weight = bot.getUservar("user1", "weight");
 		assertThat(weight).isEqualTo("200");
 	}
+
+public class MyTestingSubroutine implements Subroutine {
+ 		public String call(RiveScript rs, String[] args) {
+ 			assertThat(args.length).isEqualTo(2);
+ 			assertThat(args[0]).isEqualTo("abc");
+ 			return "yes";
+ 		}
+ 	}
+ 
+ 	// to test how to use RiveScript Subroutine
+ 	@Test
+ 	public void testRivescriptSubroutine() throws Exception {
+ 		bot = new RiveScript();
+ 		File resourcesDirectory = new File("src/test/resources/rivescript");
+ 		bot.loadDirectory(resourcesDirectory.getAbsolutePath());
+ 
+ 		bot.sortReplies();
+ 
+ 		bot.setSubroutine("MyTestingSubroutine", new MyTestingSubroutine());
+ 
+ 		String reply1 = bot.reply("user1", "MyTestingSubroutine abc");
+ 		assertThat(reply1).isEqualTo("yes");
+ 	}
 }
