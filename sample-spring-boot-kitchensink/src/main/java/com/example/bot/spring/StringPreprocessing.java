@@ -13,10 +13,15 @@ public class StringPreprocessing {
 	private static final int MIN_WORD_LENGTH = 3;
 	
 	private final String[] STOPWORDS_ARRAY = {
-			"with", "and", "you", "date",
+			"with", "and", "you", "your", "our", "date", "choice", "served", "served", "get",
+			"are", "is", "am", "were", "was",
 			"breakfast", "lunch", "dinner",
 			"special", "restaurant", "offer", "order", "free",
-			"monday", "tuesday", "wednesday", "thursday", "friday"
+			"monday", "tuesday", "wednesday", "thursday", "friday",
+			"January", "February", "March", "April", "May", "June",
+			"July", "August", "September", "October", "November", "December",
+			"main", "dishes", "more", "cal", "side", "choice", "come", "charge", "signature",
+			"item", "details", "select", "for", "have", "has", "had", "available"
 	};
 
 	/**
