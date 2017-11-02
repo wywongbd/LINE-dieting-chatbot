@@ -13,8 +13,8 @@ import java.util.Set;
 public class InputMenuState extends State {
     // Constant values
     private static final String NO_CHARACTER_MESSAGE = "There is no chracter in the image!";
-    private static final String URL_PATTERN_REGEX = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
- 	 
+    static final String URL_PATTERN_REGEX = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+
     /**
      * Default constructor for InputMenuState
      */
@@ -24,32 +24,31 @@ public class InputMenuState extends State {
 
     /**
      * Reply a message for input text
+     * @param text A String data type
+     * @return A String data type
+     */
+	public String reply(String text) {
+		return "";
+	}
+
+    /**
+     * Reply a message for input URL
      * Inherited from abstract base class
      * @param text A String data type
      * @return A String data type
      */
-    public String reply(String text) {
-    	        
-  	  if(text.matches(URL_PATTERN_REGEX)){
-  		  try{
+    public String replyUrl(String text) {
+    		try{
   			HTMLStringPreprocessing h = new HTMLStringPreprocessing();
   			ArrayList<String> processedUrlContent = h.processURLRawContent(h.readFromUrl(text));
-  			
+
   			// Convert to string to be replied as message for testing
-            return Arrays.toString(processedUrlContent.toArray());
-  			
+  			return Arrays.toString(processedUrlContent.toArray());
   		  } catch(Exception e){ 
   			  //TODO: handle user input invalid url
-  			return "Your text has been well received! This URL is not reachable :(";
+  			  return "Your text has been well received! This URL is not reachable :(";
   		  }
-        }
-  	  else{
-  		  // user did not intend input url type
-  		  return "Your text has been well received! However, this is not a URL";
-  	  }
     }
-
-    
     
     /**
      * Reply a message for input image
@@ -57,7 +56,7 @@ public class InputMenuState extends State {
      * @param jpg A DownloadedContent data type
      * @return A String data type
      */
-    public String reply(DownloadedContent jpg) {
+    public String replyImage(DownloadedContent jpg) {
     		ArrayList<String> processedOcrImage = processImage(jpg);
         if(processedOcrImage.size() > 0){
             // Convert to string to be replied as message for testing
