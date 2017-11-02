@@ -140,8 +140,9 @@ public class DietbotController {
         String reply = null;
     	try {
 			UserProfileResponse profile = lineMessagingClient.getProfile(event.getSource().getUserId()).get();
-    		reply = stateManager.chat(text);
-    		reply += "\n UserName: " + profile.getDisplayName();
+    		reply = stateManager.chat(event.getSource().getUserId(), text);
+    		// reply += "\n UserName: " + profile.getDisplayName();
+    		reply += "\n UserID: " + event.getSource().getUserId();
     	} catch (Exception e) {
     		reply = defaultString;
     	}
