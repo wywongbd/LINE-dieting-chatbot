@@ -25,34 +25,18 @@ public class CollectUserInfoState extends State {
 		
 		if (currentState != afterState) {
 			// write to DB
-			System.out.println("Writing to DB.... 1");
-			
-			SQLDatabaseEngine sql = null;
-			int age = 0;
-			Double weight = 1.0;
-			Double height = 1.0;
-			String gender = "";
+			SQLDatabaseEngine sql = new SQLDatabaseEngine();
+			int age = Integer.parseInt(bot.getUservar(userId, "age"));
+			Double weight = Double.parseDouble(bot.getUservar(userId, "weight"));
+			Double height = Double.parseDouble(bot.getUservar(userId, "height"));
+			String gender = bot.getUservar(userId, "gender");
 			String[] allergyFood = {"milk", "egg", "nut", "seafood"};
-			Vector<String> allergies = null;
+			Vector<String> allergies = new Vector<String>(0);
 			
-			try {
-				sql = new SQLDatabaseEngine();
-				age = Integer.parseInt(bot.getUservar(userId, "age"));
-				weight = Double.parseDouble(bot.getUservar(userId, "weight"));
-			    height = Double.parseDouble(bot.getUservar(userId, "height"));
-				gender = bot.getUservar(userId, "gender");
-				allergies = new Vector<String>(0);
-			}
-			catch(Exception e) {
-				System.out.println("failed");
-			}
-			
-			System.out.println("Writing to DB.... 2");
 			
 			for (String food: allergyFood) {
 				if (bot.getUservar(userId, food + "_allergy").equals("true")) {
-					allergies.add(food);
-					System.out.println(food);				
+					allergies.add(food);				
 				}
 			}
 			
@@ -63,8 +47,6 @@ public class CollectUserInfoState extends State {
 				System.out.println(food);
 			}
 			
-			
-			
 			try {
 				sql.writeUserInfo(userId, age, gender, height, weight, temp);
 			}
@@ -72,6 +54,8 @@ public class CollectUserInfoState extends State {
 				System.out.println("Exception while inserting user info into user database: " + e.toString());
 			}
 		}
+		
+		sql.writeUserInfo(userId, 10, "male", 1.1, 1.1, {"A", "B"});
 		return output;
 	}
 }
