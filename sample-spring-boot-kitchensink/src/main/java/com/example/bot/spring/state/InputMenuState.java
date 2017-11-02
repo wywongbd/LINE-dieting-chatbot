@@ -38,7 +38,7 @@ public class InputMenuState extends State {
             // The text message is URL
 			bot.setUservar(userId, "url_received", "true");
 			urlContent = replyUrl(text);
-			replyText = bot.reply(userId, "InputUrl")
+			replyText = bot.reply(userId, "InputUrl");
             currentState.put(userId, INPUT_MENU_STATE);
             bot.setUservar(userId, "url_received", "false");
             bot.setUservar(userId, "topic", "recommend");
