@@ -22,8 +22,9 @@ dependencies {
     compile "com.rivescript:rivescript-core:0.10.0"
     compile group: "com.asprise.ocr", name: "java-ocr-api", version: "15.3.0.3"
     compile("org.json:json:20141113")
-    compile 'org.jsoup:jsoup:1.10.3'
+    compile files('libs/jsoup-1.10.3.jar')
 }
+
 
 test {
     environment "DATABASE_URL", "postgres://bmbayfplhrhhmo:a7f74df68ddd67590ba67907ffbe469abfac4ea9d42674acc3ec152f8bfd0082@ec2-23-23-248-162.compute-1.amazonaws.com:5432/d8kdgmt1kqm7pl" 
