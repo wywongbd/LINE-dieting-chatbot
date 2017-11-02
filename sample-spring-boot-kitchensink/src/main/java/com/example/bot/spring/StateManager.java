@@ -28,7 +28,7 @@ public class StateManager {
             new PostEatingState()
         };
     
-    private RiveScript bot;
+//    private RiveScript bot;
     
     
     /**
@@ -37,12 +37,12 @@ public class StateManager {
     public StateManager() {
 
     	// Rivescript object
-        bot = new RiveScript();
+//        bot = new RiveScript();
         
     	// Load rive files for Rivescript object
-    	File resourcesDirectory = new File("src/main/resources/rivescript/trigger.rive");
-    	bot.loadFile(resourcesDirectory.getAbsolutePath());
-    	bot.sortReplies();
+//    	File resourcesDirectory = new File("src/main/resources/rivescript/trigger.rive");
+//    	bot.loadFile(resourcesDirectory.getAbsolutePath());
+//    	bot.sortReplies();
     }
 
     /**
@@ -52,20 +52,21 @@ public class StateManager {
      */
     public String chat(String text) throws Exception {
         String replyText = null;
-        try{
-            // Get the next state after current message
-        	replyText = bot.reply("user", text);
-            currentState = decodeState(bot.getUservar("user", "state"));    // Check trigger
-            
-        } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
-            // Text is not recognized, does not modify current state
-            replyText = "Your text is not recognized by us!";
-        }
-        if(replyText != null) {
-            // Just for testing
-            return replyText + " Current state is " +  Integer.toString(currentState);
-        }
-        throw new Exception("NOT FOUND");
+        return "Testing chat";
+//        try{
+//            // Get the next state after current message
+//        	replyText = bot.reply("user", text);
+//            currentState = decodeState(bot.getUservar("user", "state"));    // Check trigger
+//            
+//        } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
+//            // Text is not recognized, does not modify current state
+//            replyText = "Your text is not recognized by us!";
+//        }
+//        if(replyText != null) {
+//            // Just for testing
+//            return replyText + " Current state is " +  Integer.toString(currentState);
+//        }
+//        throw new Exception("NOT FOUND");
     }
 
     /**
