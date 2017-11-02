@@ -40,9 +40,9 @@ public class StateManager {
 	    	bot = new RiveScript();
 
 	    	// Load rive files for Rivescript object
-	    	File resourcesDirectory = new File("src/main/resources/rivescript/trigger.rive");
+	    	File resourcesDirectory = new File("/src/main/resources/rivescript");
 //	    	bot.loadFile(resourcesDirectory.getAbsolutePath());
-	    	bot.loadFile(resourcesDirectory);
+	    	bot.loadDirectory(resourcesDirectory);
 //	    	bot.sortReplies();
     }
 
