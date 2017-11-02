@@ -1,3 +1,5 @@
+! local concat = newline
+
 > topic new_user
 	+ *
 	- Hi! I am your personal Dieting Chatbot!
