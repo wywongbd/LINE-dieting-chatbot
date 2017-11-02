@@ -3,7 +3,7 @@
 > begin
   // If it is a new user, set the new_user topic and continue.
   + request
-  * <get met> == undefined => {topic=new_user} <set met=true> {ok}
+  * <get met> == undefined => {topic=new_user}<set met=true>{ok}
   - {ok}
 < begin
 
@@ -151,6 +151,7 @@
 ! sub (f)       = rose
 ! sub (w)       = wilted rose
 
+
 // Person substitutions
 ! person i am    = you are
 ! person you are = I am
@@ -162,14 +163,16 @@
 ! person i       = you
 
 // Set arrays
-! array meals	   = meal breakfast lunch dinner
-! array malenoun   = male guy boy dude boi man men gentleman gentlemen
-! array femalenoun = female girl chick woman women lady babe
+! array meals	   = meal breakfast lunch dinner supper snack tea
+! array malenoun   = m male guy boy dude man men gentleman
+! array femalenoun = f female girl woman women lady 
 ! array mennoun    = males guys boys dudes bois men gentlemen
 ! array womennoun  = females girls chicks women ladies babes
 ! array lol        = lol lmao rofl rotfl haha hahaha
 ! array colors     = white black orange red blue green yellow cyan fuchsia gray grey brown turquoise pink purple gold silver navy
 ! array height     = tall long wide thick
 ! array measure    = inch in centimeter cm millimeter mm meter m inches centimeters millimeters meters
-! array yes        = yes yeah yep yup ya yea
-! array no         = no nah nope nay
+! array yes        = yes yeah yep yup ya yea absolutely aye sure
+^ of course
+! array no         = no nah nope nay nop
+
