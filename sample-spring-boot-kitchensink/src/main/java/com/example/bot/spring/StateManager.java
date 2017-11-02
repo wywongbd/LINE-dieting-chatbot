@@ -42,7 +42,7 @@ public class StateManager {
 	    	// Load rive files for Rivescript object
 	    	File resourcesDirectory = new File("/src/main/resources/rivescript");
 //	    	bot.loadFile(resourcesDirectory.getAbsolutePath());
-	    	bot.loadDirectory(resourcesDirectory);
+	    	bot.loadDirectory(resourcesDirectory.getAbsolutePath());
 //	    	bot.sortReplies();
     }
 
