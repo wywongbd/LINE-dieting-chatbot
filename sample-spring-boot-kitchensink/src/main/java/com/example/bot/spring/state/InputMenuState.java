@@ -2,6 +2,7 @@ package com.example.bot.spring;
 
 import com.example.bot.spring.DietbotController.DownloadedContent;
 import com.example.bot.spring.StringPreprocessing;
+import com.example.bot.spring.HTMLStringPreprocessing;
 import com.asprise.ocr.Ocr;
 import java.io.File;
 import java.nio.file.Path;
@@ -11,7 +12,9 @@ import java.util.Set;
 
 public class InputMenuState extends State {
     // Constant values
-    private final String NO_CHARACTER_MESSAGE = "There is no chracter in the image!";
+    private static final String NO_CHARACTER_MESSAGE = "There is no chracter in the image!";
+    private static final String URL_PATTERN_REGEX = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+ 	 
     /**
      * Default constructor for InputMenuState
      */
@@ -26,9 +29,28 @@ public class InputMenuState extends State {
      * @return A String data type
      */
     public String reply(String text) {
-        return "Your text has been well received!"; 
+    	        
+  	  if(text.matches(URL_PATTERN_REGEX)){
+  		  try{
+  			HTMLStringPreprocessing h = new HTMLStringPreprocessing();
+  			ArrayList<String> processedUrlContent = h.processURLRawContent(h.readFromUrl(text));
+  			
+  			// Convert to string to be replied as message for testing
+            return Arrays.toString(processedUrlContent.toArray());
+  			
+  		  } catch(Exception e){ 
+  			  //TODO: handle user input invalid url
+  			return "Your text has been well received! This URL is not reachable :(";
+  		  }
+        }
+  	  else{
+  		  // user did not intend input url type
+  		  return "Your text has been well received! However, this is not a URL";
+  	  }
     }
 
+    
+    
     /**
      * Reply a message for input image
      * Overload the function inherited from abstract base class
