@@ -31,7 +31,27 @@ public class InputMenuState extends State {
      * @return A String data type
      */
 	public String reply(String userId, String text, RiveScript bot) {
-		return "";
+        String replyText = null;
+        String urlContent = null;
+        
+		if(text.matches(InputMenuState.URL_PATTERN_REGEX)){
+            // The text message is URL
+			bot.setUservar(userId, "url_received", "true");
+			urlContent = replyUrl(text);
+			replyText = bot.reply(userId, "InputUrl")
+            currentState.put(userId, INPUT_MENU_STATE);
+            bot.setUservar(userId, "url_received", "false");
+            bot.setUservar(userId, "topic", "recommend");
+            bot.setUservar(userId, "state", "recommend");
+            
+            return replyText + urlContent;
+        
+		}
+		else {
+			bot.setUservar(userId, "url_received", "false");
+			replyText = bot.reply(userId, "InputUrl");
+			return replyText;
+		}
 	}
 
     /**
@@ -60,13 +80,23 @@ public class InputMenuState extends State {
      * @param jpg A DownloadedContent data type
      * @return A String data type
      */
-    public String replyImage(DownloadedContent jpg) {
-    		ArrayList<String> processedOcrImage = processImage(jpg);
-        if(processedOcrImage.size() > 0){
+    public String replyImage(String userId, DownloadedContent jpg, RiveScript bot) {
+    	ArrayList<String> processedOcrImage = processImage(jpg);
+        String replyText = null;
+    	
+    	if(processedOcrImage.size() > 0){
             // Convert to string to be replied as message for testing
-            return Arrays.toString(processedOcrImage.toArray());
+    		bot.setUservar(userId, "img_received", "true");
+        	replyText = bot.reply(userId, "InputImage");
+        	bot.setUservar(userId, "img_received", "false");
+            bot.setUservar(userId, "topic", "recommend");
+            bot.setUservar(userId, "state", "recommend");
+        	
+            return replyText + Arrays.toString(processedOcrImage.toArray());
         }
         else {
+        	bot.setUservar(userId, "img_received", "false");
+        	replyText = bot.reply(userId, "InputImage");
             return "There is no useful information in your image!";
         }
     }

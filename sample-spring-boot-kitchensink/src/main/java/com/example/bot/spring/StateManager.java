@@ -64,18 +64,8 @@ public class StateManager {
                 bot.setUservar(userId, "state", "collect_user_info");
             }
             
-            if(text.matches(InputMenuState.URL_PATTERN_REGEX)){
-                // The text message is URL
-                replyText = ((InputMenuState) states[INPUT_MENU_STATE]).replyUrl(text);
-                currentState.put(userId, INPUT_MENU_STATE);
-                bot.setUservar(userId, "topic", "input_menu");
-                bot.setUservar(userId, "state", "input_menu");
-            }
-            else {
-                replyText = states[currentState.get(userId)].reply(userId, text, bot);
-                System.out.println("Writing to DB....");
-                currentState.put(userId, decodeState(bot.getUservar(userId, "state")));    
-            }
+        	replyText = states[currentState.get(userId)].reply(userId, text, bot);
+            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));    
             
         } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
             // Text is not recognized, does not modify current state
@@ -100,8 +90,9 @@ public class StateManager {
             if (currentState.containsKey(userId) == false) {
                 currentState.put(userId, INPUT_MENU_STATE);
             }
+            bot.setUservar(userId, "img_received", "true");
             // Pass the image into InputMenuState to check if the image is recognized as menu
-            replyText = ((InputMenuState) states[INPUT_MENU_STATE]).replyImage(jpg);
+            replyText = ((InputMenuState) states[INPUT_MENU_STATE]).replyImage(userId, jpg, bot);
             // If above line does not return exception, then the image is recognized as menu
             currentState.put(userId, INPUT_MENU_STATE);
             bot.setUservar(userId, "topic", "input_menu");
