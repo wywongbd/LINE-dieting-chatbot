@@ -30,7 +30,8 @@ public class SQLDatabaseEngine {
 	}
 	
 	
-	/* Writes input user info into the database
+	/* 
+	 * Writes input user info into the database
 	 * Valid values for gender: male, female
 	 * Unit for height: m
 	 * Unit for weight: kg
@@ -86,6 +87,7 @@ public class SQLDatabaseEngine {
 		String result = "test";
 		return result;
 	}
+	
 	
 	// Deletes user info from database
 	public void deleteUserInfo(String userId) throws Exception {
@@ -153,7 +155,7 @@ public class SQLDatabaseEngine {
 	}
 	
 
-	// Deletes all records in the menu
+	// Deletes all records in the menu table
 	public void resetMenu() throws Exception {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
@@ -161,7 +163,7 @@ public class SQLDatabaseEngine {
 		try {
 			connection = this.getConnection();
 			
-			// Insert meal names into menu table
+			// Deletes records from menu table
 			try {
 				stmtUpdate = connection.prepareStatement(
 					"DELETE FROM menu"
@@ -183,20 +185,179 @@ public class SQLDatabaseEngine {
 	}
 	
 	
-	public String search(String text) throws Exception {
+	/*
+	 *  Reads meal names from meal table and matches them to the food in our nutrient table
+	 *  Stores the closest match for each meal name into the recommendation table
+	 */
+	public void addRecommendations() throws Exception {
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Insert meal names into menu table
+			try {
+				stmtUpdate = connection.prepareStatement(
+					"INSERT INTO recommendations " +
+					"SELECT " +
+						"DISTINCT ON (menu.meal_name) " +
+						"menu.meal_name, " +
+						"nutrient_table.description, " +
+						"similarity(menu.meal_name, nutrient_table.description) AS sim " +
+					"FROM menu " +
+					"JOIN nutrient_table ON menu.meal_name % nutrient_table.description " +
+					"ORDER BY menu.meal_name, sim DESC"
+				);
+				stmtUpdate.executeUpdate();
+			} catch (SQLException e) {
+				log.info("Exception while inserting records into the recommendations table: {}", e.toString());
+			}
+		} catch (SQLException e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (SQLException e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}		
+	}
+	
+	
+	// Deletes all records in the recommendations table
+	public void resetRecommendations() throws Exception {
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Deletes records from recommendations table
+			try {
+				stmtUpdate = connection.prepareStatement(
+					"DELETE FROM recommendations"
+				);
+				stmtUpdate.executeUpdate();
+			} catch (SQLException e) {
+				log.info("Exception while deleting records from recommendations table: {}", e.toString());
+			}
+		} catch (SQLException e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (SQLException e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+	}
+	
+	
+	// Removes recommendations that the user is allergic to
+	public void processRecommendationsByAllergies(String userId) throws Exception {
+		Connection connection = null;
+		PreparedStatement stmtQuery = null;
+		PreparedStatement stmtUpdate = null;
+		String update = null;
+		ResultSet rs = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Removes recommendations from recommendations table that the user is allergic to
+			try {
+				// Retrieves user allergies
+				stmtQuery = connection.prepareStatement(
+					"SELECT allergy " + 
+					"FROM userallergies " + 
+					"WHERE userid = ?"
+				);
+				stmtQuery.setString(1, userId);
+				rs = stmtQuery.executeQuery();
+				
+				// Removes recommendations that the user is allergic to			
+				stmtUpdate = connection.prepareStatement(
+					"DELETE FROM recommendations " + 
+					"WHERE description LIKE CONCAT('%', ?, '%')"
+				);				
+				while (rs.next()) {							
+					stmtUpdate.setString(1, rs.getString(1));
+					stmtUpdate.addBatch();
+				}
+				stmtUpdate.executeBatch();
+			} catch (SQLException e) {
+				log.info("Exception while removing recommendations from recommendations table: {}", e.toString());
+			}
+		} catch (SQLException e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (SQLException e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+	}
+	
+	
+	// Searches for a meal in the menu table (for debugging purposes)
+	public String searchMenu(String text) throws Exception {
 		//Write your code here
 		String result = null;
 		Connection connection = null;
 		PreparedStatement stmtQuery = null;
-
 		ResultSet rs = null;
 		try {
 			connection = this.getConnection();
 			stmtQuery = connection.prepareStatement(
 				"SELECT meal_name FROM menu " +
-				"WHERE ? LIKE concat('%', meal_name, '%')"
+				"WHERE meal_name LIKE CONCAT('%', ?, '%')"
 			);
-			stmtQuery.setString(1, text.toLowerCase());
+			stmtQuery.setString(1, text);
+			rs = stmtQuery.executeQuery(); 
+			while(result == null && rs.next()) {
+				result = rs.getString(1);
+			}
+		} catch (SQLException e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmtQuery != null)
+					stmtQuery.close();
+				if (connection != null)
+					connection.close();
+			} catch (SQLException ex) {  // Exception or IOException??
+				log.info("Exception while closing connection of database: {}", ex.toString());
+			}
+		}
+		if (result != null)
+			return result;
+		throw new Exception("NOT FOUND");
+	}
+	
+
+	// Searches for a meal in the recommendations table (for debugging purposes)
+	public String searchRecommendations(String text) throws Exception {
+		//Write your code here
+		String result = null;
+		Connection connection = null;
+		PreparedStatement stmtQuery = null;
+		ResultSet rs = null;
+		try {
+			connection = this.getConnection();
+			stmtQuery = connection.prepareStatement(
+				"SELECT meal_name FROM recommendations " +
+				"WHERE meal_name LIKE CONCAT('%', ?, '%')"
+			);
+			stmtQuery.setString(1, text);
 			rs = stmtQuery.executeQuery(); 
 			while(result == null && rs.next()) {
 				result = rs.getString(1);

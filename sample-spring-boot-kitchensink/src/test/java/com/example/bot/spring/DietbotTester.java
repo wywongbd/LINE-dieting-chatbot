@@ -96,48 +96,59 @@ public class DietbotTester {
 	}
 	
 	@Test
-	public void addMenu() throws Exception {
+	public void testAdd() throws Exception {
 		boolean thrown = false;
+		String resultMenu = null;
+		String resultRecommendations = null;
 		String[] menu = {"frozen water", "molten ice"};
 		try {
 			this.databaseEngine.addMenu(menu);
+			this.databaseEngine.addRecommendations();
+			resultMenu = this.databaseEngine.searchMenu("frozen");
+			resultRecommendations = this.databaseEngine.searchRecommendations("frozen");
+			this.databaseEngine.resetMenu();
+			this.databaseEngine.resetRecommendations();
 		} catch (Exception e) {
 			thrown = true;
 		}
 		assertThat(thrown).isEqualTo(false);
+		assertThat(resultMenu.contains("frozen"));
+		assertThat(resultRecommendations.contains("frozen"));
 	}
 	
 	@Test
-	public void searchFound() throws Exception {
+	public void searchMenuNotFound() throws Exception {
 		boolean thrown = false;
-		String result = "";
+		String result = null;
 		try {
-			result = this.databaseEngine.search("frozen water");
+			result = this.databaseEngine.searchMenu("asdf");
 		} catch (Exception e) {
 			thrown = true;
 		}
-		assertThat(thrown).isEqualTo(false);
-		assertThat(result.contains("frozen"));
+		assertThat(thrown).isEqualTo(true);
 	}
 
-	
 	@Test
-	public void resetMenu() throws Exception {
-		boolean thrown = false;
-		try {
-			this.databaseEngine.resetMenu();
-		} catch (Exception e) {
-			thrown = true;
-		}
-		assertThat(thrown).isEqualTo(false);
-	}	
-	
-	@Test
-	public void searchNotFound() throws Exception {
+	public void searchRecommendationsNotFound() throws Exception {
 		boolean thrown = false;
 		String result = "";
 		try {
-			result = this.databaseEngine.search("asdf");
+			result = this.databaseEngine.searchRecommendations("asdf");
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(true);
+	}
+	
+	@Test
+	public void testRemoveAllergies() throws Exception {
+		boolean thrown = false;
+		String[] menu = {"grilled salmon"};
+		try {
+			this.databaseEngine.addMenu(menu);
+			this.databaseEngine.addRecommendations();
+			this.databaseEngine.processRecommendationsByAllergies("testUser");
+			this.databaseEngine.searchRecommendations("salmon");
 		} catch (Exception e) {
 			thrown = true;
 		}
