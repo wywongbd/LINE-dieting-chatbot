@@ -26,7 +26,7 @@
 
 	+ [*] (tweak|change|alter|update|modify) [*] (info|information|details|particulars)|(height|weight|age|gender|name|allergy|allergies) [*]
 	- Okay, I will now ask you a few questions to <star1> your <star2>.
-		^ {topic=collect_user_info} <set state=collect_user_info>
+		^ {topic=collect_user_name} <set state=collect_user_info>
 
 	+ [*] ([eating] [*] restaurant|[help me] (look|check out) [*] menu|(recommend|recommendation|suggest|suggestion|decide|should|what to) [*] eat|have) [*]
 	- Please let me have a look at your menu.
