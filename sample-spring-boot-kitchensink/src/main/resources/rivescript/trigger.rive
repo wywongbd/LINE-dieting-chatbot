@@ -93,7 +93,7 @@
     - <set age=<star>>Alright, then what is your height?{topic=collect_user_height}
 
     + *
-    - I am sorry. I do not understand. Can you input a number? What is your weight (in kg)?
+    - I am sorry. I do not understand. Can you input a number? What is your weight (in kg)? Please input an integer.
     
 < topic
 
@@ -104,7 +104,7 @@
     - <set height=<star>>Great. Are you allergic to milk? (Yes/No) {topic=collect_user_allergy_milk}
 
     + *
-    - I do not understand. Can you please input a number? What is your height?
+    - I do not understand. Can you please input a number? What is your height (in cm)? Please input an integer. 
     
 < topic
 

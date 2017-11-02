@@ -32,8 +32,7 @@ public class StateManager {
             new PostEatingState()
         };
     
-    private RiveScript bot;
-    
+    private RiveScript bot;    
     
     /**
      * Default constructor for StateManager
