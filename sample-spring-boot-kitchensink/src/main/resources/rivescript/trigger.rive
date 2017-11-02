@@ -44,15 +44,6 @@
 	- Okay see you later.
 < topic
 
-
-
-
-
-
-
-
-
-
 ///////////////////////////////////////collect_user_info
 > topic collect_user_name
 
@@ -87,10 +78,8 @@
     + [i] [am] [a] (@malenoun)
     - <set gender=male>You are a <star>. Ok, so what is your weight (in kg)?{topic=collect_user_weight}
 
-
     + [i] [am] [a] (@femalenoun)
     - <set gender=female>You are a <star>. Ok, so what is your weight (in kg)?{topic=collect_user_weight}
-
 
     + *
     - I am sorry. I do not understand. What is your sex?
@@ -105,8 +94,77 @@
 
     + *
     - I am sorry. I do not understand. Can you input a number? What is your weight (in kg)?
+    
+< topic
+
+
+>topic collect_user_height
+
+	+ [*] # [*]
+    - <set height=<star>>Great. Are you allergic to milk? (Yes/No) {topic=collect_user_allergy_milk}
+
+    + *
+    - I do not understand. Can you please input a number? What is your height?
+    
+< topic
+
+>topic collect_user_allergy_milk
+
+    + @yes [*]
+    - <set milk_allergy=true>I see, I'll take note of that. Are you allergic to eggs? (Yes/No) {topic=collect_user_allergy_eggs}
+
+
+    + @no [*]
+    - <set milk_allergy=false>Great, are you allergic to eggs? (Yes/No) {topic=collect_user_allergy_eggs}
+
+    + *
+    - I am sorry. I do not understand. Are you allergic to milk? (Yes/No)
 
 < topic
+
+>topic collect_user_allergy_eggs
+
+    + @yes [*]
+    - <set egg_allergy=true>I see, I'll take note of that. Are you allergic to nuts in general? (Yes/No) {topic=collect_user_allergy_nuts}
+
+
+    + @no [*]
+    - <set egg_allergy=false>Great, are you allergic to nuts in general? (Yes/No) {topic=collect_user_allergy_nuts}
+
+    + *
+    - I am sorry. I do not understand. Are you allergic to eggs? (Yes/No)
+
+< topic
+
+>topic collect_user_allergy_nuts
+
+    + @yes [*]
+    - <set nut_allergy=true>I see, I'll take note of that. Are you allergic to seafood? (Yes/No) {topic=collect_user_allergy_seafood}
+
+
+    + @no [*]
+    - <set nut_allergy=false>Great, are you allergic to seafood? (Yes/No) {topic=collect_user_allergy_seafood}
+
+    + *
+    - I am sorry. I do not understand. Are you allergic to nuts? (Yes/No)
+
+
+< topic
+
+>topic collect_user_allergy_seafood
+
+    + @yes [*]
+    - <set seafood_allergy=true>I see, I'll take note of that. Thank you for your cooperation, I have a better understanding of your physical conditions now. <set state=standby>{topic=standby}
+
+
+    + @no [*]
+    - <set seafood_allergy=false>Great, thanks for cooperating. I have a better understanding of your physical condition now. <set state=standby>{topic=standby}
+
+    + *
+    - I am sorry. I do not understand. Are you allergic to seafood? (Yes/No)
+
+< topic
+
 //////////////////////////////////////collect_user_info
 
 
@@ -141,14 +199,9 @@
 
 
 > topic recommend
-<<<<<<< HEAD
+
 	+ talk later
 	- Okay see you later.
 		^ {topic=standby} <set state=standby>
 < topic
-=======
-    + talk later
-    - Okay see you later.
-        ^ {topic=standby} <set state=standby>
-< topic
->>>>>>> MODIFIED RIVE FILE FORMAT
+
