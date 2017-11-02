@@ -8,8 +8,10 @@ public class StringPreprocessing {
 	Set<String> stopWordsSet = null;
 
 	// Constant values
-	private final int MIN_LINE_LENGTH = 4;
-	private final int MIN_WORD_LENGTH = 3;
+	private static final int MIN_LINE_LENGTH = 4;
+	protected static final int MAX_LINE_LENGTH = 150;
+	private static final int MIN_WORD_LENGTH = 3;
+	
 	private final String[] STOPWORDS_ARRAY = {
 			"with", "and", "you", "date",
 			"breakfast", "lunch", "dinner",
@@ -21,7 +23,7 @@ public class StringPreprocessing {
      * Default constructor for StringPreprocessing
      */
 	public StringPreprocessing() {
-		// Convert to hast set for faster search
+		// Convert to has set for faster search
 		stopWordsSet = new HashSet<String>();
 		for(String stopWord : STOPWORDS_ARRAY) {
 			stopWordsSet.add(stopWord);
@@ -44,6 +46,9 @@ public class StringPreprocessing {
 
 		String processUnitContent = null;    // Working variable
 		for(String unitContent : longLowerCaseString) {
+			// remove those with character > 150
+			if(unitContent.length()> MAX_LINE_LENGTH) {continue;}
+			
 			processUnitContent = processUnitContent(unitContent);
 			if(!processUnitContent.equals("")) {
 				result.add(processUnitContent);

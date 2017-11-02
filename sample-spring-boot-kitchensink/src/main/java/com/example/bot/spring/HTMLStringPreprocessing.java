@@ -14,7 +14,7 @@ import org.jsoup.helper.*;
 import org.jsoup.nodes.*;
 import org.jsoup.select.*;
 
-public class HTMLStringPreprocessing {
+public class HTMLStringPreprocessing extends StringPreprocessing{
 			
 
 	/**
@@ -26,8 +26,8 @@ public class HTMLStringPreprocessing {
      * which should be passed to getValidContent method
      * before passing into database for query to recommend food 
      */
-	
-  public static ArrayList<String> readFromUrl(String url) throws IOException {
+
+  public ArrayList<String> readFromUrl(String url) throws IOException {
     InputStream is = new URL(url).openStream();
     ArrayList<String> foodContent = new ArrayList<String>();
     try {
@@ -40,7 +40,7 @@ public class HTMLStringPreprocessing {
     	  	if(temp == null){ isNull = true;}
     	  	else{
     			Document doc = Jsoup.parse(temp);
-    			foodContent.add(doc.body().text());
+    			foodContent.add(doc.body().text().toLowerCase());
     		}
     		// TODO: else throw no menu exception		  
       }
@@ -50,4 +50,20 @@ public class HTMLStringPreprocessing {
     
     return foodContent;
   } 
+  
+  public ArrayList<String> processURLRawContent(ArrayList<String> URLRawContent){
+	  ArrayList<String> result = new ArrayList<String>();
+	  String processUnitContent = null;    // Working variable
+	  
+	  for(String unitContent: URLRawContent){
+		// remove those with character > 150
+		if(unitContent.length()> MAX_LINE_LENGTH) {continue;}
+		
+		processUnitContent = processUnitContent(unitContent);
+		if(!processUnitContent.equals("")) {
+			result.add(processUnitContent); 
+		}
+	  }
+	  return result;
+  }
 }
