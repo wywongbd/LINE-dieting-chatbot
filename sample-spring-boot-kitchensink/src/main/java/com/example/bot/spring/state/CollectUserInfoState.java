@@ -27,14 +27,22 @@ public class CollectUserInfoState extends State {
 			// write to DB
 			System.out.println("Writing to DB.... 1");
 			
+			SQLDatabaseEngine sql = null;
+			int age = null;
+			Double weight = null;
+			Double height = null;
+			String gender = null;
+			String[] allergyFood = null;
+			Vector<String> allergies = null;
+			
 			try {
-				SQLDatabaseEngine sql = new SQLDatabaseEngine();
-				int age = Integer.parseInt(bot.getUservar(userId, "age"));
-				Double weight = Double.parseDouble(bot.getUservar(userId, "weight"));
-				Double height = Double.parseDouble(bot.getUservar(userId, "height"));
-				String gender = bot.getUservar(userId, "gender");
-				String[] allergyFood = {"milk", "eggs", "nut", "seafood"};
-				Vector<String> allergies = new Vector<String>(0);
+				sql = new SQLDatabaseEngine();
+				age = Integer.parseInt(bot.getUservar(userId, "age"));
+				weight = Double.parseDouble(bot.getUservar(userId, "weight"));
+			    height = Double.parseDouble(bot.getUservar(userId, "height"));
+				gender = bot.getUservar(userId, "gender");
+				allergyFood = {"milk", "eggs", "nut", "seafood"};
+				allergies = new Vector<String>(0);
 			}
 			catch(Exception e) {
 				System.out.println("failed");
