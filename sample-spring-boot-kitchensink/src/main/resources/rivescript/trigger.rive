@@ -1,9 +1,8 @@
 > topic new_user
 	+ *
-	- Hi! I am your personal Dieting Chatbot!\n
-        ^ First, I need to ask you a few questions about your physical information.\n
-        ^ What is your age?
-		^ {topic=collect_user_info} <set state=collect_user_info>
+	- Hi! I am your personal Dieting Chatbot!
+        ^ First, I need to ask you a few questions about your physical information.
+        ^ What is your age?{topic=collect_user_info} <set state=collect_user_info>
 < topic
 
 
@@ -43,9 +42,9 @@
 
 > topic collect_user_info
 
-    + *
-    % hi i am your personal dieting chatbot first i need to ask you a few questions about your physical information what is your age
-	- Alright, then what is your sex?
+    + [*] # [*]
+    % hi I am your personal dieting chatbot first i need to ask you a few questions about your physical information what is your age
+    - Ok, you are <star1>. Alright, then what is your sex?
 
     + (@malenoun|@femalenoun)
     % alright then what is your sex

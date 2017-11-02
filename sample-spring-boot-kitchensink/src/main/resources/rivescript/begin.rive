@@ -1,4 +1,5 @@
 ! version = 2.0
+! local concat = newline
 
 > begin
   // If it is a new user, set the new_user topic and continue.
