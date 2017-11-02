@@ -58,24 +58,27 @@ public class StateManager {
      */
     public String chat(String userId, String text) throws Exception {
         String replyText = null;
-        if(text.matches(InputMenuState.URL_PATTERN_REGEX)){
+        try{
+            // Get the next state after current message
+            if (currentState.containsKey(userId) == false) {
+                currentState.put(userId, 1);
+            }
+            
+            if(text.matches(InputMenuState.URL_PATTERN_REGEX)){
                 // The text message is URL
                 replyText = ((InputMenuState) states[INPUT_MENU_STATE]).replyUrl(text);
-        }
-        else {
-                try{
-                // Get the next state after current message
-                    if (currentState.containsKey(userId) == false) {
-                        currentState.put(userId, 1);
-                    }
-                    replyText = bot.reply(userId, text);
-                currentState.put(userId, decodeState(bot.getUservar(userId, "state")));    
-                
-            } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
-                // Text is not recognized, does not modify current state
-                replyText = "Your text is not recognized by us!";
+                currentState.put(userId, INPUT_MENU_STATE);
             }
+            else {
+                replyText = bot.reply(userId, text);
+                currentState.put(userId, decodeState(bot.getUservar(userId, "state")));    
+            }
+            
+        } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
+            // Text is not recognized, does not modify current state
+            replyText = "Your text is not recognized by us!";
         }
+        
         if(replyText != null) {
             // Just for testing
             return replyText + " Current state is " +  Integer.toString(currentState.get(userId));
