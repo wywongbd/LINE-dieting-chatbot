@@ -1,5 +1,10 @@
-+ * 
-- Hi! I am your personal Dieting Chatbot! {topic=standby} <set state=standby>
+> begin
+  // If it is a new user, set the new_user topic and continue.
+  + request
+  * <get met> == undefined => <set met=true> {topic=new_user} {ok}
+  - {ok}
+< begin
+
 
 > topic new_user
 	+ *
