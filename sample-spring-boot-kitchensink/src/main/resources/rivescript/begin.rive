@@ -1,12 +1,10 @@
 ! version = 2.0
 
 > begin
-
   // If it is a new user, set the new_user topic and continue.
   + request
-  * <get met> == undefined => <set met=true> {topic=new_user} {ok}
+  * <get met> == undefined => {topic=new_user} <set met=true> {ok}
   - {ok}
-
 < begin
 
 // Bot Variables
