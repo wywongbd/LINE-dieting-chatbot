@@ -3,12 +3,15 @@ package com.example.bot.spring;
 import com.example.bot.spring.DietbotController.DownloadedContent;
 import com.example.bot.spring.StringPreprocessing;
 import com.example.bot.spring.HTMLStringPreprocessing;
+import com.rivescript.RiveScript;
 import com.asprise.ocr.Ocr;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Set;
+
+
 
 public class InputMenuState extends State {
     // Constant values
@@ -27,7 +30,7 @@ public class InputMenuState extends State {
      * @param text A String data type
      * @return A String data type
      */
-	public String reply(String text) {
+	public String reply(String userId, String text, RiveScript bot) {
 		return "";
 	}
 

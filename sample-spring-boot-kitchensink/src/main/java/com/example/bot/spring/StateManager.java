@@ -71,7 +71,7 @@ public class StateManager {
 //                bot.setUservar(userId, "state", "input_menu");
             }
             else {
-                replyText = bot.reply(userId, text);
+                replyText = states[currentState.get(userId)].reply(userId, text, bot);
                 currentState.put(userId, decodeState(bot.getUservar(userId, "state")));    
             }
             
@@ -136,4 +136,5 @@ public class StateManager {
                 return 4;
         }
     }
+    
 }
