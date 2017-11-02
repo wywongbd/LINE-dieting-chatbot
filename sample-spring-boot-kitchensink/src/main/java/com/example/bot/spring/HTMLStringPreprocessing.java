@@ -31,14 +31,14 @@ public class HTMLStringPreprocessing extends StringPreprocessing{
     InputStream is = new URL(url).openStream();
     ArrayList<String> foodContent = new ArrayList<String>();
     try {
-      BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-      String temp; // dummy working variable
+    		BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+        	String temp; // dummy working variable
       boolean isNull = false;
       while (!isNull)
       {
-    	  temp = rd.readLine();
+    	  	temp = rd.readLine();
     	  	if(temp == null){ isNull = true;}
-    	  	else{
+    	  	else if(temp.toLowerCase().contains("<h") || temp.toLowerCase().contains("<p")) {
     			Document doc = Jsoup.parse(temp);
     			foodContent.add(doc.body().text().toLowerCase());
     		}

@@ -68,8 +68,8 @@ public class StateManager {
                 // The text message is URL
                 replyText = ((InputMenuState) states[INPUT_MENU_STATE]).replyUrl(text);
                 currentState.put(userId, INPUT_MENU_STATE);
-                bot.setUservar(userId, "topic", "input_menu");
-                bot.setUservar(userId, "state", "input_menu");
+//                bot.setUservar(userId, "topic", "input_menu");
+//                bot.setUservar(userId, "state", "input_menu");
             }
             else {
                 replyText = bot.reply(userId, text);
@@ -103,8 +103,8 @@ public class StateManager {
             replyText = ((InputMenuState) states[INPUT_MENU_STATE]).replyImage(jpg);
             // If above line does not return exception, then the image is recognized as menu
             currentState.put(userId, INPUT_MENU_STATE);
-            bot.setUservar(userId, "topic", "input_menu");
-            bot.setUservar(userId, "state", "input_menu");
+//            bot.setUservar(userId, "topic", "input_menu");
+//            bot.setUservar(userId, "state", "input_menu");
         } catch (Exception e) {    // Modify to custom exception ImageNotRecognized later
             // Image is not recognized as menu, does not modify current state
             replyText = "Your image is not recognized by us!";

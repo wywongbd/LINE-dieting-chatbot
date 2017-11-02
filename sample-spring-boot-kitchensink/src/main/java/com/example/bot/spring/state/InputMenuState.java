@@ -41,10 +41,10 @@ public class InputMenuState extends State {
     		try{
   			HTMLStringPreprocessing h = new HTMLStringPreprocessing();
   			ArrayList<String> URLRawContent = h.readFromUrl(text);
-  			ArrayList<String> processedUrlContent = h.processURLRawContent(URLRawContent);
+//  			ArrayList<String> processedUrlContent = h.processURLRawContent(URLRawContent);
 
   			// Convert to string to be replied as message for testing
-  			return Arrays.toString(processedUrlContent.toArray());
+  			return Arrays.toString(URLRawContent.toArray());
   		  } catch(Exception e){ 
   			  //TODO: handle user input invalid url
   			  return "Your text has been well received! This URL is not reachable :(";
