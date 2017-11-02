@@ -32,7 +32,7 @@ public class CollectUserInfoState extends State {
 			Double weight = null;
 			Double height = null;
 			String gender = null;
-			String[] allergyFood = null;
+			String[] allergyFood = {"milk", "eggs", "nut", "seafood"};
 			Vector<String> allergies = null;
 			
 			try {
@@ -41,7 +41,6 @@ public class CollectUserInfoState extends State {
 				weight = Double.parseDouble(bot.getUservar(userId, "weight"));
 			    height = Double.parseDouble(bot.getUservar(userId, "height"));
 				gender = bot.getUservar(userId, "gender");
-				allergyFood = {"milk", "eggs", "nut", "seafood"};
 				allergies = new Vector<String>(0);
 			}
 			catch(Exception e) {
