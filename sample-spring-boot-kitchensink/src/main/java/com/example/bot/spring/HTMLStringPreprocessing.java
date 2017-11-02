@@ -95,8 +95,8 @@ public class HTMLStringPreprocessing extends StringPreprocessing{
 		      is.close();
 		    }
 		    return foodContent;
-	  	} 
-	  
+	  	}
+
 		public ArrayList<String> processURLRawContent(ArrayList<String> URLRawContent){
 			ArrayList<String> result = new ArrayList<String>();
 			String processUnitContentString = null;    // Working variable
