@@ -48,6 +48,10 @@
 
 > topic collect_user_info
 
+    + [*] # [*]
+    % hi i am your personal dieting chatbot first i need to ask you a few questions about your physical information what is your age
+    - Ok, you are <star1>. Alright, then what is your sex?
+
     + (@malenoun|@femalenoun)
     % alright then what is your sex
     - Ok, so what is your height (in meters)?
