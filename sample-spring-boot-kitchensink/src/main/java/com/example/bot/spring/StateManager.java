@@ -36,13 +36,13 @@ public class StateManager {
      */
     public StateManager() {
 
-    	// Rivescript object
-        bot = new RiveScript();
-        
-    	// Load rive files for Rivescript object
-    	File resourcesDirectory = new File("src/main/resources/rivescript/trigger.rive");
-    	bot.loadFile(resourcesDirectory.getAbsolutePath());
-    	bot.sortReplies();
+	    	// Rivescript objectg
+	    	bot = new RiveScript();
+
+	    	// Load rive files for Rivescript object
+	    	File resourcesDirectory = new File("sample-spring-boot-kitchensink/src/main/resources/rivescript");
+	    	bot.loadDirectory(resourcesDirectory.getAbsolutePath());
+	    	bot.sortReplies();
     }
 
     /**
@@ -54,7 +54,7 @@ public class StateManager {
         String replyText = null;
         try{
             // Get the next state after current message
-        	replyText = bot.reply("user", text);
+        		replyText = bot.reply("user", text);
             currentState = decodeState(bot.getUservar("user", "state"));    // Check trigger
             
         } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
