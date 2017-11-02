@@ -44,14 +44,14 @@ public class StringPreprocessing {
 		String[] splitOcrRawString = ocrRawString.split("\\r?\\n");
 		ArrayList<String> longLowerCaseString = getLongLowerCaseString(splitOcrRawString, MIN_LINE_LENGTH);
 
-		String processUnitContent = null;    // Working variable
+		String processUnitContentString = null;    // Working variable
 		for(String unitContent : longLowerCaseString) {
 			// remove those with character > 150
 			if(unitContent.length()> MAX_LINE_LENGTH) {continue;}
-			
-			processUnitContent = processUnitContent(unitContent);
-			if(!processUnitContent.equals("")) {
-				result.add(processUnitContent);
+
+			processUnitContentString = processUnitContent(unitContent);
+			if(!processUnitContentString.equals("")) {
+				result.add(processUnitContentString);
 			}
 		}
 		return result;
@@ -63,12 +63,12 @@ public class StringPreprocessing {
      * @return A String data type
      */
 	public String processUnitContent(String unitContent){
-		String processUnitContent = null;    // Working variable
-		processUnitContent = removeSpecialCharacters(unitContent);
-		processUnitContent = removeShortAndStopWord(processUnitContent, MIN_WORD_LENGTH, stopWordsSet);
-		processUnitContent = removeExtraSpace(processUnitContent);
+		String processUnitContentString = null;    // Working variable
+		processUnitContentString = removeSpecialCharacters(unitContent);
+		processUnitContentString = removeShortAndStopWord(processUnitContentString, MIN_WORD_LENGTH, stopWordsSet);
+		processUnitContentString = removeExtraSpace(processUnitContentString);
 
-		return processUnitContent;
+		return processUnitContentString;
 	}
 	
     /**

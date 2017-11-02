@@ -53,15 +53,15 @@ public class HTMLStringPreprocessing extends StringPreprocessing{
   
   public ArrayList<String> processURLRawContent(ArrayList<String> URLRawContent){
 	  ArrayList<String> result = new ArrayList<String>();
-	  String processUnitContent = null;    // Working variable
+	  String processUnitContentString = null;    // Working variable
 	  
 	  for(String unitContent: URLRawContent){
 		// remove those with character > 150
 		if(unitContent.length()> MAX_LINE_LENGTH) {continue;}
 		
-		processUnitContent = processUnitContent(unitContent);
-		if(!processUnitContent.equals("")) {
-			result.add(processUnitContent); 
+		processUnitContentString = processUnitContent(unitContent);
+		if(!processUnitContentString.equals("")) {
+			result.add(processUnitContentString); 
 		}
 	  }
 	  return result;
