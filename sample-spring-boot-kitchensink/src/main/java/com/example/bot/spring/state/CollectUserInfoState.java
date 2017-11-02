@@ -25,31 +25,43 @@ public class CollectUserInfoState extends State {
 		
 		if (currentState != afterState) {
 			// write to DB
-			System.out.println("Writing to DB....");
-			SQLDatabaseEngine sql = new SQLDatabaseEngine();
-			int age = Integer.parseInt(bot.getUservar(userId, "age"));
-			Double weight = Double.parseDouble(bot.getUservar(userId, "weight"));
-			Double height = Double.parseDouble(bot.getUservar(userId, "height"));
-			String gender = bot.getUservar(userId, "gender");
-			String[] allergyFood = {"milk", "eggs", "nut", "seafood"};
-			Vector<String> allergies = new Vector<String>(0);
+			System.out.println("Writing to DB.... 1");
 			
-			System.out.println("Writing to DB....");
+			try {
+				SQLDatabaseEngine sql = new SQLDatabaseEngine();
+				int age = Integer.parseInt(bot.getUservar(userId, "age"));
+				Double weight = Double.parseDouble(bot.getUservar(userId, "weight"));
+				Double height = Double.parseDouble(bot.getUservar(userId, "height"));
+				String gender = bot.getUservar(userId, "gender");
+				String[] allergyFood = {"milk", "eggs", "nut", "seafood"};
+				Vector<String> allergies = new Vector<String>(0);
+			}
+			catch(Exception e) {
+				System.out.println("failed");
+			}
+			
+			System.out.println("Writing to DB.... 2");
 			
 			for (String food: allergyFood) {
 				if (bot.getUservar(userId, food + "_allergy").equals("true")) {
 					allergies.add(food);
+					
 				}
 			}
 			
-//			try {
-//				sql.writeUserInfo(userId, age, gender, height, weight, allergies.toArray(new String[allergies.size()]));
-//			}
-//			catch(Exception e) {
-//				System.out.println("Exception while inserting user info into user database: " + e.toString());
-//			}
+			String[] temp = allergies.toArray(new String[allergies.size()]);
+			
+			for (String food: temp) {
+				System.out.println(food);
+			}
+			
+			try {
+				sql.writeUserInfo(userId, age, gender, height, weight, temp);
+			}
+			catch(Exception e) {
+				System.out.println("Exception while inserting user info into user database: " + e.toString());
+			}
 		}
-		System.out.println("Writing to DB....");
 		return output;
 	}
 }
