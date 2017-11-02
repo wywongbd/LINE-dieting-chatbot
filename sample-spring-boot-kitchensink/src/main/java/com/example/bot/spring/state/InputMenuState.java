@@ -40,8 +40,8 @@ public class InputMenuState extends State {
     public String replyUrl(String text) {
     		try{
   			HTMLStringPreprocessing h = new HTMLStringPreprocessing();
-  			h.readFromUrl(text)
-  			ArrayList<String> processedUrlContent = h.processURLRawContent();
+  			ArrayList<String> URLRawContent = h.readFromUrl(text);
+  			ArrayList<String> processedUrlContent = h.processURLRawContent(URLRawContent);
 
   			// Convert to string to be replied as message for testing
   			return Arrays.toString(processedUrlContent.toArray());
