@@ -36,12 +36,13 @@ public class StateManager {
      */
     public StateManager() {
 
-	    	// Rivescript object
+	    	// Rivescript objectg
 	    	bot = new RiveScript();
 
 	    	// Load rive files for Rivescript object
 	    	File resourcesDirectory = new File("src/main/resources/rivescript/trigger.rive");
-	    	bot.loadFile(resourcesDirectory.getAbsolutePath());
+//	    	bot.loadFile(resourcesDirectory.getAbsolutePath());
+	    	bot.loadFile(resourcesDirectory);
 //	    	bot.sortReplies();
     }
 
