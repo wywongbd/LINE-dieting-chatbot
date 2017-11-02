@@ -28,10 +28,10 @@ public class CollectUserInfoState extends State {
 			System.out.println("Writing to DB.... 1");
 			
 			SQLDatabaseEngine sql = null;
-			int age = null;
-			Double weight = null;
-			Double height = null;
-			String gender = null;
+			int age = 0;
+			Double weight = 0;
+			Double height = 0;
+			String gender = "";
 			String[] allergyFood = {"milk", "eggs", "nut", "seafood"};
 			Vector<String> allergies = null;
 			
