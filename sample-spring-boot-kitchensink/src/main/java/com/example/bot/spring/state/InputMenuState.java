@@ -39,7 +39,7 @@ public class InputMenuState extends State {
 			bot.setUservar(userId, "url_received", "true");
 			urlContent = replyUrl(text);
 			replyText = bot.reply(userId, "InputUrl");
-            currentState.put(userId, INPUT_MENU_STATE);
+
             bot.setUservar(userId, "url_received", "false");
             bot.setUservar(userId, "topic", "recommend");
             bot.setUservar(userId, "state", "recommend");
