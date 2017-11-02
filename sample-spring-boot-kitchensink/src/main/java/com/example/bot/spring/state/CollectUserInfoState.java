@@ -32,7 +32,7 @@ public class CollectUserInfoState extends State {
 			Double weight = 1.0;
 			Double height = 1.0;
 			String gender = "";
-			String[] allergyFood = {"milk", "eggs", "nut", "seafood"};
+			String[] allergyFood = {"milk", "egg", "nut", "seafood"};
 			Vector<String> allergies = null;
 			
 			try {
@@ -52,7 +52,7 @@ public class CollectUserInfoState extends State {
 			for (String food: allergyFood) {
 				if (bot.getUservar(userId, food + "_allergy").equals("true")) {
 					allergies.add(food);
-					
+					System.out.println(food);				
 				}
 			}
 			
@@ -62,6 +62,8 @@ public class CollectUserInfoState extends State {
 			for (String food: temp) {
 				System.out.println(food);
 			}
+			
+			
 			
 			try {
 				sql.writeUserInfo(userId, age, gender, height, weight, temp);
