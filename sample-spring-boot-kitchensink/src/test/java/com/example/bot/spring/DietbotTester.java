@@ -51,6 +51,14 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.jsoup.*;
+import org.jsoup.helper.*;
+import org.jsoup.nodes.*;
+import org.jsoup.select.*;
+
 @RunWith(SpringRunner.class)
 //@SpringBootTest(classes = { DietbotTester.class, DatabaseEngine.class })
 @SpringBootTest(classes = { DietbotTester.class, SQLDatabaseEngine.class })
@@ -168,4 +176,38 @@ public class DietbotTester {
  		String reply1 = bot.reply("user1", "MyTestingSubroutine abc");
  		assertThat(reply1).isEqualTo("yes");
  	}
+ 	
+ 	@Test
+	public void testURLtoJSON() throws Exception{
+		
+		boolean thrown = false;
+		String output = null;
+		final String realOutput = "{\"Network\":[{\"2G bands\":\"GSM 900 / 1800 - SIM 1 & SIM 2\",\"Technology\":\"GSM\",\"GPRS\":\"Class 12\",\"EDGE\":\"Yes\"}]}";
+		try{
+			final String HTML = "<table cellspacing=\"0\" style=\"height: 24px;\">\r\n<tr class=\"tr-hover\">\r\n<th rowspan=\"15\" scope=\"row\">Network</th>\r\n<td class=\"ttl\"><a href=\"network-bands.php3\">Technology</a></td>\r\n<td class=\"nfo\"><a href=\"#\" class=\"link-network-detail collapse\">GSM</a></td>\r\n</tr>\r\n<tr class=\"tr-toggle\">\r\n<td class=\"ttl\"><a href=\"network-bands.php3\">2G bands</a></td>\r\n<td class=\"nfo\">GSM 900 / 1800 - SIM 1 & SIM 2</td>\r\n</tr>   \r\n<tr class=\"tr-toggle\">\r\n<td class=\"ttl\"><a href=\"glossary.php3?term=gprs\">GPRS</a></td>\r\n<td class=\"nfo\">Class 12</td>\r\n</tr>   \r\n<tr class=\"tr-toggle\">\r\n<td class=\"ttl\"><a href=\"glossary.php3?term=edge\">EDGE</a></td>\r\n<td class=\"nfo\">Yes</td>\r\n</tr>\r\n</table>";
+			Document document = Jsoup.parse(HTML);
+			Element table = document.select("table").first();
+			String arrayName = table.select("th").first().text();
+			JSONObject jsonObj = new JSONObject();
+			JSONArray jsonArr = new JSONArray();
+			Elements ttls = table.getElementsByClass("ttl");
+			Elements nfos = table.getElementsByClass("nfo");
+			JSONObject jo = new JSONObject();
+			for (int i = 0, l = ttls.size(); i < l; i++) {
+			    String key = ttls.get(i).text();
+			    String value = nfos.get(i).text();
+			    jo.put(key, value);
+			}
+			jsonArr.put(jo);
+			jsonObj.put(arrayName, jsonArr);
+			output = jsonObj.toString();
+			
+    
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(output).isEqualTo(realOutput);
+	}
 }
+ 	
+
