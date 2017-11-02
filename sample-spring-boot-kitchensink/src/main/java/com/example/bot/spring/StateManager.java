@@ -94,8 +94,7 @@ public class StateManager {
             // Pass the image into InputMenuState to check if the image is recognized as menu
             replyText = ((InputMenuState) states[INPUT_MENU_STATE]).replyImage(userId, jpg, bot);
             // If above line does not return exception, then the image is recognized as menu
-            currentState.put(userId, INPUT_MENU_STATE);
-            bot.setUservar(userId, "topic",  decodeState(bot.getUservar(userId, "state")));
+            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));
 
         } catch (Exception e) {    // Modify to custom exception ImageNotRecognized later
             // Image is not recognized as menu, does not modify current state
