@@ -40,7 +40,7 @@ public class StateManager {
 	    	bot = new RiveScript();
 
 	    	// Load rive files for Rivescript object
-	    	File resourcesDirectory = new File("/src/main/resources/rivescript");
+	    	File resourcesDirectory = new File("sample-spring-boot-kitchensink/src/main/resources/rivescript");
 //	    	bot.loadFile(resourcesDirectory.getAbsolutePath());
 	    	bot.loadDirectory(resourcesDirectory.getAbsolutePath());
 //	    	bot.sortReplies();
