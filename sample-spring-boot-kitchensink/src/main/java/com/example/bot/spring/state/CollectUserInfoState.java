@@ -22,10 +22,10 @@ public class CollectUserInfoState extends State {
 		int currentState = decodeState(bot.getUservar(userId, "state")); 
 		String output = bot.reply(userId, text);
 		int afterState = decodeState(bot.getUservar(userId, "state"));
+		SQLDatabaseEngine sql = new SQLDatabaseEngine();
 		
 		if (currentState != afterState) {
 			// write to DB
-			SQLDatabaseEngine sql = new SQLDatabaseEngine();
 			int age = Integer.parseInt(bot.getUservar(userId, "age"));
 			Double weight = Double.parseDouble(bot.getUservar(userId, "weight"));
 			Double height = Double.parseDouble(bot.getUservar(userId, "height"));
