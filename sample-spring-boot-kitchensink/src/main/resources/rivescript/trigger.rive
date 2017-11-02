@@ -10,6 +10,9 @@
 	- Sorry, I'm not sure how to respond to that.
 	- Sorry, I do not understand. Please try saying it in another way.
 
+	+ [*] my id [*]
+	- Your ID is <id>.
+
 	+ [*] google *
 	- Google results for "<star>": <a href="http://google.com/search?q=<star>">Click Here</a>
 
@@ -17,7 +20,7 @@
 	- Okay, I will now ask you a few questions to <star1> your <star2>.
 		^ {topic=collect_user_info} <set state=collect_user_info>
 
-	+ [*] ([eating] [*] restaurant|[help me] (look|check out) [*] menu|(recommend|recommendation|suggest|suggestion|decide|should) [*] eat|have) [*]
+	+ [*] ([eating] [*] restaurant|[help me] (look|check out) [*] menu|(recommend|recommendation|suggest|suggestion|decide|should|what to) [*] eat|have) [*]
 	- Please let me have a look at your menu.
 		^ {topic=input_menu} <set state=input_menu>
 
