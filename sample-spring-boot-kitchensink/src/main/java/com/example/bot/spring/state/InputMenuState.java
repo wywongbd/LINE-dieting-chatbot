@@ -47,7 +47,7 @@ public class InputMenuState extends State {
 			}
 			catch (Exception e) {
 				urlContent = "";
-				replyText = "Your text has been well received! But this URL is not reachable. :("
+				replyText = "Your text has been well received! But this URL is not reachable. :(";
 			}
 
             return replyText + urlContent;
