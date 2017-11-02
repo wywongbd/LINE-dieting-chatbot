@@ -36,14 +36,20 @@ public class InputMenuState extends State {
         
 		if(text.matches(InputMenuState.URL_PATTERN_REGEX)){
             // The text message is URL
-			bot.setUservar(userId, "url_received", "true");
-			urlContent = replyUrl(text);
-			replyText = bot.reply(userId, "InputUrl");
+			
+			try {
+				urlContent = replyUrl(text);
+				bot.setUservar(userId, "url_received", "true");
+				replyText = bot.reply(userId, "InputUrl");
+	            bot.setUservar(userId, "url_received", "false");
+	            bot.setUservar(userId, "topic", "recommend");
+	            bot.setUservar(userId, "state", "recommend");
+			}
+			catch (Exception e) {
+				urlContent = "";
+				replyText = "Your text has been well received! But this URL is not reachable. :("
+			}
 
-            bot.setUservar(userId, "url_received", "false");
-            bot.setUservar(userId, "topic", "recommend");
-            bot.setUservar(userId, "state", "recommend");
-            
             return replyText + urlContent;
         
 		}
@@ -60,18 +66,18 @@ public class InputMenuState extends State {
      * @param text A String data type
      * @return A String data type
      */
-    public String replyUrl(String text) {
-    		try{
+    public String replyUrl(String text) throws Exception {
+//    		try{
   			HTMLStringPreprocessing h = new HTMLStringPreprocessing();
   			ArrayList<String> URLRawContent = h.readFromUrl(text);
   			ArrayList<String> processedUrlContent = h.processURLRawContent(URLRawContent);
 
   			// Convert to string to be replied as message for testing
   			return Arrays.toString(processedUrlContent.toArray());
-  		  } catch(Exception e){ 
+//  		  } catch(Exception e){ 
   			  //TODO: handle user input invalid url
-  			  return "Your text has been well received! This URL is not reachable :(";
-  		  }
+//  			  return "Your text has been well received! This URL is not reachable :(";
+//  		  }
     }
     
     /**
