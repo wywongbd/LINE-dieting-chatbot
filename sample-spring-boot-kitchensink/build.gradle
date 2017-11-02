@@ -21,8 +21,8 @@ dependencies {
     compile group: 'postgresql', name: 'postgresql', version: '9.0-801.jdbc4'
     compile "com.rivescript:rivescript-core:0.10.0"
     compile group: "com.asprise.ocr", name: "java-ocr-api", version: "15.3.0.3"
-    compile 'org.jsoup:jsoup:1.10.3'
     compile("org.json:json:20141113")
+    compile 'org.jsoup:jsoup:1.10.3'
 }
 
 test {

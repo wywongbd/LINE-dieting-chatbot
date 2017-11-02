@@ -44,6 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.example.bot.spring.DatabaseEngine;
 
+
 import com.rivescript.Config;
 import com.rivescript.RiveScript;
 import com.rivescript.macro.Subroutine;
@@ -176,8 +177,7 @@ public class DietbotTester {
  		String reply1 = bot.reply("user1", "MyTestingSubroutine abc");
  		assertThat(reply1).isEqualTo("yes");
  	}
- 	
- 	@Test
+  
 	public void testURLtoJSON() throws Exception{
 		
 		boolean thrown = false;
