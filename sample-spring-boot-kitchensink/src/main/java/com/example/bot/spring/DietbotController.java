@@ -153,7 +153,7 @@ public class DietbotController {
 	private void handleImageContent(String replyToken, Event event, DownloadedContent jpg) {
 		String reply = null;
     	try {
-    		reply = stateManager.chat(jpg);
+    		reply = stateManager.chat(event.getSource().getUserId(), jpg);
     	} catch (Exception e) {
     		reply = defaultString;
     	}

@@ -3,8 +3,11 @@
 */
 
 package com.example.bot.spring;
+
 import com.rivescript.RiveScript;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.example.bot.spring.DietbotController.DownloadedContent;
 
@@ -18,7 +21,8 @@ public class StateManager {
     private final int[] FROM_STANDBY_STATE = {1, 2, 3, 5};
 
     // Value to keep track current state
-    private int currentState = 0;
+    private static Map<String, Integer> currentState; 
+    
     private State[] states = {
             new StandbyState(),
             new CollectUserInfoState(),
@@ -38,6 +42,8 @@ public class StateManager {
 
 	    	// Rivescript objectg
 	    	bot = new RiveScript();
+	    	
+	    	currentState = new HashMap<String, Integer>();
 
 	    	// Load rive files for Rivescript object
 	    	File resourcesDirectory = new File("sample-spring-boot-kitchensink/src/main/resources/rivescript");
@@ -54,8 +60,12 @@ public class StateManager {
         String replyText = null;
         try{
             // Get the next state after current message
-        		replyText = bot.reply(userId, text);
-            currentState = decodeState(bot.getUservar(userId, "state"));    // Check trigger
+        	if (currentState.containsKey(userId) == false) {
+        		currentState.put(userId, 1);
+        	}
+     
+        	replyText = bot.reply(userId, text);
+            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));    
             
         } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
             // Text is not recognized, does not modify current state
@@ -63,7 +73,7 @@ public class StateManager {
         }
         if(replyText != null) {
             // Just for testing
-            return replyText + " Current state is " +  Integer.toString(currentState);
+            return replyText + " Current state is " +  Integer.toString(currentState.get(userId));
         }
         throw new Exception("NOT FOUND");
     }
@@ -73,20 +83,23 @@ public class StateManager {
      * @param jpg A DownloadedContent data type
      * @return A String data type
      */
-    public String chat(DownloadedContent jpg) throws Exception {
+    public String chat(String userId, DownloadedContent jpg) throws Exception {
         String replyText = null;
         try{
+        	if (currentState.containsKey(userId) == false) {
+        		currentState.put(userId, INPUT_MENU_STATE);
+        	}
             // Pass the image into InputMenuState to check if the image is recognized as menu
             replyText = ((InputMenuState) states[INPUT_MENU_STATE]).reply(jpg);
             // If above line does not return exception, then the image is recognized as menu
-            currentState = INPUT_MENU_STATE;
+            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));  
         } catch (Exception e) {    // Modify to custom exception ImageNotRecognized later
             // Image is not recognized as menu, does not modify current state
             replyText = "Your image is not recognized by us!";
         }
         if(replyText != null) {
             // Just for testing
-            return replyText + " Current state is " +  Integer.toString(currentState);
+            return replyText + " Current state is " +  Integer.toString(currentState.get(userId));
         }
         throw new Exception("NOT FOUND");
     }
