@@ -61,6 +61,7 @@ public class StateManager {
             // Get the next state after current message
             if (currentState.containsKey(userId) == false) {
                 currentState.put(userId, 1);
+                bot.setUservar(userId, "state", "collect_user_info");
             }
             
             if(text.matches(InputMenuState.URL_PATTERN_REGEX)){
