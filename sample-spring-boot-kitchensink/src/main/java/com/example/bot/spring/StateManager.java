@@ -32,23 +32,22 @@ public class StateManager {
             new PostEatingState()
         };
     
-    private RiveScript bot;
-    
+    private RiveScript bot;    
     
     /**
      * Default constructor for StateManager
      */
     public StateManager() {
 
-	    	// Rivescript objectg
-	    	bot = new RiveScript();
-	    	
-	    	currentState = new HashMap<String, Integer>();
+            // Rivescript objectg
+            bot = new RiveScript();
+            
+            currentState = new HashMap<String, Integer>();
 
-	    	// Load rive files for Rivescript object
-	    	File resourcesDirectory = new File("sample-spring-boot-kitchensink/src/main/resources/rivescript");
-	    	bot.loadDirectory(resourcesDirectory.getAbsolutePath());
-	    	bot.sortReplies();
+            // Load rive files for Rivescript object
+            File resourcesDirectory = new File("sample-spring-boot-kitchensink/src/main/resources/rivescript");
+            bot.loadDirectory(resourcesDirectory.getAbsolutePath());
+            bot.sortReplies();
     }
 
     /**
@@ -60,17 +59,27 @@ public class StateManager {
         String replyText = null;
         try{
             // Get the next state after current message
-        	if (currentState.containsKey(userId) == false) {
-        		currentState.put(userId, 1);
-        	}
-     
-        	replyText = bot.reply(userId, text);
-            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));    
+            if (currentState.containsKey(userId) == false) {
+                currentState.put(userId, 1);
+            }
+            
+            if(text.matches(InputMenuState.URL_PATTERN_REGEX)){
+                // The text message is URL
+                replyText = ((InputMenuState) states[INPUT_MENU_STATE]).replyUrl(text);
+                currentState.put(userId, INPUT_MENU_STATE);
+//                bot.setUservar(userId, "topic", "input_menu");
+//                bot.setUservar(userId, "state", "input_menu");
+            }
+            else {
+                replyText = states[currentState.get(userId)].reply(userId, text, bot);
+                currentState.put(userId, decodeState(bot.getUservar(userId, "state")));    
+            }
             
         } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
             // Text is not recognized, does not modify current state
             replyText = "Your text is not recognized by us!";
         }
+        
         if(replyText != null) {
             // Just for testing
             return replyText + " Current state is " +  Integer.toString(currentState.get(userId));
@@ -86,13 +95,15 @@ public class StateManager {
     public String chat(String userId, DownloadedContent jpg) throws Exception {
         String replyText = null;
         try{
-        	if (currentState.containsKey(userId) == false) {
-        		currentState.put(userId, INPUT_MENU_STATE);
-        	}
+            if (currentState.containsKey(userId) == false) {
+                currentState.put(userId, INPUT_MENU_STATE);
+            }
             // Pass the image into InputMenuState to check if the image is recognized as menu
-            replyText = ((InputMenuState) states[INPUT_MENU_STATE]).reply(jpg);
+            replyText = ((InputMenuState) states[INPUT_MENU_STATE]).replyImage(jpg);
             // If above line does not return exception, then the image is recognized as menu
-            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));  
+            currentState.put(userId, INPUT_MENU_STATE);
+//            bot.setUservar(userId, "topic", "input_menu");
+//            bot.setUservar(userId, "state", "input_menu");
         } catch (Exception e) {    // Modify to custom exception ImageNotRecognized later
             // Image is not recognized as menu, does not modify current state
             replyText = "Your image is not recognized by us!";
@@ -110,19 +121,20 @@ public class StateManager {
      * @return A int data type
      */
     public int decodeState(String text) {
-    	switch(text) {
-	    	case "standby":
-	    		return 0;
-	    	case "collect_user_info":
-	    		return 1;
-	    	case "input_menu":
-	    		return 3;
-	    	case "post_eating":
-	    		return 5;
-	    	case "provide_info":
-	    		return 2;
-	    	default:
-	    		return 4;
+        switch(text) {
+            case "standby":
+                return 0;
+            case "collect_user_info":
+                return 1;
+            case "input_menu":
+                return 3;
+            case "post_eating":
+                return 5;
+            case "provide_info":
+                return 2;
+            default:
+                return 4;
         }
     }
+    
 }

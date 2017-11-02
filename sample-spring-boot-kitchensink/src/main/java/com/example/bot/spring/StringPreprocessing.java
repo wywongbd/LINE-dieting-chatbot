@@ -13,10 +13,25 @@ public class StringPreprocessing {
 	private static final int MIN_WORD_LENGTH = 3;
 	
 	private final String[] STOPWORDS_ARRAY = {
-			"with", "and", "you", "date",
+			"with", "and", "you", "your", "our", "date", "choice", "served", "served", "get",
+			"are", "is", "am", "were", "was",
 			"breakfast", "lunch", "dinner",
 			"special", "restaurant", "offer", "order", "free",
-			"monday", "tuesday", "wednesday", "thursday", "friday"
+			"monday", "tuesday", "wednesday", "thursday", "friday",
+			"january", "february", "march", "april", "may", "june",
+			"july", "august", "september", "october", "november", "december",
+			"main", "dishes", "more", "cal", "side", "choice", "come", "charge", "signature",
+			"item", "details", "select", "for", "have", "has", "had", "available",
+			"premium", "seasoned", "less", "additional", "menus", "ultimate",
+			"terms", "conditions", "privacy", "policy", "condition",
+			"tomorrow", "today", "yesterday", "subject", "based",
+			"currently", "viewing", "website", "book", "stay", "signup", "find", "the",
+			"type", "book", "reserve", "reservation", "booking", "desktop", "version", "website",
+			"when", "will", "numbers", "how", "many", "adults", "children", "guests", "hotel",
+			"season", "seasons", "hong", "kong", "nights", "days",
+			"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+			"traditional", "fresh", "buffet", "eat", "meal", "download", "food", "phone", "specialties",
+			"set", "alacarte", "table"
 	};
 
 	/**
@@ -44,14 +59,14 @@ public class StringPreprocessing {
 		String[] splitOcrRawString = ocrRawString.split("\\r?\\n");
 		ArrayList<String> longLowerCaseString = getLongLowerCaseString(splitOcrRawString, MIN_LINE_LENGTH);
 
-		String processUnitContent = null;    // Working variable
+		String processUnitContentString = null;    // Working variable
 		for(String unitContent : longLowerCaseString) {
 			// remove those with character > 150
 			if(unitContent.length()> MAX_LINE_LENGTH) {continue;}
-			
-			processUnitContent = processUnitContent(unitContent);
-			if(!processUnitContent.equals("")) {
-				result.add(processUnitContent);
+
+			processUnitContentString = processUnitContent(unitContent);
+			if(!processUnitContentString.equals("")) {
+				result.add(processUnitContentString);
 			}
 		}
 		return result;
@@ -63,12 +78,12 @@ public class StringPreprocessing {
      * @return A String data type
      */
 	public String processUnitContent(String unitContent){
-		String processUnitContent = null;    // Working variable
-		processUnitContent = removeSpecialCharacters(unitContent);
-		processUnitContent = removeShortAndStopWord(processUnitContent, MIN_WORD_LENGTH, stopWordsSet);
-		processUnitContent = removeExtraSpace(processUnitContent);
+		String processUnitContentString = null;    // Working variable
+		processUnitContentString = removeSpecialCharacters(unitContent);
+		processUnitContentString = removeShortAndStopWord(processUnitContentString, MIN_WORD_LENGTH, stopWordsSet);
+		processUnitContentString = removeExtraSpace(processUnitContentString);
 
-		return processUnitContent;
+		return processUnitContentString;
 	}
 	
     /**
