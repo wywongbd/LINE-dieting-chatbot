@@ -42,12 +42,12 @@ public class CollectUserInfoState extends State {
 				}
 			}
 			
-			try {
-				sql.writeUserInfo(userId, age, gender, height, weight, allergies.toArray(new String[allergies.size()]));
-			}
-			catch(Exception e) {
-				System.out.println("Exception while inserting user info into user database: " + e.toString());
-			}
+//			try {
+//				sql.writeUserInfo(userId, age, gender, height, weight, allergies.toArray(new String[allergies.size()]));
+//			}
+//			catch(Exception e) {
+//				System.out.println("Exception while inserting user info into user database: " + e.toString());
+//			}
 		}
 		System.out.println("Writing to DB....");
 		return output;
