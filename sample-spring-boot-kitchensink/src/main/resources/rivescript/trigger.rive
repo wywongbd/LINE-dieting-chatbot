@@ -44,15 +44,6 @@
 	- Okay see you later.
 < topic
 
-
-
-
-
-
-
-
-
-
 ///////////////////////////////////////collect_user_info
 > topic collect_user_age
 
@@ -68,39 +59,85 @@
 >topic collect_user_sex
 
     + [i am a] (@malenoun)
-    - <set gender=male>You are a <star>. Ok, so what is your height (in meters)?
+    - <set gender=male>You are a <star>. Ok, so what is your height (in meters)? {topic=collect_user_height}
 
 
     + [i am a] (@femalenoun)
-    - <set gender=female>You are a <star>. Ok, so what is your height (in meters)?
-
-
-    + *
-    - I am sorry. I do not understand What is your sex?
-
+    - <set gender=female>You are a <star>. Ok, so what is your height (in meters)? {topic=collect_user_height}
 
     + *
     - I am sorry. I do not understand. What is your sex?
 
+
 < topic
-//////////////////////////////////////collect_user_info
 
+>topic collect_user_height
 
-> topic collect_user_info
-
-
+	+ [*] # [*]
+    - <set height=<star>>Great. Are you allergic to milk? (Yes/No) {topic=collect_user_allergy_milk}
 
     + *
-    % sorry that is not an accepted sex
-    - Ok, so what is your height (in meters)?    
-
-	+ talk later
-	- Okay see you later.
-		^ {topic=standby} <set state=standby>
+    - I do not understand. Can you please input a number? What is your height?
     
-//	+ * 
-//	- collect_user_info
 < topic
+
+>topic collect_user_allergy_milk
+
+    + (@yes)
+    - <set gender=male>I see, I'll take note of that. Are you allergic to eggs? (Yes/No) {topic=collect_user_allergy_eggs}
+
+
+    + (@no)
+    - <set gender=female>Great, are you allergic to eggs? (Yes/No) {topic=collect_user_allergy_eggs}
+
+    + *
+    - I am sorry. I do not understand. Are you allergic to milk? (Yes/No)
+
+< topic
+
+>topic collect_user_allergy_eggs
+
+    + (@yes)
+    - <set gender=male>I see, I'll take note of that. Are you allergic to nuts in general? (Yes/No) {topic=collect_user_allergy_nuts}
+
+
+    + (@no)
+    - <set gender=female>Great, are you allergic to nuts in general? (Yes/No) {topic=collect_user_allergy_nuts}
+
+    + *
+    - I am sorry. I do not understand. Are you allergic to eggs? (Yes/No)
+
+< topic
+
+>topic collect_user_allergy_nuts
+
+    + (@yes)
+    - <set gender=male>I see, I'll take note of that. Are you allergic to seafood? (Yes/No) {topic=collect_user_allergy_seafood}
+
+
+    + (@no)
+    - <set gender=female>Great, are you allergic to seafood? (Yes/No) {topic=collect_user_allergy_seafood}
+
+    + *
+    - I am sorry. I do not understand. Are you allergic to nuts? (Yes/No)
+
+< topic
+
+>topic collect_user_allergy_seafood
+
+    + (@yes)
+    - <set gender=male>I see, I'll take note of that. Thank you for your cooperation, I have a better understanding of your physical conditions now. {topic=standby}
+
+
+    + (@no)
+    - <set gender=female>Great, thanks for cooperating. I have a better understanding of your physical condition now. {topic=standby}
+
+    + *
+    - I am sorry. I do not understand. Are you allergic to seafood? (Yes/No)
+
+< topic
+
+//////////////////////////////////////collect_user_info
 
 
 > topic input_menu 
