@@ -50,12 +50,12 @@ public class StateManager {
      * @param text A String data type
      * @return A String data type
      */
-    public String chat(String text) throws Exception {
+    public String chat(String userId, String text) throws Exception {
         String replyText = null;
         try{
             // Get the next state after current message
-        		replyText = bot.reply("user", text);
-            currentState = decodeState(bot.getUservar("user", "state"));    // Check trigger
+        		replyText = bot.reply(userId, text);
+            currentState = decodeState(bot.getUservar(userId, "state"));    // Check trigger
             
         } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
             // Text is not recognized, does not modify current state
