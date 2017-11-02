@@ -85,10 +85,11 @@ public class StateManager {
      * @return A String data type
      */
     public String chat(String userId, DownloadedContent jpg) throws Exception {
+    	
         String replyText = null;
         try{
-            if (currentState.containsKey(userId) == false) {
-                currentState.put(userId, INPUT_MENU_STATE);
+            if (currentState.containsKey(userId) == false || currentState.get(userId) == 1) {
+                return "Please finish giving us your personal information before sending photos!";
             }
             // Pass the image into InputMenuState to check if the image is recognized as menu
             replyText = ((InputMenuState) states[INPUT_MENU_STATE]).replyImage(userId, jpg, bot);
