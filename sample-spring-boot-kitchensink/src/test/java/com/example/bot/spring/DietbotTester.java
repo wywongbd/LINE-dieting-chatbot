@@ -177,7 +177,8 @@ public class DietbotTester {
  		String reply1 = bot.reply("user1", "MyTestingSubroutine abc");
  		assertThat(reply1).isEqualTo("yes");
  	}
-  
+  	
+	@Test
 	public void testURLtoJSON() throws Exception{
 		
 		boolean thrown = false;
