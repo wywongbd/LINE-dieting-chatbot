@@ -54,8 +54,8 @@ public class CollectUserInfoState extends State {
 				System.out.println("Exception while inserting user info into user database: " + e.toString());
 			}
 		}
-		
-		sql.writeUserInfo(userId, 10, "male", 1.1, 1.1, {"A", "B"});
+		String[] temp = {"A", "B"};
+		sql.writeUserInfo(userId, 10, "male", 1.1, 1.1, temp);
 		return output;
 	}
 }
