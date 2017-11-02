@@ -1,0 +1,207 @@
+
+! local concat = space
+
+> topic new_user
+
+	+ *
+	- Hi! I am your personal Dieting Chatbot!
+        ^ First, I need to ask you a few questions about your physical information.
+        ^ What is your name?{topic=collect_user_name}<set state=collect_user_info>
+
+< topic
+
+
+> topic standby 
+	+ *
+	- Sorry, I'm not sure how to respond to that.
+	- Sorry, I do not understand. Please try saying it in another way.
+
+	// Do we need this?
+	+ [*] my id [*]
+	- Your ID is <id>.
+
+	// And this?
+	+ [*] google *
+	- Google results for "<star>": <a href="http://google.com/search?q=<star>">Click Here</a>
+
+	+ [*] (tweak|change|alter|update|modify) [*] (info|information|details|particulars)|(height|weight|age|gender|name|allergy|allergies) [*]
+	- Okay, I will now ask you a few questions to <star1> your <star2>.
+		^ {topic=collect_user_name} <set state=collect_user_info>
+
+	+ [*] ([eating] [*] restaurant|[help me] (look|check out) [*] menu|(recommend|recommendation|suggest|suggestion|decide|should|what to) [*] eat|have) [*]
+	- Please let me have a look at your menu.
+		^ {topic=input_menu} <set state=input_menu>
+
+	+ [*] (finished eating|ate|eaten|had (a|an|[my] @meals)) [*]
+	- Great! Please tell me what you ate.
+		^ {topic=post_eating} <set state=post_eating>
+
+	+ [*] (what [did|had] i (had|eat|eaten) (yesterday|just now|not long ago)|what is my (fat|carbohydrate|sodium|vitamin) intake) [*]
+	- Please wait while I check your eating history.
+		^ {topic=provide_info} <set state=provide_info>
+
+	+ talk later
+	- Okay see you later.
+< topic
+
+///////////////////////////////////////collect_user_info
+> topic collect_user_name
+
+    + (i am|my name is|this is) *
+    - <set name={formal}<star2>{/formal}>Is {formal}<star2>{/formal} your name?
+
+    + *
+    - <set name=<Formal>>Is <Formal> your name?
+
+    + @yes [*]
+    - Ok. Nice to meet to <get name>! Next question! What is your age?{topic=collect_user_age}
+
+    + @no [*]
+    - Can you enter your name again? Pls~
+
+< topic
+
+
+> topic collect_user_age
+
+    + [*] # [*]
+    - <set age=<star>>Alright, then what is your sex?{topic=collect_user_sex}
+
+    + *
+    - I do not understand. Can you please input a number? What is your age?
+
+< topic
+
+
+>topic collect_user_sex
+
+    + [i] [am] [a] (@malenoun)
+    - <set gender=male>You are a <star>. Ok, so what is your weight (in kg)?{topic=collect_user_weight}
+
+    + [i] [am] [a] (@femalenoun)
+    - <set gender=female>You are a <star>. Ok, so what is your weight (in kg)?{topic=collect_user_weight}
+
+    + *
+    - I am sorry. I do not understand. What is your sex?
+
+< topic
+
+
+>topic collect_user_weight
+
+    + [*] # [*]
+    - <set age=<star>>Alright, then what is your height?{topic=collect_user_height}
+
+    + *
+    - I am sorry. I do not understand. Can you input a number? What is your weight (in kg)?
+    
+< topic
+
+
+>topic collect_user_height
+
+	+ [*] # [*]
+    - <set height=<star>>Great. Are you allergic to milk? (Yes/No) {topic=collect_user_allergy_milk}
+
+    + *
+    - I do not understand. Can you please input a number? What is your height?
+    
+< topic
+
+>topic collect_user_allergy_milk
+
+    + @yes [*]
+    - <set milk_allergy=true>I see, I'll take note of that. Are you allergic to eggs? (Yes/No) {topic=collect_user_allergy_eggs}
+
+
+    + @no [*]
+    - <set milk_allergy=false>Great, are you allergic to eggs? (Yes/No) {topic=collect_user_allergy_eggs}
+
+    + *
+    - I am sorry. I do not understand. Are you allergic to milk? (Yes/No)
+
+< topic
+
+>topic collect_user_allergy_eggs
+
+    + @yes [*]
+    - <set egg_allergy=true>I see, I'll take note of that. Are you allergic to nuts in general? (Yes/No) {topic=collect_user_allergy_nuts}
+
+
+    + @no [*]
+    - <set egg_allergy=false>Great, are you allergic to nuts in general? (Yes/No) {topic=collect_user_allergy_nuts}
+
+    + *
+    - I am sorry. I do not understand. Are you allergic to eggs? (Yes/No)
+
+< topic
+
+>topic collect_user_allergy_nuts
+
+    + @yes [*]
+    - <set nut_allergy=true>I see, I'll take note of that. Are you allergic to seafood? (Yes/No) {topic=collect_user_allergy_seafood}
+
+
+    + @no [*]
+    - <set nut_allergy=false>Great, are you allergic to seafood? (Yes/No) {topic=collect_user_allergy_seafood}
+
+    + *
+    - I am sorry. I do not understand. Are you allergic to nuts? (Yes/No)
+
+
+< topic
+
+>topic collect_user_allergy_seafood
+
+    + @yes [*]
+    - <set seafood_allergy=true>I see, I'll take note of that. Thank you for your cooperation, I have a better understanding of your physical conditions now. <set state=standby>{topic=standby}
+
+
+    + @no [*]
+    - <set seafood_allergy=false>Great, thanks for cooperating. I have a better understanding of your physical condition now. <set state=standby>{topic=standby}
+
+    + *
+    - I am sorry. I do not understand. Are you allergic to seafood? (Yes/No)
+
+< topic
+
+//////////////////////////////////////collect_user_info
+
+
+> topic input_menu 
+	+ talk later
+	- Okay see you later.
+		^ {topic=standby} <set state=standby>
+    
+	+ * 
+	- input_menu
+< topic
+
+
+> topic post_eating
+	+ talk later
+	- Okay see you later.
+		^ {topic=standby} <set state=standby>
+
+	+ * 
+	- post_eating
+< topic
+
+
+> topic provide_info
+	+ talk later
+	- Okay see you later.
+		^ {topic=standby} <set state=standby>
+    
+	+ * 
+	- provide_info
+< topic
+
+
+> topic recommend
+
+	+ talk later
+	- Okay see you later.
+		^ {topic=standby} <set state=standby>
+< topic
+
