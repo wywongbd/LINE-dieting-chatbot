@@ -43,7 +43,7 @@ public class StateManager {
 	    	File resourcesDirectory = new File("sample-spring-boot-kitchensink/src/main/resources/rivescript");
 //	    	bot.loadFile(resourcesDirectory.getAbsolutePath());
 	    	bot.loadDirectory(resourcesDirectory.getAbsolutePath());
-//	    	bot.sortReplies();
+	    	bot.sortReplies();
     }
 
     /**
@@ -53,21 +53,20 @@ public class StateManager {
      */
     public String chat(String text) throws Exception {
         String replyText = null;
-        return "Testing chat";
-//        try{
-//            // Get the next state after current message
-//        	replyText = bot.reply("user", text);
-//            currentState = decodeState(bot.getUservar("user", "state"));    // Check trigger
-//            
-//        } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
-//            // Text is not recognized, does not modify current state
-//            replyText = "Your text is not recognized by us!";
-//        }
-//        if(replyText != null) {
-//            // Just for testing
-//            return replyText + " Current state is " +  Integer.toString(currentState);
-//        }
-//        throw new Exception("NOT FOUND");
+        try{
+            // Get the next state after current message
+        	replyText = bot.reply("user", text);
+            currentState = decodeState(bot.getUservar("user", "state"));    // Check trigger
+            
+        } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
+            // Text is not recognized, does not modify current state
+            replyText = "Your text is not recognized by us!";
+        }
+        if(replyText != null) {
+            // Just for testing
+            return replyText + " Current state is " +  Integer.toString(currentState);
+        }
+        throw new Exception("NOT FOUND");
     }
 
     /**
