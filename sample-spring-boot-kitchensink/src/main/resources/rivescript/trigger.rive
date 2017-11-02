@@ -6,7 +6,7 @@
 	+ *
 	- Hi! I am your personal Dieting Chatbot!
         ^ First, I need to ask you a few questions about your physical information.
-        ^ What is your age?{topic=collect_user_age}<set state=collect_user_info> 
+        ^ What is your name?{topic=collect_user_name}<set state=collect_user_info>
 
 < topic
 
@@ -45,6 +45,23 @@
 < topic
 
 ///////////////////////////////////////collect_user_info
+> topic collect_user_name
+
+    + (i am|my name is|this is) *
+    - <set name={formal}<star2>{/formal}>Is {formal}<star2>{/formal} your name?
+
+    + *
+    - <set name=<Formal>>Is <Formal> your name?
+
+    + @yes [*]
+    - Ok. Nice to meet to <get name>! Next question! What is your age?{topic=collect_user_age}
+
+    + @no [*]
+    - Can you enter your name again? Pls~
+
+< topic
+
+
 > topic collect_user_age
 
     + [*] # [*]
@@ -58,18 +75,28 @@
 
 >topic collect_user_sex
 
-    + [i am a] (@malenoun)
-    - <set gender=male>You are a <star>. Ok, so what is your height (in meters)? {topic=collect_user_height}
+    + [i] [am] [a] (@malenoun)
+    - <set gender=male>You are a <star>. Ok, so what is your weight (in kg)?{topic=collect_user_weight}
 
-
-    + [i am a] (@femalenoun)
-    - <set gender=female>You are a <star>. Ok, so what is your height (in meters)? {topic=collect_user_height}
+    + [i] [am] [a] (@femalenoun)
+    - <set gender=female>You are a <star>. Ok, so what is your weight (in kg)?{topic=collect_user_weight}
 
     + *
     - I am sorry. I do not understand. What is your sex?
 
-
 < topic
+
+
+>topic collect_user_weight
+
+    + [*] # [*]
+    - <set age=<star>>Alright, then what is your height?{topic=collect_user_height}
+
+    + *
+    - I am sorry. I do not understand. Can you input a number? What is your weight (in kg)?
+    
+< topic
+
 
 >topic collect_user_height
 
@@ -83,12 +110,12 @@
 
 >topic collect_user_allergy_milk
 
-    + (@yes)
-    - <set gender=male>I see, I'll take note of that. Are you allergic to eggs? (Yes/No) {topic=collect_user_allergy_eggs}
+    + @yes [*]
+    - <set milk_allergy=true>I see, I'll take note of that. Are you allergic to eggs? (Yes/No) {topic=collect_user_allergy_eggs}
 
 
-    + (@no)
-    - <set gender=female>Great, are you allergic to eggs? (Yes/No) {topic=collect_user_allergy_eggs}
+    + @no [*]
+    - <set milk_allergy=false>Great, are you allergic to eggs? (Yes/No) {topic=collect_user_allergy_eggs}
 
     + *
     - I am sorry. I do not understand. Are you allergic to milk? (Yes/No)
@@ -97,12 +124,12 @@
 
 >topic collect_user_allergy_eggs
 
-    + (@yes)
-    - <set gender=male>I see, I'll take note of that. Are you allergic to nuts in general? (Yes/No) {topic=collect_user_allergy_nuts}
+    + @yes [*]
+    - <set egg_allergy=true>I see, I'll take note of that. Are you allergic to nuts in general? (Yes/No) {topic=collect_user_allergy_nuts}
 
 
-    + (@no)
-    - <set gender=female>Great, are you allergic to nuts in general? (Yes/No) {topic=collect_user_allergy_nuts}
+    + @no [*]
+    - <set egg_allergy=false>Great, are you allergic to nuts in general? (Yes/No) {topic=collect_user_allergy_nuts}
 
     + *
     - I am sorry. I do not understand. Are you allergic to eggs? (Yes/No)
@@ -111,26 +138,27 @@
 
 >topic collect_user_allergy_nuts
 
-    + (@yes)
-    - <set gender=male>I see, I'll take note of that. Are you allergic to seafood? (Yes/No) {topic=collect_user_allergy_seafood}
+    + @yes [*]
+    - <set nut_allergy=true>I see, I'll take note of that. Are you allergic to seafood? (Yes/No) {topic=collect_user_allergy_seafood}
 
 
-    + (@no)
-    - <set gender=female>Great, are you allergic to seafood? (Yes/No) {topic=collect_user_allergy_seafood}
+    + @no [*]
+    - <set nut_allergy=false>Great, are you allergic to seafood? (Yes/No) {topic=collect_user_allergy_seafood}
 
     + *
     - I am sorry. I do not understand. Are you allergic to nuts? (Yes/No)
+
 
 < topic
 
 >topic collect_user_allergy_seafood
 
-    + (@yes)
-    - <set gender=male>I see, I'll take note of that. Thank you for your cooperation, I have a better understanding of your physical conditions now. {topic=standby}
+    + @yes [*]
+    - <set seafood_allergy=true>I see, I'll take note of that. Thank you for your cooperation, I have a better understanding of your physical conditions now. <set state=standby>{topic=standby}
 
 
-    + (@no)
-    - <set gender=female>Great, thanks for cooperating. I have a better understanding of your physical condition now. {topic=standby}
+    + @no [*]
+    - <set seafood_allergy=false>Great, thanks for cooperating. I have a better understanding of your physical condition now. <set state=standby>{topic=standby}
 
     + *
     - I am sorry. I do not understand. Are you allergic to seafood? (Yes/No)
@@ -171,14 +199,9 @@
 
 
 > topic recommend
-<<<<<<< HEAD
+
 	+ talk later
 	- Okay see you later.
 		^ {topic=standby} <set state=standby>
 < topic
-=======
-    + talk later
-    - Okay see you later.
-        ^ {topic=standby} <set state=standby>
-< topic
->>>>>>> MODIFIED RIVE FILE FORMAT
+
