@@ -44,10 +44,7 @@ public class StringPreprocessing {
 
 		String processUnitContent = null;    // Working variable
 		for(String unitContent : longLowerCaseString) {
-			processUnitContent = removeSpecialCharacters(unitContent);
-			processUnitContent = removeShortAndStopWord(processUnitContent, MIN_WORD_LENGTH, stopWordsSet);
-			processUnitContent = removeExtraSpace(processUnitContent);
-
+			processUnitContent = processUnitContent(unitContent);
 			if(!processUnitContent.equals("")) {
 				result.add(processUnitContent);
 			}
@@ -55,6 +52,20 @@ public class StringPreprocessing {
 		return result;
 	}
 
+    /**
+     * Process the unitContent string
+     * @param unitContent A String data type
+     * @return A String data type
+     */
+	public String processUnitContent(String unitContent){
+		String processUnitContent = null;    // Working variable
+		processUnitContent = removeSpecialCharacters(unitContent);
+		processUnitContent = removeShortAndStopWord(processUnitContent, MIN_WORD_LENGTH, stopWordsSet);
+		processUnitContent = removeExtraSpace(processUnitContent);
+
+		return processUnitContent;
+	}
+	
     /**
      * Get long string and convert to lower case
      * @param unitContentArray A String[] data type

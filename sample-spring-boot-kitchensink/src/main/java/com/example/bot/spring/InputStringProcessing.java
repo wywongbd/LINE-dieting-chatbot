@@ -153,14 +153,4 @@ public class InputStringProcessing {
     
     return foodContent;
   } 
-
-  public static void main(String[] args) throws IOException{
-
-	//JSONObject json = readJsonFromUrl("http://www.riverdining.com/dinner-menu.html");
-//	TestURL.readFromUrl("https://www.tgifridays.com/menu/dine-in/");
-//	TestURL.readFromUrl("http://menu.dining.ucla.edu/Menus");
-	  ArrayList<String> foodContent = InputStringProcessing.readFromUrl("http://www.milestonesrestaurants.com/dinner.php");
-	//System.out.println(json);
-    
-  }
 }
