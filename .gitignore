@@ -5,6 +5,9 @@
 *.html
 *.original
 
+# Build directory
+sample-spring-boot-kitchensink/build/
+
 # Binary file
 *.bin
 
