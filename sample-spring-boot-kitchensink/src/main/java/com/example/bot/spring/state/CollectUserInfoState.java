@@ -56,7 +56,8 @@ public class CollectUserInfoState extends State {
 				}
 			}
 			
-			String[] temp = allergies.toArray(new String[allergies.size()]);
+			String[] temp = new String[allergies.size()];
+			allergies.toArray(temp);
 			
 			for (String food: temp) {
 				System.out.println(food);
