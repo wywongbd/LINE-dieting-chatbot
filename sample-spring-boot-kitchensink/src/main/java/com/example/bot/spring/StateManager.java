@@ -73,6 +73,7 @@ public class StateManager {
             }
             else {
                 replyText = states[currentState.get(userId)].reply(userId, text, bot);
+                System.out.println("Writing to DB....");
                 currentState.put(userId, decodeState(bot.getUservar(userId, "state")));    
             }
             

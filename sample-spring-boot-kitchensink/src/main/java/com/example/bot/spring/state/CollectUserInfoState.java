@@ -34,6 +34,8 @@ public class CollectUserInfoState extends State {
 			String[] allergyFood = {"milk", "eggs", "nut", "seafood"};
 			Vector<String> allergies = new Vector<String>(0);
 			
+			System.out.println("Writing to DB....");
+			
 			for (String food: allergyFood) {
 				if (bot.getUservar(userId, food + "_allergy").equals("true")) {
 					allergies.add(food);
@@ -47,7 +49,7 @@ public class CollectUserInfoState extends State {
 				System.out.println("Exception while inserting user info into user database: " + e.toString());
 			}
 		}
-		
+		System.out.println("Writing to DB....");
 		return output;
 	}
 }
