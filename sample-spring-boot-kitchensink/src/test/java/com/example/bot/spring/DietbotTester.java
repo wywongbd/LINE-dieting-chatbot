@@ -46,6 +46,7 @@ import com.example.bot.spring.DatabaseEngine;
 
 import com.rivescript.Config;
 import com.rivescript.RiveScript;
+import com.rivescript.macro.Subroutine;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
