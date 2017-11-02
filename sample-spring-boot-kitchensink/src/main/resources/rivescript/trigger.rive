@@ -6,7 +6,7 @@
 	+ *
 	- Hi! I am your personal Dieting Chatbot!
         ^ First, I need to ask you a few questions about your physical information.
-        ^ What is your age?{topic=collect_user_age}<set state=collect_user_info> 
+        ^ What is your name?{topic=collect_user_name}<set state=collect_user_info>
 
 < topic
 
@@ -54,6 +54,23 @@
 
 
 ///////////////////////////////////////collect_user_info
+> topic collect_user_name
+
+    + (i am|my name is|this is) *
+    - <set name={formal}<star2>{/formal}>Is {formal}<star2>{/formal} your name?
+
+    + *
+    - <set name=<Formal>>Is <Formal> your name?
+
+    + @yes [*]
+    - Ok. Nice to meet to <get name>! Next question! What is your age?{topic=collect_user_age}
+
+    + @no [*]
+    - Can you enter your name again? Pls~
+
+< topic
+
+
 > topic collect_user_age
 
     + [*] # [*]
@@ -67,40 +84,30 @@
 
 >topic collect_user_sex
 
-    + [i am a] (@malenoun)
-    - <set gender=male>You are a <star>. Ok, so what is your height (in meters)?
+    + [i] [am] [a] (@malenoun)
+    - <set gender=male>You are a <star>. Ok, so what is your weight (in kg)?{topic=collect_user_weight}
 
 
-    + [i am a] (@femalenoun)
-    - <set gender=female>You are a <star>. Ok, so what is your height (in meters)?
-
-
-    + *
-    - I am sorry. I do not understand What is your sex?
+    + [i] [am] [a] (@femalenoun)
+    - <set gender=female>You are a <star>. Ok, so what is your weight (in kg)?{topic=collect_user_weight}
 
 
     + *
     - I am sorry. I do not understand. What is your sex?
 
 < topic
-//////////////////////////////////////collect_user_info
 
 
-> topic collect_user_info
+>topic collect_user_weight
 
-
+    + [*] # [*]
+    - <set age=<star>>Alright, then what is your height?{topic=collect_user_height}
 
     + *
-    % sorry that is not an accepted sex
-    - Ok, so what is your height (in meters)?    
+    - I am sorry. I do not understand. Can you input a number? What is your weight (in kg)?
 
-	+ talk later
-	- Okay see you later.
-		^ {topic=standby} <set state=standby>
-    
-//	+ * 
-//	- collect_user_info
 < topic
+//////////////////////////////////////collect_user_info
 
 
 > topic input_menu 
