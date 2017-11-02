@@ -87,6 +87,8 @@ public class InputMenuState extends State {
     	if(processedOcrImage.size() > 0){
             // Convert to string to be replied as message for testing
     		bot.setUservar(userId, "img_received", "true");
+    		bot.setUservar(userId, "topic", "input_menu");
+            bot.setUservar(userId, "state", "input_menu");
         	replyText = bot.reply(userId, "InputImage");
         	bot.setUservar(userId, "img_received", "false");
             bot.setUservar(userId, "topic", "recommend");
@@ -96,7 +98,6 @@ public class InputMenuState extends State {
         }
         else {
         	bot.setUservar(userId, "img_received", "false");
-        	replyText = bot.reply(userId, "InputImage");
             return "There is no useful information in your image!";
         }
     }
