@@ -28,15 +28,18 @@ public class HTMLStringPreprocessing extends StringPreprocessing{
      */
 
   public ArrayList<String> readFromUrl(String url) throws IOException {
-    InputStream is = new URL(url).openStream();
+//    InputStream is = new URL(url).openStream();
     ArrayList<String> foodContent = new ArrayList<String>();
     try {
-      BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-      String temp; // dummy working variable
+    		URL urlString = new URL(url);
+        Scanner sc = new Scanner(urlString.openStream());
+
+//        BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+        	String temp; // dummy working variable
       boolean isNull = false;
       while (!isNull)
       {
-    	  temp = rd.readLine();
+    	  temp = sc.nextLine();
     	  	if(temp == null){ isNull = true;}
     	  	else{
     			Document doc = Jsoup.parse(temp);
@@ -45,7 +48,7 @@ public class HTMLStringPreprocessing extends StringPreprocessing{
     		// TODO: else throw no menu exception		  
       }
     } finally {
-      is.close();
+      
     }
     
     return foodContent;
