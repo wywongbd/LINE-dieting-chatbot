@@ -18,10 +18,13 @@ public class StringPreprocessing {
 			"breakfast", "lunch", "dinner",
 			"special", "restaurant", "offer", "order", "free",
 			"monday", "tuesday", "wednesday", "thursday", "friday",
-			"January", "February", "March", "April", "May", "June",
-			"July", "August", "September", "October", "November", "December",
+			"january", "february", "march", "april", "may", "june",
+			"july", "august", "september", "october", "november", "december",
 			"main", "dishes", "more", "cal", "side", "choice", "come", "charge", "signature",
-			"item", "details", "select", "for", "have", "has", "had", "available"
+			"item", "details", "select", "for", "have", "has", "had", "available",
+			"premium", "seasoned", "less", "additional", "menus", "ultimate",
+			"terms", "conditions", "privacy", "policy", "condition",
+			"tomorrow", "today", "yesterday", "subject", "based"
 	};
 
 	/**
