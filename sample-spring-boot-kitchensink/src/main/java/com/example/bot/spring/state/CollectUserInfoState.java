@@ -29,8 +29,8 @@ public class CollectUserInfoState extends State {
 			
 			SQLDatabaseEngine sql = null;
 			int age = 0;
-			Double weight = 0;
-			Double height = 0;
+			Double weight = 1.0;
+			Double height = 1.0;
 			String gender = "";
 			String[] allergyFood = {"milk", "eggs", "nut", "seafood"};
 			Vector<String> allergies = null;
