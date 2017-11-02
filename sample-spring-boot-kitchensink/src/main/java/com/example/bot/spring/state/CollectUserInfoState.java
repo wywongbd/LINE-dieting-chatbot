@@ -22,10 +22,10 @@ public class CollectUserInfoState extends State {
 		int currentState = decodeState(bot.getUservar(userId, "state")); 
 		String output = bot.reply(userId, text);
 		int afterState = decodeState(bot.getUservar(userId, "state"));
-		SQLDatabaseEngine sql = new SQLDatabaseEngine();
-		
+				
 		if (currentState != afterState) {
 			// write to DB
+			SQLDatabaseEngine sql = new SQLDatabaseEngine();
 			int age = Integer.parseInt(bot.getUservar(userId, "age"));
 			Double weight = Double.parseDouble(bot.getUservar(userId, "weight"));
 			Double height = Double.parseDouble(bot.getUservar(userId, "height"));
@@ -43,24 +43,12 @@ public class CollectUserInfoState extends State {
 			String[] temp = new String[allergies.size()];
 			allergies.toArray(temp);
 			
-			for (String food: temp) {
-				System.out.println(food);
-			}
-			
 			try {
 				sql.writeUserInfo(userId, age, gender, height, weight, temp);
 			}
 			catch(Exception e) {
 				System.out.println("Exception while inserting user info into user database: " + e.toString());
 			}
-		}
-		String[] temp = {"A", "B"};
-		
-		try {
-			sql.writeUserInfo(userId, 10, "male", 1.1, 1.1, temp);
-		}
-		catch (Exception e) {
-			System.out.println("Exception while inserting user info into user database");
 		}
 		return output;
 	}
