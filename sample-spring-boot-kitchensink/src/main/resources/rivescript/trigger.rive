@@ -1,14 +1,13 @@
+
 ! local concat = space
 
 > topic new_user
+
 	+ *
 	- Hi! I am your personal Dieting Chatbot!
         ^ First, I need to ask you a few questions about your physical information.
-        ^ What is your age?
+        ^ What is your age?{topic=collect_user_age}<set state=collect_user_info> 
 
-    + [*] # [*]
-    % hi I am your personal dieting chatbot first i need to ask you a few questions about your physical information what is your age
-    - Ok, you are <star1>. Alright, then what is your sex?
 < topic
 
 
@@ -46,15 +45,50 @@
 < topic
 
 
-> topic collect_user_info
+
+
+
+
+
+
+
+
+///////////////////////////////////////collect_user_info
+> topic collect_user_age
 
     + [*] # [*]
-    % hi i am your personal dieting chatbot first i need to ask you a few questions about your physical information what is your age
-    - <set age=<star>>Alright, then what is your sex?
+    - <set age=<star>>Alright, then what is your sex?{topic=collect_user_sex}
 
-    + (@malenoun|@femalenoun)
-    % alright then what is your sex
-    - You are <star>. Ok, so what is your height (in meters)?
+    + *
+    - I do not understand. Can you please input a number? What is your age?
+
+< topic
+
+
+>topic collect_user_sex
+
+    + [i am a] (@malenoun)
+    - <set gender=male>You are a <star>. Ok, so what is your height (in meters)?
+
+
+    + [i am a] (@femalenoun)
+    - <set gender=female>You are a <star>. Ok, so what is your height (in meters)?
+
+
+    + *
+    - I am sorry. I do not understand What is your sex?
+
+
+    + *
+    - I am sorry. I do not understand. What is your sex?
+
+< topic
+//////////////////////////////////////collect_user_info
+
+
+> topic collect_user_info
+
+
 
     + *
     % sorry that is not an accepted sex
@@ -100,7 +134,14 @@
 
 
 > topic recommend
+<<<<<<< HEAD
 	+ talk later
 	- Okay see you later.
 		^ {topic=standby} <set state=standby>
 < topic
+=======
+    + talk later
+    - Okay see you later.
+        ^ {topic=standby} <set state=standby>
+< topic
+>>>>>>> MODIFIED RIVE FILE FORMAT

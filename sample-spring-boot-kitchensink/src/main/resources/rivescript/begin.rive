@@ -1,5 +1,4 @@
 ! version = 2.0
-! local concat = newline
 
 > begin
   // If it is a new user, set the new_user topic and continue.
@@ -152,6 +151,7 @@
 ! sub (f)       = rose
 ! sub (w)       = wilted rose
 
+
 // Person substitutions
 ! person i am    = you are
 ! person you are = I am
@@ -163,9 +163,9 @@
 ! person i       = you
 
 // Set arrays
-! array meals	   = meal breakfast lunch dinner
-! array malenoun   = male guy boy dude boi man men gentleman gentlemen
-! array femalenoun = female girl chick woman women lady babe
+! array meals	   = meal breakfast lunch dinner supper snack tea
+! array malenoun   = m male guy boy dude man men gentleman
+! array femalenoun = f female girl woman women lady 
 ! array mennoun    = males guys boys dudes bois men gentlemen
 ! array womennoun  = females girls chicks women ladies babes
 ! array lol        = lol lmao rofl rotfl haha hahaha
