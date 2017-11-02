@@ -102,7 +102,7 @@
     - <set gender=female>You are a <star>. Ok, so what is your weight (in kg)? Please input an integer. {topic=collect_user_weight}
 
     + *
-    - I am sorry. I do not understand. What is your sex?
+    - I am sorry. I do not understand. What is your gender?
 
 < topic
 
