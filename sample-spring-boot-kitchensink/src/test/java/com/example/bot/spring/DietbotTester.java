@@ -66,8 +66,8 @@ import org.jsoup.select.*;
 public class DietbotTester {
 	@Autowired
 	private SQLDatabaseEngine databaseEngine;
-
 	private RiveScript bot;
+	
 	
 	@Test
 	public void writeUserInfoNonExisting() throws Exception {
@@ -93,6 +93,55 @@ public class DietbotTester {
 			thrown = true;
 		}
 		assertThat(thrown).isEqualTo(false);
+	}
+	
+	@Test
+	public void addMenu() throws Exception {
+		boolean thrown = false;
+		String[] menu = {"frozen water", "molten ice"};
+		try {
+			this.databaseEngine.addMenu(menu);
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+	}
+	
+	@Test
+	public void searchFound() throws Exception {
+		boolean thrown = false;
+		String result = "";
+		try {
+			result = this.databaseEngine.search("frozen water");
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+		assertThat(result.contains("frozen"));
+	}
+
+	
+	@Test
+	public void resetMenu() throws Exception {
+		boolean thrown = false;
+		try {
+			this.databaseEngine.resetMenu();
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+	}	
+	
+	@Test
+	public void searchNotFound() throws Exception {
+		boolean thrown = false;
+		String result = "";
+		try {
+			result = this.databaseEngine.search("asdf");
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(true);
 	}
 
 	@Test
