@@ -28,7 +28,7 @@ public class StateManager {
             new PostEatingState()
         };
     
-//    private RiveScript bot;
+    private RiveScript bot;
     
     
     /**
@@ -36,13 +36,13 @@ public class StateManager {
      */
     public StateManager() {
 
-    	// Rivescript object
-//        bot = new RiveScript();
-        
-    	// Load rive files for Rivescript object
-//    	File resourcesDirectory = new File("src/main/resources/rivescript/trigger.rive");
-//    	bot.loadFile(resourcesDirectory.getAbsolutePath());
-//    	bot.sortReplies();
+	    	// Rivescript object
+	    	bot = new RiveScript();
+
+	    	// Load rive files for Rivescript object
+	    	File resourcesDirectory = new File("src/main/resources/rivescript/trigger.rive");
+//	    	bot.loadFile(resourcesDirectory.getAbsolutePath());
+//	    	bot.sortReplies();
     }
 
     /**
