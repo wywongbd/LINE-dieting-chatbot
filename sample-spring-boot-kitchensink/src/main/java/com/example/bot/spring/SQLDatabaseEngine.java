@@ -119,43 +119,87 @@ public class SQLDatabaseEngine {
 	}
 
 
+	// Adds meal name from input menu into meal table
+	public void addMenu(String[] menu) throws Exception {
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Insert meal names into menu table
+			try {
+				stmtUpdate = connection.prepareStatement(
+					"INSERT INTO menu VALUES (?)"
+				);
+				for (String meal : menu) {
+					stmtUpdate.setString(1, meal);
+					stmtUpdate.addBatch();
+				}
+				stmtUpdate.executeBatch();
+			} catch (SQLException e) {
+				log.info("Exception while inserting data into menu table: {}", e.toString());
+			}
+		} catch (SQLException e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (SQLException e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+	}
+	
+
+	// Deletes all records in the menu
+	public void resetMenu() throws Exception {
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Insert meal names into menu table
+			try {
+				stmtUpdate = connection.prepareStatement(
+					"DELETE FROM menu"
+				);
+				stmtUpdate.executeUpdate();
+			} catch (SQLException e) {
+				log.info("Exception while deleting records from menu table: {}", e.toString());
+			}
+		} catch (SQLException e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (SQLException e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}		
+	}
+	
+	
 	public String search(String text) throws Exception {
 		//Write your code here
 		String result = null;
 		Connection connection = null;
 		PreparedStatement stmtQuery = null;
-		PreparedStatement stmtUpdate = null;
 
 		ResultSet rs = null;
 		try {
 			connection = this.getConnection();
 			stmtQuery = connection.prepareStatement(
-				"SELECT response, hits FROM automatedreply "
-				+ "WHERE ? LIKE concat('%', LOWER(keyword), '%')"
+				"SELECT meal_name FROM menu " +
+				"WHERE ? LIKE concat('%', meal_name, '%')"
 			);
 			stmtQuery.setString(1, text.toLowerCase());
 			rs = stmtQuery.executeQuery(); 
 			while(result == null && rs.next()) {
-				String response = rs.getString(1);
-				int numHits = rs.getInt(2) + 1;  // rs.getInt(2) does not include current call
-				result = response + " " + String.valueOf(numHits);
-
-				// Perform update for number of hits in db
-				try {
-					stmtUpdate = connection.prepareStatement(
-						"UPDATE automatedreply "
-						+ "SET hits = hits + 1 "
-						+ "WHERE ? LIKE concat('%', LOWER(keyword), '%')"
-					);
-					stmtUpdate.setString(1, text.toLowerCase());
-				    // Call executeUpdate to execute our sql update statement
-					stmtUpdate.executeUpdate();
-				} catch (SQLException e) {
-					log.info("Exception while updating number of hits in database: {}", e.toString());
-				} finally {
-					if(stmtUpdate != null)
-						stmtUpdate.close();
-				}
+				result = rs.getString(1);
 			}
 		} catch (SQLException e) {
 			log.info("Exception while connecting to database: {}", e.toString());
