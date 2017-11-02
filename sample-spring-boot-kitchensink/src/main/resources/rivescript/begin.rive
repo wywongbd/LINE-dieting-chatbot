@@ -2,7 +2,7 @@
 
 > begin
 
-  // If if it a new user, set the new_user topic and continue.
+  // If it is a new user, set the new_user topic and continue.
   + request
   * <get met> == undefined => <set met=true> {topic=new_user} {ok}
   - {ok}
@@ -10,7 +10,7 @@
 < begin
 
 // Bot Variables
-! var features = 
+! var features = hi
 
 // Substitutions
 ! sub &quot;    = "
