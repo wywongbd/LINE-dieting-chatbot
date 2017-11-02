@@ -10,9 +10,11 @@
 	- Sorry, I'm not sure how to respond to that.
 	- Sorry, I do not understand. Please try saying it in another way.
 
+	// Do we need this?
 	+ [*] my id [*]
 	- Your ID is <id>.
 
+	// And this?
 	+ [*] google *
 	- Google results for "<star>": <a href="http://google.com/search?q=<star>">Click Here</a>
 
