@@ -60,8 +60,8 @@
 	- Okay see you later.
 		^ {topic=standby} <set state=standby>
     
-	+ * 
-	- collect_user_info
+//	+ * 
+//	- collect_user_info
 < topic
 
 
