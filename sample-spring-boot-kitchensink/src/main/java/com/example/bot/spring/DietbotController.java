@@ -77,7 +77,7 @@ public class DietbotController {
 	private final String defaultString = "I don't understand"; 
 	
 	protected DietbotController() {
-		stateManager = new StateManager();
+		stateManager = new StateManager("sample-spring-boot-kitchensink/src/main/resources/rivescript");
 	}
 	
 	@EventMapping

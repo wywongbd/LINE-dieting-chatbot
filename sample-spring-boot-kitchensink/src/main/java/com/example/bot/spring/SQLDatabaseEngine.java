@@ -86,9 +86,52 @@ public class SQLDatabaseEngine {
 
 	
 	// Returns the desired user info
-	public String readUserInfo(String userId, String[] columns) {
-		String result = "test";
-		return result;
+	public String getUserInfo(String userId, String info) throws Exception {
+		Connection connection = null;
+		String queryString = null;
+		PreparedStatement stmtQuery = null;
+		ResultSet rs = null;
+		String result = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Returns user info if user exists
+			try {
+				queryString = "SELECT " + info + " FROM userinfo WHERE userid = '" + userId + "'"; 
+				stmtQuery = connection.prepareStatement(queryString);
+				rs = stmtQuery.executeQuery();
+				while (rs.next()) {
+					if (info.equals("gender")) {
+						result = rs.getString(1);
+					}
+					else if (info.equals("age")) {
+						result = Integer.toString(rs.getInt(1));
+
+					}
+					else if (info.equals("height") || (info.equals("weight"))) {
+						result = Double.toString(rs.getDouble(1));
+					}
+				}
+			} catch (SQLException e) {
+				log.info("Exception while retrieving user info: {}", e.toString());
+			}
+		} catch (SQLException e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
+			} catch (SQLException e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+		if (result != null) {
+			return result;
+		} else {
+			return "Error in retrieving user info";
+		}
 	}
 	
 	
