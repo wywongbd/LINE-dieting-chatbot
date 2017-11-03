@@ -41,7 +41,7 @@
 	- Please wait while I check your eating history.
 		^ {topic=provide_info} <set state=provide_info>
 
-	+ talk later
+	+ ([*] talk later|talk to you later)
 	- Okay see you later.
 < topic
 
@@ -224,7 +224,7 @@
 
 
 > topic input_menu 
-	+ talk later
+	+ ([*] talk later|talk to you later)
 	- Okay see you later.
 		^ {topic=standby} <set state=standby>
     
@@ -237,7 +237,7 @@
 
 
 > topic post_eating
-	+ talk later
+	+ ([*] talk later|talk to you later)
 	- Okay see you later.
 		^ {topic=standby} <set state=standby>
 
@@ -247,7 +247,7 @@
 
 
 > topic provide_info
-	+ talk later
+	+ ([*] talk later|talk to you later)
 	- Okay see you later.
 		^ {topic=standby} <set state=standby>
     
@@ -258,7 +258,7 @@
 
 > topic recommend
 
-	+ talk later
+	+ ([*] talk later|talk to you later)
 	- Okay see you later.
 		^ {topic=standby} <set state=standby>
 < topic

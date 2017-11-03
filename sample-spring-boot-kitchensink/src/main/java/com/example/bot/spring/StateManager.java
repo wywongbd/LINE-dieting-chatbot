@@ -65,7 +65,8 @@ public class StateManager {
             }
             
         	replyText = states[currentState.get(userId)].reply(userId, text, bot);
-            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));    
+            currentState.put(userId, decodeState(bot.getUservar(userId, "state"))); 
+            
             
         } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
             // Text is not recognized, does not modify current state
