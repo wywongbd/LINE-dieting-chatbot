@@ -160,6 +160,8 @@ public class DietbotTester {
 			this.databaseEngine.addRecommendations("testUser");
 			this.databaseEngine.processRecommendationsByAllergies("testUser");
 			this.databaseEngine.searchRecommendations("salmon");
+			this.databaseEngine.resetMenu("testUser");
+			this.databaseEngine.resetRecommendations("testUser");
 		} catch (Exception e) {
 			thrown = true;
 		}
