@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.ArrayList;
 
 @Slf4j
 public class SQLDatabaseEngine {
@@ -83,7 +84,8 @@ public class SQLDatabaseEngine {
 	}
 
 	
-	public String readUserInfo(String[] columns) {
+	// Returns the desired user info
+	public String readUserInfo(String userId, String[] columns) {
 		String result = "test";
 		return result;
 	}
@@ -122,7 +124,7 @@ public class SQLDatabaseEngine {
 
 
 	// Adds meal name from input menu into meal table
-	public void addMenu(String[] menu) throws Exception {
+	public void addMenu(String userId, ArrayList<String> menu) throws Exception {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
 		
@@ -132,10 +134,11 @@ public class SQLDatabaseEngine {
 			// Insert meal names into menu table
 			try {
 				stmtUpdate = connection.prepareStatement(
-					"INSERT INTO menu VALUES (?)"
+					"INSERT INTO menu VALUES (?, ?)"
 				);
+				stmtUpdate.setString(1, userId);
 				for (String meal : menu) {
-					stmtUpdate.setString(1, meal);
+					stmtUpdate.setString(2, meal);
 					stmtUpdate.addBatch();
 				}
 				stmtUpdate.executeBatch();
@@ -155,19 +158,21 @@ public class SQLDatabaseEngine {
 	}
 	
 
-	// Deletes all records in the menu table
-	public void resetMenu() throws Exception {
+	// Deletes all records corresponding to the user in the menu table
+	public void resetMenu(String userId) throws Exception {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
 		
 		try {
 			connection = this.getConnection();
 			
-			// Deletes records from menu table
+			// Deletes records corresponding to the user from menu table
 			try {
 				stmtUpdate = connection.prepareStatement(
-					"DELETE FROM menu"
+					"DELETE FROM recommendations " +
+					"WHERE userid = ?"
 				);
+				stmtUpdate.setString(1, userId);
 				stmtUpdate.executeUpdate();
 			} catch (SQLException e) {
 				log.info("Exception while deleting records from menu table: {}", e.toString());
@@ -189,7 +194,7 @@ public class SQLDatabaseEngine {
 	 *  Reads meal names from meal table and matches them to the food in our nutrient table
 	 *  Stores the closest match for each meal name into the recommendation table
 	 */
-	public void addRecommendations() throws Exception {
+	public void addRecommendations(String userId) throws Exception {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
 		
@@ -202,13 +207,17 @@ public class SQLDatabaseEngine {
 					"INSERT INTO recommendations " +
 					"SELECT " +
 						"DISTINCT ON (menu.meal_name) " +
+						"? AS userid, " +
 						"menu.meal_name, " +
 						"nutrient_table.description, " +
-						"similarity(menu.meal_name, nutrient_table.description) AS sim " +
+						"similarity(menu.meal_name, nutrient_table.description) AS sim, " +
+						"? AS weightage " +
 					"FROM menu " +
 					"JOIN nutrient_table ON menu.meal_name % nutrient_table.description " +
 					"ORDER BY menu.meal_name, sim DESC"
 				);
+				stmtUpdate.setString(1, userId);
+				stmtUpdate.setDouble(2, 1.0);
 				stmtUpdate.executeUpdate();
 			} catch (SQLException e) {
 				log.info("Exception while inserting records into the recommendations table: {}", e.toString());
@@ -226,19 +235,21 @@ public class SQLDatabaseEngine {
 	}
 	
 	
-	// Deletes all records in the recommendations table
-	public void resetRecommendations() throws Exception {
+	// Deletes all records corresponding to the user in the recommendations table
+	public void resetRecommendations(String userId) throws Exception {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
 		
 		try {
 			connection = this.getConnection();
 			
-			// Deletes records from recommendations table
+			// Deletes records corresponding to the user from recommendations table
 			try {
 				stmtUpdate = connection.prepareStatement(
-					"DELETE FROM recommendations"
+					"DELETE FROM recommendations " +
+					"WHERE userid = ?"
 				);
+				stmtUpdate.setString(1, userId);
 				stmtUpdate.executeUpdate();
 			} catch (SQLException e) {
 				log.info("Exception while deleting records from recommendations table: {}", e.toString());
@@ -297,6 +308,56 @@ public class SQLDatabaseEngine {
 			try {
 				if (rs != null) {rs.close();}
 				if (stmtQuery != null) {stmtQuery.close();}
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (SQLException e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+	}
+	
+	
+	// Adjusts the weightages of meals corresponding to the user in the recommendations table based on the recommended daily intake
+	public void processRecommendationsByIntake(String userId) throws Exception {
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Adjusts the weightages of meals corresponsing to the user in the recommendations table
+			try {
+				stmtUpdate = connection.prepareStatement(
+					"WITH daily_intake AS ( " + 
+						"SELECT userinfo.userid, description, daily_serve " + 
+						"FROM ( " + 
+							"SELECT userid, description " + 
+							"FROM recommendations " + 
+							"WHERE userid = ? " + 
+						") AS R " + 
+						"JOIN type_food ON description LIKE CONCAT('%', food, '%') " + 
+						"JOIN userinfo ON R.userid = userinfo.userid " + 
+						"JOIN recommended_intake RI " + 
+							"ON userinfo.age >= RI.age_min " + 
+							"AND userinfo.age <= RI.age_max " + 
+							"AND userinfo.gender = RI.gender " + 
+							"AND type_food.type = RI.type " + 
+					") " + 
+					"UPDATE recommendations " + 
+					"SET weightage = daily_intake.daily_serve " + 
+					"FROM daily_intake " + 
+					"WHERE recommendations.description = daily_intake.description " +
+					"AND recommendations.userid = daily_intake.userid"
+				);
+				stmtUpdate.setString(1, userId);
+				stmtUpdate.executeUpdate();
+			} catch (SQLException e) {
+				log.info("Exception while updating the weightages of the user in the recommendations table: {}", e.toString());
+			}
+		} catch (SQLException e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
 				if (stmtUpdate != null) {stmtUpdate.close();}
 				if (connection != null) {connection.close();}
 			} catch (SQLException e) {
