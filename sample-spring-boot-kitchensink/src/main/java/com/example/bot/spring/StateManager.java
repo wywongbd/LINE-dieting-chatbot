@@ -120,7 +120,6 @@ public class StateManager {
             	
             	
             	System.out.println(splitString[0]);
-            	System.out.println(splitString[1]);
             	
             	replyText.add(0, splitString[0]);
             	replyText.remove(replyText.size() - 1);
