@@ -51,6 +51,8 @@ public class RecommendationState extends State {
 			sql.processRecommendationsByAllergies(userId);
 			sql.processRecommendationsByIntake(userId);
 			foodWeightage = sql.getRecommendations(userId);
+			sql.resetMenu(userId);
+			sql.resetRecommendations(userId);
 
 			// Compute the total weight of all items together
 			Double totalWeight = 0.0d;

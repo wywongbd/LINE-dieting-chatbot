@@ -71,29 +71,29 @@ public class DietbotTester {
 	private SQLDatabaseEngine databaseEngine;
 	private RiveScript bot;
 	
-
+	
 	@Test
-	public void writeUserInfoNonExisting() throws Exception {
+	public void writeUserInfoExisting() throws Exception {
 		boolean thrown = false;
 		String[] allergies = {"peanuts", "shrimp"};
 		try {
 			this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies);
 		} catch (Exception e) {
 			thrown = true;
-		} finally {
-			this.databaseEngine.deleteUserInfo("testUser");
 		}
 		assertThat(thrown).isEqualTo(false);
 	}
 	
 	@Test
-	public void writeUserInfoExisting() throws Exception {
+	public void writeUserInfoNonExisting() throws Exception {
 		boolean thrown = false;
 		String[] allergies = {"water"};
 		try {
-			this.databaseEngine.writeUserInfo("testUserExisting", 21, "female", 1.64, 55, allergies);
+			this.databaseEngine.writeUserInfo("testUserNonExisting", 21, "female", 1.64, 55, allergies);
 		} catch (Exception e) {
 			thrown = true;
+		} finally {
+			this.databaseEngine.deleteUserInfo("testUserNonExisting");
 		}
 		assertThat(thrown).isEqualTo(false);
 	}
@@ -199,9 +199,9 @@ public class DietbotTester {
 		String resultString = "grilled salmon vege fish chip mayo rice fried chicken fish";
 		RecommendationState recommend = new RecommendationState();
 		ArrayList<String> foodList = new ArrayList<String>();
-		foodList.add("grilled salmon vege");
+		foodList.add("grilled pork vege");
 		foodList.add("fish chip mayo");
-		foodList.add("rice fried chicken fish");
+		foodList.add("rice fried chicken");
 
 		try {
 			result = recommend.recommendFood("testUser", foodList);

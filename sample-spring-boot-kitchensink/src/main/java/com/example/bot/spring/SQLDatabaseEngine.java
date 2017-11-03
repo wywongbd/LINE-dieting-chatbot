@@ -170,7 +170,7 @@ public class SQLDatabaseEngine {
 			// Deletes records corresponding to the user from menu table
 			try {
 				stmtUpdate = connection.prepareStatement(
-					"DELETE FROM recommendations " +
+					"DELETE FROM menu " +
 					"WHERE userid = ?"
 				);
 				stmtUpdate.setString(1, userId);
