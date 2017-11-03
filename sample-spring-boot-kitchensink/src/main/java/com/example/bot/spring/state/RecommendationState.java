@@ -1,10 +1,13 @@
 package com.example.bot.spring;
 
 //import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 import com.rivescript.RiveScript;
 import com.example.bot.spring.SQLDatabaseEngine;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+@Slf4j
 public class RecommendationState extends State {
     /**
      * Default constructor for RecommendationState
@@ -34,10 +37,21 @@ public class RecommendationState extends State {
      * @param userID A int data type
      * @return A String data type
      */
-	public String recommendation(ArrayList<String> foodList, int userID) {
-		SQLDatabaseEngine db = new SQLDatabaseEngine();
+	public String recommendation(String userId, ArrayList<String> foodList) {
+		SQLDatabaseEngine sql = new SQLDatabaseEngine();
+		HashMap<String, Double> foodWeightage = null;
 		
-		
+		try {
+			sql.addMenu(userId, foodList);
+			sql.addRecommendations(userId);
+			sql.processRecommendationsByAllergies(userId);
+			sql.processRecommendationsByIntake(userId);
+			foodWeightage = sql.getRecommendations(userId);
+		} catch (Exception e) {
+			log.info("Exception while removing recommendations from recommendations table: {}", e.toString());
+			return "I am not sure what to recommend you";
+		}
+
 		
 		return "Food";
 	}
