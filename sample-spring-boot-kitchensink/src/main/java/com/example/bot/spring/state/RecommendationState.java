@@ -7,6 +7,7 @@ import com.example.bot.spring.SQLDatabaseEngine;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.*;
 
 @Slf4j
 public class RecommendationState extends State {
@@ -26,12 +27,27 @@ public class RecommendationState extends State {
      * @return A String data type
      */
 	public String reply(String userId, String text, RiveScript bot) {
-		int currentState = decodeState(bot.getUservar(userId, "state")); 
-		String output = bot.reply(userId, text);
-		int afterState = decodeState(bot.getUservar(userId, "state"));
+
+		ArrayList<String> foodList = new ArrayList<String>();
 		
+		String[] temp = (text.substring(1, text.length() - 1)).split(",");
+		for(String k : temp) {
+			System.out.println(k);
+			foodList.add(k);
+		}
 		
-		return output;
+		String recommended = recommendFood(userId, foodList);
+		
+		if (!recommended.equals(DEFAULT_RECOMMENDATION)) {
+			recommended = "I would recommend you to eat " + recommended; 
+		}
+		
+		System.out.println(recommended);
+		
+		bot.setUservar(userId, "topic", "standby");
+        bot.setUservar(userId, "state", "standby");
+		
+		return recommended;
 	}
 	
 	/**
@@ -51,6 +67,7 @@ public class RecommendationState extends State {
 			sql.processRecommendationsByAllergies(userId);
 			sql.processRecommendationsByIntake(userId);
 			foodWeightage = sql.getRecommendations(userId);
+      // Might remove these in the future for multiple recommendations
 			sql.resetMenu(userId);
 			sql.resetRecommendations(userId);
 

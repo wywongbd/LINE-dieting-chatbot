@@ -1,7 +1,7 @@
 package com.example.bot.spring;
 
 import com.example.bot.spring.DietbotController.DownloadedContent;
-import com.example.bot.spring.StringPreprocessing;
+import com.example.bot.spring.OCRStringPreprocessing;
 import com.example.bot.spring.HTMLStringPreprocessing;
 import com.rivescript.RiveScript;
 import com.asprise.ocr.Ocr;
@@ -50,7 +50,7 @@ public class InputMenuState extends State {
 				replyText = "Your text has been well received! But this URL is not reachable. :(";
 			}
 
-            return replyText + urlContent;
+            return replyText + "AAAAAAAAAA" + urlContent;
         
 		}
 		else {
@@ -100,7 +100,7 @@ public class InputMenuState extends State {
             bot.setUservar(userId, "topic", "recommend");
             bot.setUservar(userId, "state", "recommend");
         	
-            return replyText + Arrays.toString(processedOcrImage.toArray());
+            return replyText + "AAAAAAAAAA" + Arrays.toString(processedOcrImage.toArray());
         }
         else {
         	bot.setUservar(userId, "img_received", "false");
@@ -115,8 +115,19 @@ public class InputMenuState extends State {
      */
     public ArrayList<String> processImage(DownloadedContent jpg) {
         String ocrRawString = ocrImage(jpg);
-        StringPreprocessing stringProcessing = new StringPreprocessing();
-        return stringProcessing.processOcrRawString(ocrRawString);
+        OCRStringPreprocessing o = new OCRStringPreprocessing();
+        return o.processOcrRawString(ocrRawString);
+    }
+
+    
+    /**
+     * Perform OCR on the image and return the raw string
+     * @param jpg A DownloadedContent data type
+     * @return A String data type
+     */
+    public String ocrImage(DownloadedContent jpg) {
+    		String pathString = jpg.getPathString();
+        return ocrImagePath(pathString);
     }
 
     /**
@@ -124,11 +135,11 @@ public class InputMenuState extends State {
      * @param jpg A DownloadedContent data type
      * @return A String data type
      */
-    public String ocrImage(DownloadedContent jpg) {
+    public String ocrImagePath(String pathString) {
         Ocr.setUp();    // One time setup
         Ocr ocr = new Ocr();    // Create a new OCR engine
         ocr.startEngine("eng", Ocr.SPEED_SLOW);    // English
-        String ocrRawString = ocr.recognize(new File[] {new File(jpg.getPathString())},
+        String ocrRawString = ocr.recognize(new File[] {new File(pathString)},
                                         Ocr.RECOGNIZE_TYPE_ALL,
                                         Ocr.OUTPUT_FORMAT_PLAINTEXT);
         ocr.stopEngine();    // Stop the OCR engine
