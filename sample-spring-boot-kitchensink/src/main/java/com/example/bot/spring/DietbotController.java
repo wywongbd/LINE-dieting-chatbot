@@ -1,5 +1,6 @@
 package com.example.bot.spring;
 
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -9,10 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.CompletableFuture;
@@ -137,28 +134,36 @@ public class DietbotController {
         String text = content.getText();
         log.info("Got text message from {}: {}", replyToken, text);
         
-        String reply = null;
+        Vector<String> reply = null;
     	try {
 			UserProfileResponse profile = lineMessagingClient.getProfile(event.getSource().getUserId()).get();
-    		reply = stateManager.chat(event.getSource().getUserId(), text);
+    		reply = stateManager.chat(event.getSource().getUserId(), text, true);
     		// reply += "\n UserName: " + profile.getDisplayName();
     		// reply += "\n UserID: " + event.getSource().getUserId();
     	} catch (Exception e) {
-    		reply = defaultString;
+    		this.replyText(replyToken,defaultString);
+    		return;
     	}
         log.info("Returns echo message {}: {}", replyToken, reply);
-        this.replyText(replyToken,reply);
+        
+        for (String replyMessage:reply) {
+            this.replyText(replyToken,replyMessage);
+        }
     }
 	
 	private void handleImageContent(String replyToken, Event event, DownloadedContent jpg) {
-		String reply = null;
+		Vector<String> reply = null;
     	try {
-    		reply = stateManager.chat(event.getSource().getUserId(), jpg);
+    		reply = stateManager.chat(event.getSource().getUserId(), jpg, true);
     	} catch (Exception e) {
-    		reply = defaultString;
+    		this.replyText(replyToken,defaultString);
+    		return;
     	}
         log.info("Returns echo message {}: {}", replyToken, reply);
-        this.replyText(replyToken,reply);
+        
+        for (String replyMessage:reply) {
+            this.replyText(replyToken,replyMessage);
+        }
     }
 	
 	private static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
