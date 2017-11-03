@@ -34,6 +34,8 @@ public class RecommendationState extends State {
 			recommended = "I would recommend you to eat " + recommended; 
 		}
 		
+		System.out.println(recommended);
+		
 		return recommended;
 	}
 	

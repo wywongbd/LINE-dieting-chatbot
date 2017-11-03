@@ -114,13 +114,16 @@ public class StateManager {
             	String[] splitString = replyText.lastElement().split("$$$"); 
             	replyText.remove(replyText.size() - 1);
             	replyText.add(splitString[0]);
-            	replyText.add(states[currentState.get(userId)].reply(userId, splitString[1], bot));
+            	String temp = states[currentState.get(userId)].reply(userId, splitString[1], bot);
+            	System.out.println(temp);
+            	
+            	replyText.add(temp);
             }
 
         } catch (Exception e) {    // Modify to custom exception ImageNotRecognized later
             // Image is not recognized as menu, does not modify current state
         	replyText.clear();
-            replyText.add("Your text is not recognized by us!");
+            replyText.add("Your img is not recognized by us!");
         }
         if(replyText.size() > 0) {
             // Just for testing
