@@ -8,18 +8,51 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.*;
+import org.jsoup.helper.*;
 import org.jsoup.nodes.*;
+import org.jsoup.select.*;
+
 
 public class HTMLStringPreprocessing extends StringPreprocessing{
 	
-	public String getHTMLContents(String htmlString){
-		/**
-		 *  Goal: to obtain woscs in between the divider.
-		 *  ie, <bla_bla> GET_THE_WOsc_HERE <bla_bla_bla> GET_THE_WOsc_HERE <bla_bla_bla>
-		 *  
-		 */
+	
+	/**
+	 * This function is to convert a single string of HTML table
+	 * @param HTMLString is a concatenated after processing in readFromUrl
+	 * @return a JSONObject
+	 */
+	public JSONObject parseHTMLTableToJson(String HTMLString) {
+		Document document = Jsoup.parse(HTMLString);
+		Element table = document.select("table").first();
+		String arrayName = table.select("th").first().text();
+		JSONObject jsonObj = new JSONObject();
+		JSONArray jsonArr = new JSONArray();
+		Elements ttls = table.getElementsByClass("ttl");
+		Elements nfos = table.getElementsByClass("nfo");
+		JSONObject jo = new JSONObject();
+		for (int i = 0, l = ttls.size(); i < l; i++) {
+		    String key = ttls.get(i).text();
+		    String value = nfos.get(i).text();
+		    jo.put(key, value);
+		}
+		jsonArr.put(jo);
+		jsonObj.put(arrayName, jsonArr);
 		
+		return jsonObj;
+	}
+	
+	
+	/**
+	 * This function is to get the unitContent within HTML Tags
+	 * @param htmlString A single line of HTML code
+	 * @return the unitContent of the HTML line
+	 * ie: <tag1><tag2> GET_THIS_UNITCONTENT <tag3>
+	 */
+	public String getHTMLContents(String htmlString){
 		char[] htmlStringArr = htmlString.toCharArray(); // "Working String"
 		String content = null;
 		ArrayList<Integer> listOfSigns = new ArrayList<Integer>(); // also dummy tool. Odd num stores indexOf("<"), even stores indexOf(">")
@@ -57,6 +90,7 @@ public class HTMLStringPreprocessing extends StringPreprocessing{
 		return content;
 	}
 
+	
 	/**
      * Return the unprocessed contents from one the entire HTML code
      * @param url A String data type
@@ -66,7 +100,6 @@ public class HTMLStringPreprocessing extends StringPreprocessing{
      * which should be passed to getValidContent method
      * before passing into database for query to recommend food 
      */
-
 	  public ArrayList<String> readFromUrl(String url) throws IOException {
 		  	ArrayList<String> foodContent = new ArrayList<String>();
 		    InputStream is = new URL(url).openStream();
