@@ -69,6 +69,7 @@ public class StateManager {
             
             if(currentState.get(userId) == RECOMMEND_STATE) {
             	String[] splitString = replyText.lastElement().split("$$$"); 
+            	System.out.println(splitString);
             	replyText.remove(replyText.size() - 1);
             	replyText.add(splitString[0]);
             	String temp = states[currentState.get(userId)].reply(userId, splitString[1], bot);
@@ -112,6 +113,7 @@ public class StateManager {
             
             if(currentState.get(userId) == RECOMMEND_STATE) {
             	String[] splitString = replyText.lastElement().split("$$$"); 
+            	System.out.println(splitString);
             	replyText.remove(replyText.size() - 1);
             	replyText.add(splitString[0]);
             	String temp = states[currentState.get(userId)].reply(userId, splitString[1], bot);
