@@ -27,9 +27,12 @@ public class RecommendationState extends State {
      * @return A String data type
      */
 	public String reply(String userId, String text, RiveScript bot) {
-		ArrayList<String> foodList = new ArrayList<String>(Arrays.asList((text.substring(1, text.length() - 1)).split(",")));
+		ArrayList<String> foodList = new ArrayList<String>();
 		
-		System.out.println(foodList[0]);
+		String[] temp = (text.substring(1, text.length() - 1)).split(",");
+		for(String k : temp) {
+			foodList.add(k);
+		}
 		
 		String recommended = recommendFood(userId, foodList);
 		
