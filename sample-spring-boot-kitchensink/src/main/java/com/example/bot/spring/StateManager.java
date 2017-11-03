@@ -71,7 +71,10 @@ public class StateManager {
             	String[] splitString = replyText.lastElement().split("$$$"); 
             	replyText.remove(replyText.size() - 1);
             	replyText.add(splitString[0]);
-            	replyText.add(states[currentState.get(userId)].reply(userId, splitString[1], bot));
+            	String temp = states[currentState.get(userId)].reply(userId, splitString[1], bot);
+            	System.out.println(temp);
+            	
+            	replyText.add(temp);
             }
             
         } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
