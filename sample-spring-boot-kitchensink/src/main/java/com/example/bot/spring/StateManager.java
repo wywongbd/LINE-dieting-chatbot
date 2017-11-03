@@ -116,14 +116,12 @@ public class StateManager {
             	System.out.println("entered if statement");
             	System.out.println(replyText.lastElement());
             	
-            	String[] splitString = (replyText.lastElement()).split("$$$$$$$$$$"); 
-            	
-            	
+            	String[] splitString = (replyText.lastElement()).split("$$$$$$$$$$");       	            	
             	System.out.println(splitString[0]);
             	
             	replyText.add(0, splitString[0]);
             	
-            	System.out.println("added new item");
+            	System.out.println("added new item ");
             	
             	replyText.remove(replyText.size() - 1);
             	
