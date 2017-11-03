@@ -70,11 +70,8 @@ public class HTMLStringPreprocessing extends StringPreprocessing{
 	  public ArrayList<String> readFromUrl(String url) throws IOException {
 		  	ArrayList<String> foodContent = new ArrayList<String>();
 		    InputStream is = new URL(url).openStream();
-<<<<<<< HEAD
-		    try { 
-=======
+
 		    try {
->>>>>>> 07bc08535f35717ad13c0d80221f02b4a0fb2baa
 		      // print all the html lines
 		    	BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 		    	String temp;
@@ -99,13 +96,8 @@ public class HTMLStringPreprocessing extends StringPreprocessing{
 		      is.close();
 		    }
 		    return foodContent;
-<<<<<<< HEAD
 	  	} 
 	  
-=======
-	  	}
-
->>>>>>> 07bc08535f35717ad13c0d80221f02b4a0fb2baa
 		public ArrayList<String> processURLRawContent(ArrayList<String> URLRawContent){
 			ArrayList<String> result = new ArrayList<String>();
 			String processUnitContentString = null;    // Working variable
