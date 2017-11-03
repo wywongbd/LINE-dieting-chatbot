@@ -135,35 +135,40 @@ public class DietbotController {
         log.info("Got text message from {}: {}", replyToken, text);
         
         Vector<String> reply = null;
+        List<Message> replyList = new ArrayList<Message>(0);
     	try {
 			UserProfileResponse profile = lineMessagingClient.getProfile(event.getSource().getUserId()).get();
     		reply = stateManager.chat(event.getSource().getUserId(), text, true);
-    		// reply += "\n UserName: " + profile.getDisplayName();
-    		// reply += "\n UserID: " + event.getSource().getUserId();
     	} catch (Exception e) {
     		this.replyText(replyToken,defaultString);
     		return;
     	}
-        log.info("Returns echo message {}: {}", replyToken, reply);
-        
-        for (String replyMessage:reply) {
-            this.replyText(replyToken,replyMessage);
+    	
+    	for (String replyMessage:reply) {
+         	log.info("Returns echo message {}: {}", replyToken, replyMessage);
+         	replyList.add(new TextMessage(replyMessage));
         }
+    	
+        this.reply(replyToken,replyList);
+     
     }
 	
 	private void handleImageContent(String replyToken, Event event, DownloadedContent jpg) {
 		Vector<String> reply = null;
+		List<Message> replyList = new ArrayList<Message>(0);
     	try {
     		reply = stateManager.chat(event.getSource().getUserId(), jpg, true);
     	} catch (Exception e) {
     		this.replyText(replyToken,defaultString);
     		return;
     	}
-        log.info("Returns echo message {}: {}", replyToken, reply);
         
-        for (String replyMessage:reply) {
-            this.replyText(replyToken,replyMessage);
+    	for (String replyMessage:reply) {
+         	log.info("Returns echo message {}: {}", replyToken, replyMessage);
+         	replyList.add(new TextMessage(replyMessage));
         }
+    	
+        this.reply(replyToken,replyList);
     }
 	
 	private static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
