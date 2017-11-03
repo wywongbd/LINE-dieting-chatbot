@@ -28,6 +28,9 @@ public class RecommendationState extends State {
      */
 	public String reply(String userId, String text, RiveScript bot) {
 		ArrayList<String> foodList = new ArrayList<String>(Arrays.asList((text.substring(1, text.length() - 1)).split(",")));
+		
+		System.out.println(foodList[0]);
+		
 		String recommended = recommendFood(userId, foodList);
 		
 		if (recommended.equals(DEFAULT_RECOMMENDATION) == false) {
