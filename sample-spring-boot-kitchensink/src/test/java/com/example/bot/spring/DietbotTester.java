@@ -72,29 +72,29 @@ public class DietbotTester {
 	private SQLDatabaseEngine databaseEngine;
 	private RiveScript bot;
 	
-
+	
 	@Test
-	public void writeUserInfoNonExisting() throws Exception {
+	public void writeUserInfoExisting() throws Exception {
 		boolean thrown = false;
 		String[] allergies = {"peanuts", "shrimp"};
 		try {
 			this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies);
 		} catch (Exception e) {
 			thrown = true;
-		} finally {
-			this.databaseEngine.deleteUserInfo("testUser");
 		}
 		assertThat(thrown).isEqualTo(false);
 	}
 	
 	@Test
-	public void writeUserInfoExisting() throws Exception {
+	public void writeUserInfoNonExisting() throws Exception {
 		boolean thrown = false;
 		String[] allergies = {"water"};
 		try {
-			this.databaseEngine.writeUserInfo("testUserExisting", 21, "female", 1.64, 55, allergies);
+			this.databaseEngine.writeUserInfo("testUserNonExisting", 21, "female", 1.64, 55, allergies);
 		} catch (Exception e) {
 			thrown = true;
+		} finally {
+			this.databaseEngine.deleteUserInfo("testUserNonExisting");
 		}
 		assertThat(thrown).isEqualTo(false);
 	}
