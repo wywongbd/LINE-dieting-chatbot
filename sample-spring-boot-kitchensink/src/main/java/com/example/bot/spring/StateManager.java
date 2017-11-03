@@ -114,7 +114,7 @@ public class StateManager {
             
             if(currentState.get(userId) == RECOMMEND_STATE) {
             	System.out.println("entered if statement");
-            	String[] splitString = replyText.lastElement().split("$$$"); 
+            	String[] splitString = (replyText.lastElement()).split("$$$"); 
             	System.out.println(splitString);
             	replyText.remove(replyText.size() - 1);
             	replyText.add(splitString[0]);
@@ -123,6 +123,7 @@ public class StateManager {
             	
             	replyText.add(temp);
             }
+            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));
 
         } catch (Exception e) {    // Modify to custom exception ImageNotRecognized later
             // Image is not recognized as menu, does not modify current state

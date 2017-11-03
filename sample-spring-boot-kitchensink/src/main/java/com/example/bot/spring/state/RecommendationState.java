@@ -36,6 +36,9 @@ public class RecommendationState extends State {
 		
 		System.out.println(recommended);
 		
+		bot.setUservar(userId, "topic", "standby");
+        bot.setUservar(userId, "state", "standby");
+		
 		return recommended;
 	}
 	
