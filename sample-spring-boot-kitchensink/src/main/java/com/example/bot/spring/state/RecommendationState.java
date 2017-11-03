@@ -7,6 +7,7 @@ import com.example.bot.spring.SQLDatabaseEngine;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.*;
 
 @Slf4j
 public class RecommendationState extends State {
@@ -26,12 +27,14 @@ public class RecommendationState extends State {
      * @return A String data type
      */
 	public String reply(String userId, String text, RiveScript bot) {
-		int currentState = decodeState(bot.getUservar(userId, "state")); 
-		String output = bot.reply(userId, text);
-		int afterState = decodeState(bot.getUservar(userId, "state"));
+		ArrayList<String> foodList = new ArrayList<String>(Arrays.asList((text.substring(1, text.length() - 1)).split(",")));
+		String recommended = recommendFood(userId, foodList);
 		
+		if (recommended.equals(DEFAULT_RECOMMENDATION) == false) {
+			recommended = "I would recommend you to eat " + recommended; 
+		}
 		
-		return output;
+		return recommended;
 	}
 	
 	/**
