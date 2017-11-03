@@ -30,7 +30,7 @@
     - Do you want to update your personal information? {topic=collect_user_info_confirmation}
 
     // trigger to input_menu state (possibly go to recommend state later)
-	+ [*] (eating|restaurant|help me|look|check out|menu|recommend|recommendation|suggest|suggestion|decide|should|what to eat) [*]
+	+ [*] (input|eating|restaurant|help me|look|check out|menu|recommend|recommendation|suggest|suggestion|decide|should|what to eat) [*]
 	- Please let me have a look at your menu first. You can either take a photo, or share the menu url with me. {topic=input_menu} <set state=input_menu>
 
     // trigger to record what the user ate
