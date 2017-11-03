@@ -61,19 +61,11 @@ public class StateManager {
             // Get the next state after current message
             if (currentState.containsKey(userId) == false) {
                 currentState.put(userId, 1);
+                bot.setUservar(userId, "state", "collect_user_info");
             }
             
-            if(text.matches(InputMenuState.URL_PATTERN_REGEX)){
-                // The text message is URL
-                replyText = ((InputMenuState) states[INPUT_MENU_STATE]).replyUrl(text);
-                currentState.put(userId, INPUT_MENU_STATE);
-//                bot.setUservar(userId, "topic", "input_menu");
-//                bot.setUservar(userId, "state", "input_menu");
-            }
-            else {
-                replyText = states[currentState.get(userId)].reply(userId, text, bot);
-                currentState.put(userId, decodeState(bot.getUservar(userId, "state")));    
-            }
+        	replyText = states[currentState.get(userId)].reply(userId, text, bot);
+            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));    
             
         } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
             // Text is not recognized, does not modify current state
@@ -93,17 +85,17 @@ public class StateManager {
      * @return A String data type
      */
     public String chat(String userId, DownloadedContent jpg) throws Exception {
+    	
         String replyText = null;
         try{
-            if (currentState.containsKey(userId) == false) {
-                currentState.put(userId, INPUT_MENU_STATE);
+            if (currentState.containsKey(userId) == false || currentState.get(userId) == 1) {
+                return "Please finish giving us your personal information before sending photos!";
             }
             // Pass the image into InputMenuState to check if the image is recognized as menu
-            replyText = ((InputMenuState) states[INPUT_MENU_STATE]).replyImage(jpg);
+            replyText = ((InputMenuState) states[INPUT_MENU_STATE]).replyImage(userId, jpg, bot);
             // If above line does not return exception, then the image is recognized as menu
-            currentState.put(userId, INPUT_MENU_STATE);
-//            bot.setUservar(userId, "topic", "input_menu");
-//            bot.setUservar(userId, "state", "input_menu");
+            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));
+
         } catch (Exception e) {    // Modify to custom exception ImageNotRecognized later
             // Image is not recognized as menu, does not modify current state
             replyText = "Your image is not recognized by us!";

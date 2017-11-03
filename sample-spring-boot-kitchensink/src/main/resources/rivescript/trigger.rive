@@ -6,10 +6,11 @@
 	+ *
 	- Hi! I am your personal Dieting Chatbot!
         ^ First, I need to ask you a few questions about your physical information.
-        ^ What is your name?<set state=collect_user_info>{topic=collect_user_name}
+        ^ What is your name?<set state=collect_user_info><set img_received=false><set url_received=false>{topic=collect_user_name}
 
 < topic
 
+///////////////////////////////////////standby
 
 > topic standby 
 	+ *
@@ -25,11 +26,11 @@
 	- Google results for "<star>": <a href="http://google.com/search?q=<star>">Click Here</a>
 
 	+ [*] (tweak|change|alter|update|modify) [*] (info|information|details|particulars)|(height|weight|age|gender|name|allergy|allergies) [*]
-	- Okay, I will now ask you a few questions to <star1> your <star2>.
+	- Okay, I will now ask you a few questions to <star1> your <star2>. What is your name?
 		^ {topic=collect_user_name} <set state=collect_user_info>
 
 	+ [*] ([eating] [*] restaurant|[help me] (look|check out) [*] menu|(recommend|recommendation|suggest|suggestion|decide|should|what to) [*] eat|have) [*]
-	- Please let me have a look at your menu.
+	- Please let me have a look at your menu. You can now either share me a photo or a url. 
 		^ {topic=input_menu} <set state=input_menu>
 
 	+ [*] (finished eating|ate|eaten|had (a|an|[my] @meals)) [*]
@@ -228,7 +229,10 @@
 		^ {topic=standby} <set state=standby>
     
 	+ * 
-	- input_menu
+	* <get img_received> == true => Thanks, I'm looking at your photo now! I'll try to give you some recommendations.
+	* <get url_received> == true => Thanks, I'm looking at your url now! I'll try to give you some recommendations.
+	- I don't understand. Can you please provide me with a photo or url of your menu?
+	
 < topic
 
 
