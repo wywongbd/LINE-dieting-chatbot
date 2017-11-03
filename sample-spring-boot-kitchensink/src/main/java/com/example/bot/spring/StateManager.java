@@ -68,6 +68,7 @@ public class StateManager {
             currentState.put(userId, decodeState(bot.getUservar(userId, "state"))); 
             
             if(currentState.get(userId) == RECOMMEND_STATE) {
+            	System.out.println("entered if statement");
             	String[] splitString = replyText.lastElement().split("$$$"); 
             	System.out.println(splitString);
             	replyText.remove(replyText.size() - 1);
