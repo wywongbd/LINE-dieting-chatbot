@@ -119,16 +119,27 @@ public class InputMenuState extends State {
         return o.processOcrRawString(ocrRawString);
     }
 
+    
     /**
      * Perform OCR on the image and return the raw string
      * @param jpg A DownloadedContent data type
      * @return A String data type
      */
     public String ocrImage(DownloadedContent jpg) {
+    		String pathString = jpg.getPathString();
+        return ocrImagePath(pathString);
+    }
+
+    /**
+     * Perform OCR on the image and return the raw string
+     * @param jpg A DownloadedContent data type
+     * @return A String data type
+     */
+    public String ocrImagePath(String pathString) {
         Ocr.setUp();    // One time setup
         Ocr ocr = new Ocr();    // Create a new OCR engine
         ocr.startEngine("eng", Ocr.SPEED_SLOW);    // English
-        String ocrRawString = ocr.recognize(new File[] {new File(jpg.getPathString())},
+        String ocrRawString = ocr.recognize(new File[] {new File(pathString)},
                                         Ocr.RECOGNIZE_TYPE_ALL,
                                         Ocr.OUTPUT_FORMAT_PLAINTEXT);
         ocr.stopEngine();    // Stop the OCR engine

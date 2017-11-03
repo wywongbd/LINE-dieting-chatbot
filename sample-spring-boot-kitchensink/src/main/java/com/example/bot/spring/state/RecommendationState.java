@@ -27,6 +27,7 @@ public class RecommendationState extends State {
      * @return A String data type
      */
 	public String reply(String userId, String text, RiveScript bot) {
+
 		ArrayList<String> foodList = new ArrayList<String>();
 		
 		String[] temp = (text.substring(1, text.length() - 1)).split(",");
@@ -66,6 +67,9 @@ public class RecommendationState extends State {
 			sql.processRecommendationsByAllergies(userId);
 			sql.processRecommendationsByIntake(userId);
 			foodWeightage = sql.getRecommendations(userId);
+			// Remove these in the future
+			sql.resetMenu(userId);
+			sql.resetRecommendations(userId);
 
 			// Compute the total weight of all items together
 			Double totalWeight = 0.0d;
