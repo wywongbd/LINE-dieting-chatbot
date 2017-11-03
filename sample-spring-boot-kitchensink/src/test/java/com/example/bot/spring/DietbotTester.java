@@ -169,6 +169,26 @@ public class DietbotTester {
 		}
 		assertThat(thrown).isEqualTo(false);
 	}
+	
+	@Test
+	public void getRecommendations() throws Exception {
+		HashMap<String, Double> result = new HashMap<String, Double>();
+		ArrayList<String> menu = new ArrayList<String>();
+		menu.add("frozen water");
+		menu.add("molten ice");
+		boolean thrown = false;
+		try {
+			this.databaseEngine.addMenu("testUser", menu);
+			this.databaseEngine.addRecommendations("testUser");
+			result = this.databaseEngine.getRecommendations("testUser");
+			this.databaseEngine.resetMenu("testUser");
+			this.databaseEngine.resetRecommendations("testUser");
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+		assertThat(result.get("frozen water")).isEqualTo(1.0);
+	}
 
 	@Test
 	public void testNewRivescript() throws Exception {

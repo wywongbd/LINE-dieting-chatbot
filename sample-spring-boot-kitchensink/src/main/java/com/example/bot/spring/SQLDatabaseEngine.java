@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @Slf4j
 public class SQLDatabaseEngine {
@@ -364,6 +365,50 @@ public class SQLDatabaseEngine {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
 		}
+	}
+	
+	
+	// Returns a HashMap of meal recommendations corresponding to the user
+	public HashMap<String, Double> getRecommendations(String userId) throws Exception {
+		Connection connection = null;
+		PreparedStatement stmtQuery = null;
+		ResultSet rs = null;
+		HashMap<String, Double> foodWeightage = new HashMap<String, Double>();
+		String food = null;
+		double weightage = 0;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Retrieves meal name and weightage to be put into the HashMap
+			try {
+				stmtQuery = connection.prepareStatement(
+					"SELECT meal_name, weightage " + 
+					"FROM recommendations " + 
+					"WHERE userid = ?"
+				);
+				stmtQuery.setString(1, userId);
+				rs = stmtQuery.executeQuery();
+				while (rs.next()) {
+					food = rs.getString(1);
+					weightage = rs.getDouble(2);
+					foodWeightage.put(food, weightage);
+				}
+			} catch (SQLException e) {
+				log.info("Exception while removing recommendations from recommendations table: {}", e.toString());
+			}
+		} catch (SQLException e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
+			} catch (SQLException e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+		return foodWeightage;
 	}
 	
 	
