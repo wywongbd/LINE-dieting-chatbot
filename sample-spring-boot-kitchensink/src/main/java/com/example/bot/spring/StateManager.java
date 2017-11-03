@@ -123,7 +123,11 @@ public class StateManager {
             	System.out.println(splitString[1]);
             	
             	replyText.remove(replyText.size() - 1);
+            	
+            	System.out.println("removed last item");
             	replyText.add(splitString[0]);
+            	System.out.println("appended new last item");
+            	
             	String temp = states[currentState.get(userId)].reply(userId, splitString[1], bot);
             	
             	
