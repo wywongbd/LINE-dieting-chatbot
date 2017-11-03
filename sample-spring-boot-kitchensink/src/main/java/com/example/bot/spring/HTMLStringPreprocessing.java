@@ -70,7 +70,7 @@ public class HTMLStringPreprocessing extends StringPreprocessing{
 	  public ArrayList<String> readFromUrl(String url) throws IOException {
 		  	ArrayList<String> foodContent = new ArrayList<String>();
 		    InputStream is = new URL(url).openStream();
-		    try {
+		    try { 
 		      // print all the html lines
 		    	BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 		    	String temp;
