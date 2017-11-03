@@ -67,17 +67,15 @@ public class StateManager {
         	replyText.add(states[currentState.get(userId)].reply(userId, text, bot));
             currentState.put(userId, decodeState(bot.getUservar(userId, "state"))); 
             
-            if(currentState.get(userId) == RECOMMEND_STATE) {
-            	System.out.println("entered if statement");
-            	String[] splitString = replyText.lastElement().split("$$$"); 
-            	System.out.println(splitString);
+            if(currentState.get(userId) == RECOMMEND_STATE) {            	
+            	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	          	
+            	replyText.add(0, splitString[0]);         	          	
             	replyText.remove(replyText.size() - 1);
-            	replyText.add(splitString[0]);
-            	String temp = states[currentState.get(userId)].reply(userId, splitString[1], bot);
-            	System.out.println(temp);
-            	
+         
+            	String temp = states[currentState.get(userId)].reply(userId, splitString[1], bot);           	
             	replyText.add(temp);
             }
+            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));
             
         } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
             // Text is not recognized, does not modify current state
@@ -112,25 +110,12 @@ public class StateManager {
             replyText.add(((InputMenuState) states[INPUT_MENU_STATE]).replyImage(userId, jpg, bot));
             currentState.put(userId, decodeState(bot.getUservar(userId, "state")));
             
-            if(currentState.get(userId) == RECOMMEND_STATE) {
-            	System.out.println("entered if statement");
-            	System.out.println(replyText.lastElement());
-            	
-            	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	
-            	System.out.println(splitString[0]);
-            	
-            	replyText.add(0, splitString[0]);
-            	
-            	System.out.println("added new item ");
-            	
+            if(currentState.get(userId) == RECOMMEND_STATE) {            	
+            	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	          	
+            	replyText.add(0, splitString[0]);         	          	
             	replyText.remove(replyText.size() - 1);
-            	
-            	System.out.println("removed last item");
          
-            	String temp = states[currentState.get(userId)].reply(userId, splitString[1], bot);
-            	
-            	System.out.println(temp);
-            	
+            	String temp = states[currentState.get(userId)].reply(userId, splitString[1], bot);           	
             	replyText.add(temp);
             }
             currentState.put(userId, decodeState(bot.getUservar(userId, "state")));
