@@ -115,11 +115,18 @@ public class StateManager {
             if(currentState.get(userId) == RECOMMEND_STATE) {
             	System.out.println("entered if statement");
             	System.out.println(replyText.lastElement());
+            	
             	String[] splitString = (replyText.lastElement()).split("$$$$$$$$$$"); 
-            	System.out.println(splitString);
+            	
+            	
+            	System.out.println(splitString[0]);
+            	System.out.println(splitString[1]);
+            	
             	replyText.remove(replyText.size() - 1);
             	replyText.add(splitString[0]);
             	String temp = states[currentState.get(userId)].reply(userId, splitString[1], bot);
+            	
+            	
             	System.out.println(temp);
             	
             	replyText.add(temp);
