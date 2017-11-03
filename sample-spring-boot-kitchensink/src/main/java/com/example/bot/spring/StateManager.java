@@ -36,7 +36,7 @@ public class StateManager {
     /**
      * Default constructor for StateManager
      */
-    public StateManager() {
+    public StateManager(String path) {
 
             // Rivescript objectg
             bot = new RiveScript();
@@ -44,7 +44,7 @@ public class StateManager {
             currentState = new HashMap<String, Integer>();
 
             // Load rive files for Rivescript object
-            File resourcesDirectory = new File("sample-spring-boot-kitchensink/src/main/resources/rivescript");
+            File resourcesDirectory = new File(path);
             bot.loadDirectory(resourcesDirectory.getAbsolutePath());
             bot.sortReplies();
     }
