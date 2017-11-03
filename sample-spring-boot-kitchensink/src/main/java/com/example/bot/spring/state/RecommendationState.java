@@ -31,12 +31,13 @@ public class RecommendationState extends State {
 		
 		String[] temp = (text.substring(1, text.length() - 1)).split(",");
 		for(String k : temp) {
+			System.out.println(k);
 			foodList.add(k);
 		}
 		
 		String recommended = recommendFood(userId, foodList);
 		
-		if (recommended.equals(DEFAULT_RECOMMENDATION) == false) {
+		if (!recommended.equals(DEFAULT_RECOMMENDATION)) {
 			recommended = "I would recommend you to eat " + recommended; 
 		}
 		
