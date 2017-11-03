@@ -114,7 +114,8 @@ public class StateManager {
             
             if(currentState.get(userId) == RECOMMEND_STATE) {
             	System.out.println("entered if statement");
-            	String[] splitString = (replyText.lastElement()).split("$$$"); 
+            	System.out.println(replyText.lastElement());
+            	String[] splitString = (replyText.lastElement()).split("$$$$$$$$$$"); 
             	System.out.println(splitString);
             	replyText.remove(replyText.size() - 1);
             	replyText.add(splitString[0]);
