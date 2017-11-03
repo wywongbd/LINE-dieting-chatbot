@@ -116,7 +116,7 @@ public class StateManager {
             	System.out.println("entered if statement");
             	System.out.println(replyText.lastElement());
             	
-            	String[] splitString = (replyText.lastElement()).split("$$$$$$$$$$");       	            	
+            	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	
             	System.out.println(splitString[0]);
             	
             	replyText.add(0, splitString[0]);
