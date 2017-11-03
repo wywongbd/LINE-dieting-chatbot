@@ -56,6 +56,7 @@ public class StateManager {
      */
     public Vector<String> chat(String userId, String text, boolean debug) throws Exception {
     	Vector<String> replyText = new Vector<String>(0);
+
         try{
             // Get the next state after current message
             if (currentState.containsKey(userId) == false) {
@@ -66,6 +67,15 @@ public class StateManager {
         	replyText.add(states[currentState.get(userId)].reply(userId, text, bot));
             currentState.put(userId, decodeState(bot.getUservar(userId, "state"))); 
             
+            if(currentState.get(userId) == RECOMMEND_STATE) {            	
+            	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	          	
+            	replyText.add(0, splitString[0]);         	          	
+            	replyText.remove(replyText.size() - 1);
+         
+            	String temp = states[currentState.get(userId)].reply(userId, splitString[1], bot);           	
+            	replyText.add(temp);
+            }
+            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));
             
         } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
             // Text is not recognized, does not modify current state
@@ -99,11 +109,21 @@ public class StateManager {
             // Pass the image into InputMenuState to check if the image is recognized as menu
             replyText.add(((InputMenuState) states[INPUT_MENU_STATE]).replyImage(userId, jpg, bot));
             currentState.put(userId, decodeState(bot.getUservar(userId, "state")));
+            
+            if(currentState.get(userId) == RECOMMEND_STATE) {            	
+            	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	          	
+            	replyText.add(0, splitString[0]);         	          	
+            	replyText.remove(replyText.size() - 1);
+         
+            	String temp = states[currentState.get(userId)].reply(userId, splitString[1], bot);           	
+            	replyText.add(temp);
+            }
+            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));
 
         } catch (Exception e) {    // Modify to custom exception ImageNotRecognized later
             // Image is not recognized as menu, does not modify current state
         	replyText.clear();
-            replyText.add("Your text is not recognized by us!");
+            replyText.add("Your img is not recognized by us!");
         }
         if(replyText.size() > 0) {
             // Just for testing

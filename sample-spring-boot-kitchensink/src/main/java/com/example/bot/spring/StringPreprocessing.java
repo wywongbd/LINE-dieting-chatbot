@@ -8,10 +8,10 @@ public class StringPreprocessing {
 	Set<String> stopWordsSet = null;
 
 	// Constant values
-	private static final int MIN_LINE_LENGTH = 4;
+	protected static final int MIN_LINE_LENGTH = 4;
 	protected static final int MAX_LINE_LENGTH = 150;
-	private static final int MIN_WORD_LENGTH = 3;
-	
+	protected static final int MIN_WORD_LENGTH = 3;
+
 	private final String[] STOPWORDS_ARRAY = {
 			"with", "and", "you", "your", "our", "date", "choice", "served", "served", "get",
 			"are", "is", "am", "were", "was",
@@ -43,33 +43,6 @@ public class StringPreprocessing {
 		for(String stopWord : STOPWORDS_ARRAY) {
 			stopWordsSet.add(stopWord);
 		}
-	}
-	
-    /**
-     * Process the raw string returned by Ocr API
-     * @param ocrRawString A String data type
-     * @param minLineLength A int data type
-     * @param minWordLength A int data type
-     * @param stopWordsSet A Set<String> data type
-     * @return A Set<String> data type
-     */
-	public ArrayList<String> processOcrRawString(String ocrRawString){
-		ArrayList<String> result = new ArrayList<String>();
-
-		String[] splitOcrRawString = ocrRawString.split("\\r?\\n");
-		ArrayList<String> longLowerCaseString = getLongLowerCaseString(splitOcrRawString, MIN_LINE_LENGTH);
-
-		String processUnitContentString = null;    // Working variable
-		for(String unitContent : longLowerCaseString) {
-			// remove those with character > 150
-			if(unitContent.length()> MAX_LINE_LENGTH) {continue;}
-
-			processUnitContentString = processUnitContent(unitContent);
-			if(!processUnitContentString.equals("")) {
-				result.add(processUnitContentString);
-			}
-		}
-		return result;
 	}
 
     /**
