@@ -6,8 +6,7 @@ package com.example.bot.spring;
 
 import com.rivescript.RiveScript;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import com.example.bot.spring.DietbotController.DownloadedContent;
 
@@ -55,8 +54,8 @@ public class StateManager {
      * @param text A String data type
      * @return A String data type
      */
-    public String chat(String userId, String text) throws Exception {
-        String replyText = null;
+    public Vector<String> chat(String userId, String text, boolean debug) throws Exception {
+    	Vector<String> replyText = new Vector<String>(0);
         try{
             // Get the next state after current message
             if (currentState.containsKey(userId) == false) {
@@ -64,17 +63,22 @@ public class StateManager {
                 bot.setUservar(userId, "state", "collect_user_info");
             }
             
-        	replyText = states[currentState.get(userId)].reply(userId, text, bot);
-            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));    
+        	replyText.add(states[currentState.get(userId)].reply(userId, text, bot));
+            currentState.put(userId, decodeState(bot.getUservar(userId, "state"))); 
+            
             
         } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
             // Text is not recognized, does not modify current state
-            replyText = "Your text is not recognized by us!";
+        	replyText.clear();
+            replyText.add("Your text is not recognized by us!");
         }
         
-        if(replyText != null) {
+        if(replyText.size() > 0) {
             // Just for testing
-            return replyText + " Current state is " +  Integer.toString(currentState.get(userId));
+        	if(debug == true) {
+        		replyText.add("Current state is " +  Integer.toString(currentState.get(userId)));
+        	}
+        	return replyText;
         }
         throw new Exception("NOT FOUND");
     }
@@ -84,25 +88,29 @@ public class StateManager {
      * @param jpg A DownloadedContent data type
      * @return A String data type
      */
-    public String chat(String userId, DownloadedContent jpg) throws Exception {
+    public Vector<String> chat(String userId, DownloadedContent jpg, boolean debug) throws Exception {
+    	Vector<String> replyText = new Vector<String>(0);
     	
-        String replyText = null;
         try{
             if (currentState.containsKey(userId) == false || currentState.get(userId) == 1) {
-                return "Please finish giving us your personal information before sending photos!";
+            	replyText.add("Please finish giving us your personal information before sending photos!");
+                return replyText;
             }
             // Pass the image into InputMenuState to check if the image is recognized as menu
-            replyText = ((InputMenuState) states[INPUT_MENU_STATE]).replyImage(userId, jpg, bot);
-            // If above line does not return exception, then the image is recognized as menu
+            replyText.add(((InputMenuState) states[INPUT_MENU_STATE]).replyImage(userId, jpg, bot));
             currentState.put(userId, decodeState(bot.getUservar(userId, "state")));
 
         } catch (Exception e) {    // Modify to custom exception ImageNotRecognized later
             // Image is not recognized as menu, does not modify current state
-            replyText = "Your image is not recognized by us!";
+        	replyText.clear();
+            replyText.add("Your text is not recognized by us!");
         }
-        if(replyText != null) {
+        if(replyText.size() > 0) {
             // Just for testing
-            return replyText + " Current state is " +  Integer.toString(currentState.get(userId));
+        	if(debug == true) {
+        		replyText.add("Current state is " +  Integer.toString(currentState.get(userId)));
+        	}
+        	return replyText;
         }
         throw new Exception("NOT FOUND");
     }
