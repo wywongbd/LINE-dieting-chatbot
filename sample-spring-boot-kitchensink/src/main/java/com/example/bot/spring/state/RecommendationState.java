@@ -2,6 +2,8 @@ package com.example.bot.spring;
 
 //import java.io.IOException;
 import com.rivescript.RiveScript;
+import com.example.bot.spring.SQLDatabaseEngine;
+import java.util.ArrayList;
 
 public class RecommendationState extends State {
     /**
@@ -24,5 +26,19 @@ public class RecommendationState extends State {
 		
 		
 		return output;
+	}
+	
+	/**
+     * Recommended a food after inputting a list of food
+     * @param FoodList A ArrayList<String> data type
+     * @param userID A int data type
+     * @return A String data type
+     */
+	public String recommendation(ArrayList<String> foodList, int userID) {
+		SQLDatabaseEngine db = new SQLDatabaseEngine();
+		
+		
+		
+		return "Food";
 	}
 }
