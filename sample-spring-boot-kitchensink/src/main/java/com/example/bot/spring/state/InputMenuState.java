@@ -1,7 +1,7 @@
 package com.example.bot.spring;
 
 import com.example.bot.spring.DietbotController.DownloadedContent;
-import com.example.bot.spring.StringPreprocessing;
+import com.example.bot.spring.OCRStringPreprocessing;
 import com.example.bot.spring.HTMLStringPreprocessing;
 import com.rivescript.RiveScript;
 import com.asprise.ocr.Ocr;
@@ -115,8 +115,8 @@ public class InputMenuState extends State {
      */
     public ArrayList<String> processImage(DownloadedContent jpg) {
         String ocrRawString = ocrImage(jpg);
-        StringPreprocessing stringProcessing = new StringPreprocessing();
-        return stringProcessing.processOcrRawString(ocrRawString);
+        OCRStringPreprocessing o = new OCRStringPreprocessing();
+        return o.processOcrRawString(ocrRawString);
     }
 
     /**
