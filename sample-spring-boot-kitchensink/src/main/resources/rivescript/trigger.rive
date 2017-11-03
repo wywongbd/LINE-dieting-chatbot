@@ -252,25 +252,25 @@
 
 
 
-//> topic post_eating
-//	+ talk later
-//	- Okay see you later.
-//		^ {topic=standby} <set state=standby>
-//
-//	+ * 
-//	- post_eating
-//< topic
+> topic post_eating
+	+ talk later
+	- Okay see you later.
+	^ {topic=standby} <set state=standby>
 
-
-
-> topic provide_info
-    + [*] (talk [to you] later|leave) [*]
-    - Okay see you later.
-		^ {topic=standby} <set state=standby>
-    
-	+ *
-	- provide_info
+	+ * 
+	- post_eating
 < topic
+
+
+
+//> topic provide_info
+//    + [*] (talk [to you] later|leave) [*]
+//    - Okay see you later.
+//		^ {topic=standby} <set state=standby>
+//    
+//	+ *
+//	- provide_info
+//< topic
 
 
 
@@ -279,6 +279,6 @@
     + [*] (talk [to you] later|leave) [*]
     - Okay see you later.
 		^ {topic=standby} <set state=standby>
-        
+
 < topic
 
