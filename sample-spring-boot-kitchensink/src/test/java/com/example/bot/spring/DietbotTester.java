@@ -63,6 +63,8 @@ import org.jsoup.helper.*;
 import org.jsoup.nodes.*;
 import org.jsoup.select.*;
 
+import java.util.Arrays;
+
 @RunWith(SpringRunner.class)
 //@SpringBootTest(classes = { DietbotTester.class, DatabaseEngine.class })
 @SpringBootTest(classes = { DietbotTester.class, SQLDatabaseEngine.class })
@@ -296,35 +298,38 @@ public class DietbotTester {
  	}
   	
 	@Test
-	public void testURLtoJSON() throws Exception{
+	public void convertHTMLTabletoJson() throws Exception{
 		
 		boolean thrown = false;
 		String output = null;
 		final String realOutput = "{\"Network\":[{\"2G bands\":\"GSM 900 / 1800 - SIM 1 & SIM 2\",\"Technology\":\"GSM\",\"GPRS\":\"Class 12\",\"EDGE\":\"Yes\"}]}";
 		try{
 			final String HTML = "<table cellspacing=\"0\" style=\"height: 24px;\">\r\n<tr class=\"tr-hover\">\r\n<th rowspan=\"15\" scope=\"row\">Network</th>\r\n<td class=\"ttl\"><a href=\"network-bands.php3\">Technology</a></td>\r\n<td class=\"nfo\"><a href=\"#\" class=\"link-network-detail collapse\">GSM</a></td>\r\n</tr>\r\n<tr class=\"tr-toggle\">\r\n<td class=\"ttl\"><a href=\"network-bands.php3\">2G bands</a></td>\r\n<td class=\"nfo\">GSM 900 / 1800 - SIM 1 & SIM 2</td>\r\n</tr>   \r\n<tr class=\"tr-toggle\">\r\n<td class=\"ttl\"><a href=\"glossary.php3?term=gprs\">GPRS</a></td>\r\n<td class=\"nfo\">Class 12</td>\r\n</tr>   \r\n<tr class=\"tr-toggle\">\r\n<td class=\"ttl\"><a href=\"glossary.php3?term=edge\">EDGE</a></td>\r\n<td class=\"nfo\">Yes</td>\r\n</tr>\r\n</table>";
-			Document document = Jsoup.parse(HTML);
-			Element table = document.select("table").first();
-			String arrayName = table.select("th").first().text();
-			JSONObject jsonObj = new JSONObject();
-			JSONArray jsonArr = new JSONArray();
-			Elements ttls = table.getElementsByClass("ttl");
-			Elements nfos = table.getElementsByClass("nfo");
-			JSONObject jo = new JSONObject();
-			for (int i = 0, l = ttls.size(); i < l; i++) {
-			    String key = ttls.get(i).text();
-			    String value = nfos.get(i).text();
-			    jo.put(key, value);
-			}
-			jsonArr.put(jo);
-			jsonObj.put(arrayName, jsonArr);
+			HTMLStringPreprocessing h = new HTMLStringPreprocessing();
+			JSONObject jsonObj = h.parseHTMLTableToJson(HTML);
 			output = jsonObj.toString();
-			
-    
 		} catch (Exception e) {
 			thrown = true;
 		}
 		assertThat(output).isEqualTo(realOutput);
 	}
+	
+	@Test
+	public void testURLtoJSON() throws Exception{
+		
+		boolean thrown = false;
+		String output = null;
+		final String realOutput = "[apps snacks salads burgers sandwiches pairings desserts drinks, spinach queso dip, panseared pot stickers, chicken quesadilla, grilled salmon, flat iron steak, grilled salmon, flat iron steak, salads, soups, burger greenstyle, burgers sandwiches fries salad sweet potato fries instead, steaks ribs, pastas, chicken seafood, slushes, smoothies, freshly brewed teas, juices, handcrafted alcoholfree beverages made fruit pures natural flavors, refills freshly brewed teas slushes, fruit teas, slushes, drink options, casamigos strawberry rita, boba long island tea, sangria rita, peach sangria, crown apple cooler, tropical berry mojito shaker, tap drafts, happy tell what other local craft beers, bottles cans, red, white, bubbles, bottle selections, glutensensitive, tgi fridays franchisor llc drink responsibly locations see]";
+		try{
+			final String urlString = "https://tgifridays.com/menu/dine-in/";
+			HTMLStringPreprocessing h = new HTMLStringPreprocessing();
+			output =Arrays.toString(h.processURLRawContent((h.readFromUrl(urlString))).toArray());
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(output).isEqualTo(realOutput);
+	}
+
+
 }
  	
