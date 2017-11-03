@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.assertj.core.api.Condition;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,6 +44,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import com.example.bot.spring.DatabaseEngine;
+import com.example.bot.spring.RecommendationState;
 
 
 import com.rivescript.Config;
@@ -70,124 +72,144 @@ public class DietbotTester {
 	private RiveScript bot;
 	
 	
-	@Test
-	public void writeUserInfoNonExisting() throws Exception {
-		boolean thrown = false;
-		String[] allergies = {"peanuts", "shrimp"};
-		try {
-			this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies);
-		} catch (Exception e) {
-			thrown = true;
-		} finally {
-			this.databaseEngine.deleteUserInfo("testUser");
-		}
-		assertThat(thrown).isEqualTo(false);
-	}
+//	@Test
+//	public void writeUserInfoNonExisting() throws Exception {
+//		boolean thrown = false;
+//		String[] allergies = {"peanuts", "shrimp"};
+//		try {
+//			this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies);
+//		} catch (Exception e) {
+//			thrown = true;
+//		} finally {
+//			this.databaseEngine.deleteUserInfo("testUser");
+//		}
+//		assertThat(thrown).isEqualTo(false);
+//	}
+//	
+//	@Test
+//	public void writeUserInfoExisting() throws Exception {
+//		boolean thrown = false;
+//		String[] allergies = {"water"};
+//		try {
+//			this.databaseEngine.writeUserInfo("testUserExisting", 21, "female", 1.64, 55, allergies);
+//		} catch (Exception e) {
+//			thrown = true;
+//		}
+//		assertThat(thrown).isEqualTo(false);
+//	}
+//	
+//	@Test
+//	public void testAdd() throws Exception {
+//		boolean thrown = false;
+//		String resultMenu = null;
+//		String resultRecommendations = null;
+//		ArrayList<String> menu = new ArrayList<String>();
+//		menu.add("frozen water");
+//		menu.add("molten ice");
+//		try {
+//			this.databaseEngine.addMenu("testUser", menu);
+//			this.databaseEngine.addRecommendations("testUser");
+//			resultMenu = this.databaseEngine.searchMenu("frozen");
+//			resultRecommendations = this.databaseEngine.searchRecommendations("frozen");
+//			this.databaseEngine.resetMenu("testUser");
+//			this.databaseEngine.resetRecommendations("testUser");
+//		} catch (Exception e) {
+//			thrown = true;
+//		}
+//		assertThat(thrown).isEqualTo(false);
+//		assertThat(resultMenu.contains("frozen"));
+//		assertThat(resultRecommendations.contains("frozen"));
+//	}
+//	
+//	@Test
+//	public void searchMenuNotFound() throws Exception {
+//		boolean thrown = false;
+//		String result = null;
+//		try {
+//			result = this.databaseEngine.searchMenu("asdf");
+//		} catch (Exception e) {
+//			thrown = true;
+//		}
+//		assertThat(thrown).isEqualTo(true);
+//	}
+//
+//	@Test
+//	public void searchRecommendationsNotFound() throws Exception {
+//		boolean thrown = false;
+//		String result = "";
+//		try {
+//			result = this.databaseEngine.searchRecommendations("asdf");
+//		} catch (Exception e) {
+//			thrown = true;
+//		}
+//		assertThat(thrown).isEqualTo(true);
+//	}
+//	
+//	@Test
+//	public void testRemoveAllergies() throws Exception {
+//		boolean thrown = false;
+//		ArrayList<String> menu = new ArrayList<String>();
+//		menu.add("grilled salmon");
+//		try {
+//			this.databaseEngine.addMenu("testUser", menu);
+//			this.databaseEngine.addRecommendations("testUser");
+//			this.databaseEngine.processRecommendationsByAllergies("testUser");
+//			this.databaseEngine.searchRecommendations("salmon");
+//		} catch (Exception e) {
+//			thrown = true;
+//		}
+//		assertThat(thrown).isEqualTo(true);
+//	}
+//	
+//	@Test
+//	public void testUpdateRecommendationsByIntake() throws Exception {
+//		boolean thrown = false;
+//		try {
+//			this.databaseEngine.processRecommendationsByIntake("testUser");
+//		} catch (Exception e) {
+//			thrown = true;
+//		}
+//		assertThat(thrown).isEqualTo(false);
+//	}
+//	
+//	@Test
+//	public void getRecommendations() throws Exception {
+//		HashMap<String, Double> result = new HashMap<String, Double>();
+//		ArrayList<String> menu = new ArrayList<String>();
+//		menu.add("frozen water");
+//		menu.add("molten ice");
+//		boolean thrown = false;
+//		try {
+//			this.databaseEngine.addMenu("testUser", menu);
+//			this.databaseEngine.addRecommendations("testUser");
+//			result = this.databaseEngine.getRecommendations("testUser");
+//			this.databaseEngine.resetMenu("testUser");
+//			this.databaseEngine.resetRecommendations("testUser");
+//		} catch (Exception e) {
+//			thrown = true;
+//		}
+//		assertThat(thrown).isEqualTo(false);
+//		assertThat(result.get("frozen water")).isEqualTo(1.0);
+//	}
 	
 	@Test
-	public void writeUserInfoExisting() throws Exception {
-		boolean thrown = false;
-		String[] allergies = {"water"};
-		try {
-			this.databaseEngine.writeUserInfo("testUserExisting", 21, "female", 1.64, 55, allergies);
-		} catch (Exception e) {
-			thrown = true;
-		}
-		assertThat(thrown).isEqualTo(false);
-	}
-	
-	@Test
-	public void testAdd() throws Exception {
-		boolean thrown = false;
-		String resultMenu = null;
-		String resultRecommendations = null;
-		ArrayList<String> menu = new ArrayList<String>();
-		menu.add("frozen water");
-		menu.add("molten ice");
-		try {
-			this.databaseEngine.addMenu("testUser", menu);
-			this.databaseEngine.addRecommendations("testUser");
-			resultMenu = this.databaseEngine.searchMenu("frozen");
-			resultRecommendations = this.databaseEngine.searchRecommendations("frozen");
-			this.databaseEngine.resetMenu("testUser");
-			this.databaseEngine.resetRecommendations("testUser");
-		} catch (Exception e) {
-			thrown = true;
-		}
-		assertThat(thrown).isEqualTo(false);
-		assertThat(resultMenu.contains("frozen"));
-		assertThat(resultRecommendations.contains("frozen"));
-	}
-	
-	@Test
-	public void searchMenuNotFound() throws Exception {
+	public void recommend() throws Exception {
 		boolean thrown = false;
 		String result = null;
-		try {
-			result = this.databaseEngine.searchMenu("asdf");
-		} catch (Exception e) {
-			thrown = true;
-		}
-		assertThat(thrown).isEqualTo(true);
-	}
+		String resultString = "grilled salmon vege fish chip mayo rice fried chicken fish";
+		RecommendationState recommend = new RecommendationState();
+		ArrayList<String> foodList = new ArrayList<String>();
+		foodList.add("grilled salmon vege");
+		foodList.add("fish chip mayo");
+		foodList.add("rice fried chicken fish");
 
-	@Test
-	public void searchRecommendationsNotFound() throws Exception {
-		boolean thrown = false;
-		String result = "";
 		try {
-			result = this.databaseEngine.searchRecommendations("asdf");
-		} catch (Exception e) {
-			thrown = true;
-		}
-		assertThat(thrown).isEqualTo(true);
-	}
-	
-	@Test
-	public void testRemoveAllergies() throws Exception {
-		boolean thrown = false;
-		ArrayList<String> menu = new ArrayList<String>();
-		menu.add("grilled salmon");
-		try {
-			this.databaseEngine.addMenu("testUser", menu);
-			this.databaseEngine.addRecommendations("testUser");
-			this.databaseEngine.processRecommendationsByAllergies("testUser");
-			this.databaseEngine.searchRecommendations("salmon");
-		} catch (Exception e) {
-			thrown = true;
-		}
-		assertThat(thrown).isEqualTo(true);
-	}
-	
-	@Test
-	public void testUpdateRecommendationsByIntake() throws Exception {
-		boolean thrown = false;
-		try {
-			this.databaseEngine.processRecommendationsByIntake("testUser");
+			result = recommend.recommendFood("testUser", foodList);
 		} catch (Exception e) {
 			thrown = true;
 		}
 		assertThat(thrown).isEqualTo(false);
-	}
-	
-	@Test
-	public void getRecommendations() throws Exception {
-		HashMap<String, Double> result = new HashMap<String, Double>();
-		ArrayList<String> menu = new ArrayList<String>();
-		menu.add("frozen water");
-		menu.add("molten ice");
-		boolean thrown = false;
-		try {
-			this.databaseEngine.addMenu("testUser", menu);
-			this.databaseEngine.addRecommendations("testUser");
-			result = this.databaseEngine.getRecommendations("testUser");
-			this.databaseEngine.resetMenu("testUser");
-			this.databaseEngine.resetRecommendations("testUser");
-		} catch (Exception e) {
-			thrown = true;
-		}
-		assertThat(thrown).isEqualTo(false);
-		assertThat(result.get("frozen water")).isEqualTo(1.0);
+		assertThat(resultString.contains(result));
 	}
 
 	@Test
