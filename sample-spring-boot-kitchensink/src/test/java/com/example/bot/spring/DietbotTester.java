@@ -206,6 +206,7 @@ public class DietbotTester {
 		foodList.add("grilled pork vege");
 		foodList.add("fish chip mayo");
 		foodList.add("rice fried chicken");
+		foodList.add("fruit apple");
 
 		try {
 			result = recommend.recommendFood("testUser", foodList);
