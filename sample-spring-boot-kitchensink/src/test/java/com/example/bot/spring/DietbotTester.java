@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.assertj.core.api.Condition;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,6 +44,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import com.example.bot.spring.DatabaseEngine;
+import com.example.bot.spring.RecommendationState;
 
 
 import com.rivescript.Config;
@@ -69,7 +71,7 @@ public class DietbotTester {
 	private SQLDatabaseEngine databaseEngine;
 	private RiveScript bot;
 	
-	
+
 	@Test
 	public void writeUserInfoNonExisting() throws Exception {
 		boolean thrown = false;
@@ -189,6 +191,26 @@ public class DietbotTester {
 		assertThat(thrown).isEqualTo(false);
 		assertThat(result.get("frozen water")).isEqualTo(1.0);
 	}
+	
+	@Test
+	public void recommend() throws Exception {
+		boolean thrown = false;
+		String result = null;
+		String resultString = "grilled salmon vege fish chip mayo rice fried chicken fish";
+		RecommendationState recommend = new RecommendationState();
+		ArrayList<String> foodList = new ArrayList<String>();
+		foodList.add("grilled salmon vege");
+		foodList.add("fish chip mayo");
+		foodList.add("rice fried chicken fish");
+
+		try {
+			result = recommend.recommendFood("testUser", foodList);
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+		assertThat(resultString.contains(result));
+	}
 
 	@Test
 	public void testNewRivescript() throws Exception {
@@ -306,4 +328,3 @@ public class DietbotTester {
 	}
 }
  	
-
