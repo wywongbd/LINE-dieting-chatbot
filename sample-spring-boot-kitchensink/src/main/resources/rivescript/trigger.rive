@@ -239,7 +239,7 @@
 
 
 > topic input_menu 
-	+ ([*] talk later|talk to you later)
+	+ [*] (talk [to you] later|leave) [*]
 	- Okay see you later.
 		^ {topic=standby} <set state=standby>
     
@@ -264,11 +264,11 @@
 
 
 > topic provide_info
-	+ ([*] talk later|talk to you later)
-	- Okay see you later.
+    + [*] (talk [to you] later|leave) [*]
+    - Okay see you later.
 		^ {topic=standby} <set state=standby>
     
-	+ * 
+	+ *
 	- provide_info
 < topic
 
@@ -276,8 +276,9 @@
 
 > topic recommend
 
-	+ ([*] talk later|talk to you later)
-	- Okay see you later.
+    + [*] (talk [to you] later|leave) [*]
+    - Okay see you later.
 		^ {topic=standby} <set state=standby>
+        
 < topic
 
