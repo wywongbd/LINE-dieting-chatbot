@@ -1,4 +1,4 @@
-! local concat = space
+! local concat = newline
 
 > topic new_user
 
