@@ -265,7 +265,13 @@ public class DietbotTester {
 			this.databaseEngine.addMenu("testUser", menu);
 			this.databaseEngine.addRecommendations("testUser");
 			this.databaseEngine.processRecommendationsByAllergies("testUser");
+<<<<<<< HEAD
 			this.databaseEngine.getRecommendation("salmon");
+=======
+			this.databaseEngine.searchRecommendations("salmon");
+			this.databaseEngine.resetMenu("testUser");
+			this.databaseEngine.resetRecommendations("testUser");
+>>>>>>> 092c336f6bc2bd6832a1f2cdbdd62bf26133f2d2
 		} catch (Exception e) {
 			thrown = true;
 		}
