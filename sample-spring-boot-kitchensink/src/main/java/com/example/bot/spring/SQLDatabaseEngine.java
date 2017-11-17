@@ -38,7 +38,7 @@ public class SQLDatabaseEngine {
 	 * Unit for height: m
 	 * Unit for weight: kg
 	 */
-	public void writeUserInfo(String userId, int age, String gender, double height, double weight, String[] allergies) throws Exception {
+	public void writeUserInfo(String userId, int age, String gender, double height, double weight, String[] allergies, int foodHistPeriod, String topic, String state) throws Exception {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
 		
@@ -56,21 +56,158 @@ public class SQLDatabaseEngine {
 			} catch (SQLException e) {
 				log.info("Exception while deleting existing user info from database: {}", e.toString());
 			}
+
+			// Delete user allergies if it already exists
+			try {
+				stmtUpdate = connection.prepareStatement(
+					"DELETE FROM userallergies " +
+					"WHERE userId = ?"
+				);
+				stmtUpdate.setString(1, userId);
+				stmtUpdate.executeUpdate();
+			} catch (SQLException e) {
+				log.info("Exception while deleting existing user allergies from database: {}", e.toString());
+			}			
 			
 			// Insert user info into the database
 			try {
 				stmtUpdate = connection.prepareStatement(
 					"INSERT INTO userinfo " +
-					"VALUES (?, ?, ?, ?, ?)"
+					"VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 				);
 				stmtUpdate.setString(1, userId);
 				stmtUpdate.setInt(2, age);
 				stmtUpdate.setString(3, gender);
 				stmtUpdate.setDouble(4, height);
 				stmtUpdate.setDouble(5, weight);
+				stmtUpdate.setInt(6, foodHistPeriod);
+				stmtUpdate.setString(7, topic);
+				stmtUpdate.setString(8, state);
 				stmtUpdate.executeUpdate();
 			} catch (SQLException e) {
 				log.info("Exception while inserting user info into database: {}", e.toString());
+			}
+
+			// Insert user allergies into the database if they have any
+			if (allergies != null) {
+				for (String allergy: allergies) {
+					try {
+						stmtUpdate = connection.prepareStatement(
+							"INSERT INTO userallergies " +
+							"VALUES (?, ?)"
+						);
+						stmtUpdate.setString(1, userId);
+						stmtUpdate.setString(2, allergy);
+						stmtUpdate.executeUpdate();
+					} catch (SQLException e) {
+						log.info("Exception while inserting user allergies into database: {}", e.toString());
+					}						
+				}
+			}	
+		} catch (SQLException e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (SQLException e) {  // Exception or IOException??
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+	}
+
+
+	// Sets the value of a single column for a user in userinfo table 
+	// Overloaded function (String)
+	public void setUserInfo(String userId, String info, String newInfo) throws Exception {
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		String statement = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Delete user info if it already exists
+			try {
+				statement = "UPDATE userinfo " +
+							"SET " + info + " = ? " +
+							"WHERE userid = ?";
+				stmtUpdate = connection.prepareStatement(statement);
+				stmtUpdate.setString(1, newInfo);
+				stmtUpdate.setString(2, userId);
+				stmtUpdate.executeUpdate();
+			} catch (SQLException e) {
+				log.info("Exception while updating user info: {}", e.toString());
+			}
+		} catch (SQLException e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (SQLException e) {  // Exception or IOException??
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+	}
+
+
+	// Sets the value of a single column for a user in userinfo table 
+	// Overloaded function (Int)
+	public void setUserInfo(String userId, String info, int newInfo) throws Exception {
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		String statement = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Delete user info if it already exists
+			try {
+				statement = "UPDATE userinfo " +
+							"SET " + info + " = ? " +
+							"WHERE userid = ?";
+				stmtUpdate = connection.prepareStatement(statement);
+				stmtUpdate.setInt(1, newInfo);
+				stmtUpdate.setString(2, userId);
+				stmtUpdate.executeUpdate();
+			} catch (SQLException e) {
+				log.info("Exception while updating user info: {}", e.toString());
+			}
+		} catch (SQLException e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (SQLException e) {  // Exception or IOException??
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+	}
+
+
+	// Sets the value of a single column for a user in userinfo table 
+	// Overloaded function (Double)
+	public void setUserInfo(String userId, String info, double newInfo) throws Exception {
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		String statement = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Delete user info if it already exists
+			try {
+				statement = "UPDATE userinfo " +
+							"SET " + info + " = ? " +
+							"WHERE userid = ?";
+				stmtUpdate = connection.prepareStatement(statement);
+				stmtUpdate.setDouble(1, newInfo);
+				stmtUpdate.setString(2, userId);
+				stmtUpdate.executeUpdate();
+			} catch (SQLException e) {
+				log.info("Exception while updating user info: {}", e.toString());
 			}
 		} catch (SQLException e) {
 			log.info("Exception while connecting to database: {}", e.toString());
@@ -251,17 +388,19 @@ public class SQLDatabaseEngine {
 					"INSERT INTO recommendations " +
 					"SELECT " +
 						"DISTINCT ON (menu.meal_name) " +
-						"? AS userid, " +
+						"userid, " +
 						"menu.meal_name, " +
 						"nutrient_table.description, " +
 						"similarity(menu.meal_name, nutrient_table.description) AS sim, " +
 						"? AS weightage " +
 					"FROM menu " +
-					"JOIN nutrient_table ON menu.meal_name % nutrient_table.description " +
+					"JOIN nutrient_table " +
+						"ON menu.meal_name % nutrient_table.description " +
+						"AND userid = ? " +
 					"ORDER BY menu.meal_name, sim DESC"
 				);
-				stmtUpdate.setString(1, userId);
-				stmtUpdate.setDouble(2, 1.0);
+				stmtUpdate.setDouble(1, 1.0);
+				stmtUpdate.setString(2, userId);
 				stmtUpdate.executeUpdate();
 			} catch (SQLException e) {
 				log.info("Exception while inserting records into the recommendations table: {}", e.toString());
@@ -412,7 +551,7 @@ public class SQLDatabaseEngine {
 	
 	
 	// Returns a HashMap of meal recommendations corresponding to the user
-	public HashMap<String, Double> getRecommendations(String userId) throws Exception {
+	public HashMap<String, Double> getRecommendationList(String userId) throws Exception {
 		Connection connection = null;
 		PreparedStatement stmtQuery = null;
 		ResultSet rs = null;
@@ -455,9 +594,44 @@ public class SQLDatabaseEngine {
 	}
 	
 	
+	// Searchers for a user in the userinfo table
+	public boolean searchUser(String userId) throws Exception {
+		String result = null;
+		Connection connection = null;
+		PreparedStatement stmtQuery = null;
+		ResultSet rs = null;
+		try {
+			connection = this.getConnection();
+			stmtQuery = connection.prepareStatement(
+				"SELECT userid FROM userinfo " +
+				"WHERE userid = ?"
+			);
+			stmtQuery.setString(1, userId);
+			rs = stmtQuery.executeQuery(); 
+			while(result == null && rs.next()) {
+				result = rs.getString(1);
+			}
+		} catch (SQLException e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmtQuery != null)
+					stmtQuery.close();
+				if (connection != null)
+					connection.close();
+			} catch (SQLException ex) {
+				log.info("Exception while closing connection of database: {}", ex.toString());
+			}
+		}
+		if (result != null) {return true;}
+		else {return false;}
+	}
+
+
 	// Searches for a meal in the menu table (for debugging purposes)
-	public String searchMenu(String text) throws Exception {
-		//Write your code here
+	public String getMenu(String text) throws Exception {
 		String result = null;
 		Connection connection = null;
 		PreparedStatement stmtQuery = null;
@@ -494,7 +668,7 @@ public class SQLDatabaseEngine {
 	
 
 	// Searches for a meal in the recommendations table (for debugging purposes)
-	public String searchRecommendations(String text) throws Exception {
+	public String getRecommendation(String text) throws Exception {
 		//Write your code here
 		String result = null;
 		Connection connection = null;

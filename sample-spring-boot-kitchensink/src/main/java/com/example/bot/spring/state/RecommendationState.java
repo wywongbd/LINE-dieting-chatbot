@@ -66,7 +66,7 @@ public class RecommendationState extends State {
 			sql.addRecommendations(userId);
 			sql.processRecommendationsByAllergies(userId);
 			sql.processRecommendationsByIntake(userId);
-			foodWeightage = sql.getRecommendations(userId);
+			foodWeightage = sql.getRecommendationList(userId);
       // Might remove these in the future for multiple recommendations
 			sql.resetMenu(userId);
 			sql.resetRecommendations(userId);
