@@ -18,9 +18,7 @@ gradlew jacocoTestReport
 
 Open the file `hkust_cs3111h\sample-spring-boot-kitchensink\build\jacocoHtml\index.html`
 
-You can kick into "com.example.bot.spring" to see which branch has not been covered and write a test for it.
-
-You can kick into "com.example.bot.spring" to see which branch has not been covered and write a test for it.
+You can click into "com.example.bot.spring" to see which branch has not been covered and write a test for it.
 
 The coverage for "missed branch" is the one we raise to 70%.
 
