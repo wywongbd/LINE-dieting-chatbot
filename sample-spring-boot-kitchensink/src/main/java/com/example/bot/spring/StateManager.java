@@ -164,6 +164,8 @@ public class StateManager {
             replyText.add(temp);
         }
 
+        System.out.println("Image chat point 4");
+
         if(replyText.size() > 0) {
             // Just for testing
         	if(debug == true) {
