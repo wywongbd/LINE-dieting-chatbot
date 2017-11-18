@@ -106,6 +106,12 @@ public class DietbotController {
 		handleImageContent(event.getReplyToken(), event, jpg);
 
 	}
+    
+    @EventMapping
+    public void handleFollowEvent(FollowEvent event) {
+        String replyToken = event.getReplyToken();
+        this.replyText(replyToken, "Got followed event");
+    }
 	
 	private void replyText(@NonNull String replyToken, @NonNull String message) {
 		if (replyToken.isEmpty()) {

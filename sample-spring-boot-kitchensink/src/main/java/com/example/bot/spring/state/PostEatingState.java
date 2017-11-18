@@ -4,11 +4,14 @@ package com.example.bot.spring;
 import com.rivescript.RiveScript;
 
 public class PostEatingState extends State {
+
+    boolean extractFood;
+
     /**
      * Default constructor for PostEatingState
      */
 	public PostEatingState() {
-		
+		extractFood = false;
 	}
 
     /**
@@ -18,10 +21,17 @@ public class PostEatingState extends State {
      * @return A String data type
      */
 	public String reply(String userId, String text, RiveScript bot) {
-		String currentState = bot.getUservar(userId, "state"); 
+		String currentState = bot.getUservar(userId, "state");
+        String topic = bot.getUservar(userId, "topic");
+
+        if (topic.equals("post_eating")) {
+            // extract food from text
+        }
+
+
 		String output = bot.reply(userId, text);
 		String afterState = bot.getUservar(userId, "state");
-		
+
 		// write to DB
 		updateDatabase(userId, bot);
 		return output;
