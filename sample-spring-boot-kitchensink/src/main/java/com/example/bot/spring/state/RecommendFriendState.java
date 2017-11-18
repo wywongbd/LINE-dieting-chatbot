@@ -30,7 +30,7 @@ public class RecommendFriendState extends State {
 			return "FRIEND";
 		}
         else{
-            String splitText = text.split(" ");
+            String[] splitText = text.split(" ");
             if(splitText.size == 2
                 && splitText[0].equals("code")
                 && splitText[1].matches(DIGIT_REGEX)){
