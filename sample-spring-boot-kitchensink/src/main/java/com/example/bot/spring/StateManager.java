@@ -138,8 +138,8 @@ public class StateManager {
         }
         else{
         	updateBot(userId);
-            currentState = bot.getUservar(userId, "topic");
-            currentTopic = bot.getUservar(userId, "state");
+            currentState = bot.getUservar(userId, "state");
+            currentTopic = bot.getUservar(userId, "topic");
             
             if (currentState == "update_user_info"){
                 replyText.add("Please finish updating your personal information before sharing photos!");
