@@ -16,7 +16,7 @@ import java.util.Vector;
 public class RecommendFriendState extends State {
     // Constant values
     private static final String FRIEND_TRIGGER = "friend";
-    private static final String CODE_TRIGGER_REGEX = "^\\code\\b \\d+$";
+    private static final String CODE_TRIGGER_REGEX = "^\bCode\b \d+$";
 
     /**
      * Default constructor for RecommendFriendState
