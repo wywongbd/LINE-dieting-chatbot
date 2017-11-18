@@ -106,7 +106,7 @@ public class StateManager {
         	String temp = states.get(currentState).reply(userId, splitString[1], bot);           	
         	replyText.add(temp);
         }
-        
+
         if(replyText.size() > 0) {
         	if(debug == true) {
         		replyText.add("Current state is " + bot.getUservar(userId, "state"));
