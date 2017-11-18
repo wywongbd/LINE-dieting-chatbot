@@ -17,6 +17,10 @@ abstract class State {
     public void updateDatabase(String userId, RiveScript bot){
     	try {
     		SQLDatabaseEngine sql = new SQLDatabaseEngine();
+
+            System.out.println("updating DB, current state is " + sql.getUserInfo(userId, "state"));
+            System.out.println("updating DB, current topic is " + sql.getUserInfo(userId, "topic"));
+
     		sql.setUserInfo(userId, "state", bot.getUservar(userId, "state"));
     		sql.setUserInfo(userId, "topic", bot.getUservar(userId, "topic"));
     	}
