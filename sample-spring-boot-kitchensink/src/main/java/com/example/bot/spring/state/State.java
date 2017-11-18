@@ -18,8 +18,8 @@ abstract class State {
     	try {
     		SQLDatabaseEngine sql = new SQLDatabaseEngine();
 
-            System.out.println("updating DB, current state is " + sql.getUserInfo(userId, "state"));
-            System.out.println("updating DB, current topic is " + sql.getUserInfo(userId, "topic"));
+            System.out.println("updating DB, current state is " + bot.getUservar(userId, "state"));
+            System.out.println("updating DB, current topic is " + bot.getUservar(userId, "topic"));
 
     		sql.setUserInfo(userId, "state", bot.getUservar(userId, "state"));
     		sql.setUserInfo(userId, "topic", bot.getUservar(userId, "topic"));
