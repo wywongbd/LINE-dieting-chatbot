@@ -23,11 +23,13 @@ public class CollectUserInfoState extends State {
     }
 
 	public String reply(String userId, String text, RiveScript bot) {
+		System.out.println("Start: CollectUserInfoState");
+
 		String currentState = bot.getUservar(userId, "state"); 
 		String output = bot.reply(userId, text);
 		String afterState = bot.getUservar(userId, "state");
 				
-		if (currentState != afterState) {
+		if (currentState.equals(afterState)) {
 			// write to DB
 			SQLDatabaseEngine sql = new SQLDatabaseEngine();
 			int age = Integer.parseInt(bot.getUservar(userId, "age"));
