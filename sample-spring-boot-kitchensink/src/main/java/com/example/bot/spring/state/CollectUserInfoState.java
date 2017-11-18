@@ -63,7 +63,6 @@ public class CollectUserInfoState extends State {
 			catch(Exception e) {
 				System.out.println("Exception while inserting user info into user database: " + e.toString());
 			}
-			updateDatabase(userId, bot);
 		}
 		System.out.println("CollectUserInfoState point 3");
 		return output;
