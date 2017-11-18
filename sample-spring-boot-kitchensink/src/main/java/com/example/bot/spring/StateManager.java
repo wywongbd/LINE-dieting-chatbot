@@ -88,6 +88,9 @@ public class StateManager {
         System.out.println("point 2");
         
     	replyText.add(states.get(currentState).reply(userId, text, bot));
+
+        System.out.println("point 2.5");
+
         currentState = bot.getUservar(userId, "state");
         
         System.out.println("point 3");
