@@ -14,7 +14,18 @@ abstract class State {
      * @param text A String data type
      * @return A String data type
      */
-	public abstract String reply(String userId, String text, RiveScript bot);
+    public void updateDatabase(String userId, RiveScript bot){
+    	try {
+    		SQLDatabaseEngine sql = new SQLDatabaseEngine();
+    		sql.setUserInfo(userId, "state", bot.getUservar(userId, "state"));
+    		sql.setUserInfo(userId, "topic", bot.getUservar(userId, "topic"));
+    	}
+    	catch (Exception e) {
+    		System.out.println("Database error");
+    	}
+    }
+
+    public abstract String reply(String userId, String text, RiveScript bot);
 	
 	public int decodeState(String text) {
         switch(text) {
