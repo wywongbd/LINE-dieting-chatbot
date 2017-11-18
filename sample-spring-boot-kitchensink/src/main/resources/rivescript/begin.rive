@@ -4,6 +4,7 @@
   // If it is a new user, set the new_user topic and continue.
   + request
   * <get met> == undefined => {topic=new_user}<set met=true><set state=collect_user_info>{ok}
+  * <get met> == true => {ok}
   - {ok}
 < begin
 
