@@ -24,17 +24,22 @@ public class PostEatingState extends State {
 		String currentState = bot.getUservar(userId, "state");
         String topic = bot.getUservar(userId, "topic");
 
-        if (topic.equals("post_eating")) {
-            String[] foods = text.split(",");
+        String output = bot.reply(userId, text);
+        String afterState = null;
 
-            if (foods.length == 1) {
+        // when user is not typing leave
+        if ( !output.equals("Okay. Tell me when you need help~~~") ) {
 
+            // simple reprocessing by trimming new line character
+            text = text.replace("\r", " ").replace("\n", " ");
+
+            // save the result in DB if the text is not empty
+            if (text.length() > 1) {
+                // save the date, userId, food in DB
             }
         }
 
-
-		String output = bot.reply(userId, text);
-		String afterState = bot.getUservar(userId, "state");
+		afterState = bot.getUservar(userId, "state");
 
 		// write to DB
 		updateDatabase(userId, bot);
