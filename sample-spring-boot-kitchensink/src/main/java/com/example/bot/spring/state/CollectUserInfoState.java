@@ -30,6 +30,7 @@ public class CollectUserInfoState extends State {
 		String afterState = bot.getUservar(userId, "state");
 
 		System.out.println("CollectUserInfoState point 2");
+		
 		System.out.println(currentState == afterState);
 				
 		if (currentState != afterState) {
