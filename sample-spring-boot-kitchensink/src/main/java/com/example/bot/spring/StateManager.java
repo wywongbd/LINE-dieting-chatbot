@@ -16,6 +16,7 @@ public class StateManager {
     private final int STANDBY_STATE = 0;
     private final int INPUT_MENU_STATE = 3;
     private final int RECOMMEND_STATE = 4;
+    private final String ADMIN_USER_ID = "Ub6f064e9c47d12622346a14556305165";
     // Must first go through InputMenuState before going to RecommendationState,
     // so 4 is not included
 //    private final int[] FROM_STANDBY_STATE = {1, 2, 3, 5};
@@ -85,11 +86,10 @@ public class StateManager {
             bot.setUservar(userId, "met", "true");
         }
 
-        if(currentState.equals("standby") && (((AdminState) states.get("admin")).matchTrigger(text) == 1)){
-            // currentState = "admin";
+        if(currentState.equals("standby") 
+            && (((AdminState) states.get("admin")).matchTrigger(text) == 1)
+            && userId.equals(ADMIN_USER_ID)){
             adminAccessing = true;
-        }
-        if(adminAccessing == true){
             replyText.add(states.get("admin").reply(userId, text, bot));
         }
         else{

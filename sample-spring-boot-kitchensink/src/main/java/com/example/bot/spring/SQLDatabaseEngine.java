@@ -819,7 +819,7 @@ public class SQLDatabaseEngine {
 		
 		try {
 			connection = this.getConnection();
-			
+
 			// Generate and insert the code into the coupon_code database, together with the userId
 			try {
 				stmtQuery = connection.prepareStatement(
@@ -861,10 +861,11 @@ public class SQLDatabaseEngine {
 	public void claimCode(String userId, int code) {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
-		
+
 		try {
 			connection = this.getConnection();
 			
+			// Set claimUser of code to be userId
 			try {
 				stmtUpdate = connection.prepareStatement(
 					"UPDATE coupon_code " +
@@ -873,6 +874,18 @@ public class SQLDatabaseEngine {
 				);
 				stmtUpdate.setString(1, userId);
 				stmtUpdate.setInt(2, code);
+				stmtUpdate.executeUpdate();
+			} catch (Exception e) {
+				log.info("Exception while updating user info: {}", e.toString());
+			}
+
+			// Delete userId from campaignUser table
+			try {
+				stmtUpdate = connection.prepareStatement(
+					"DELETE FROM campaign_user " +
+					"WHERE userid = ?"
+				);
+				stmtUpdate.setString(1, userId);
 				stmtUpdate.executeUpdate();
 			} catch (Exception e) {
 				log.info("Exception while updating user info: {}", e.toString());
