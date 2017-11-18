@@ -821,7 +821,7 @@ public class SQLDatabaseEngine {
 		
 		try {
 			connection = this.getConnection();
-			
+
 			// Generate and insert the code into the coupon_code database, together with the userId
 			try {
 				stmtQuery = connection.prepareStatement(
@@ -863,10 +863,9 @@ public class SQLDatabaseEngine {
 	public void claimCode(String userId, int code) {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
-		
+
 		try {
 			connection = this.getConnection();
-
 			// Set claimUser of code to be userId
 			try {
 				stmtUpdate = connection.prepareStatement(
