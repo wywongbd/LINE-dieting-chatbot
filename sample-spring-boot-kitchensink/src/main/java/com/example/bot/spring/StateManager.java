@@ -38,7 +38,7 @@ public class StateManager {
                 } else {
                     // string
                     if (args.length == 3) {
-                        sql.setUserInfo(args[2], args[0], Integer.parseInt(args[1]));
+                        sql.setUserInfo(args[2], args[0], args[1]);
                     }
                 }
 
