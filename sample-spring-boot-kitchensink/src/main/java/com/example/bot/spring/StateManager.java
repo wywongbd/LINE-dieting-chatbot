@@ -89,8 +89,12 @@ public class StateManager {
             // currentState = "admin";
             adminAccessing = true;
         }
-
-    	replyText.add(states.get(currentState).reply(userId, text, bot));
+        if(adminAccessing == true){
+            replyText.add(states.get("admin").reply(userId, text, bot));
+        }
+        else{
+            replyText.add(states.get(currentState).reply(userId, text, bot));
+        }
         currentState = bot.getUservar(userId, "state");
 
         if(currentState.equals("recommend")) {            	
