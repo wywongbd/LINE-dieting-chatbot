@@ -95,6 +95,7 @@ public class StateManager {
         else{
             replyText.add(states.get(currentState).reply(userId, text, bot));
         }
+
         currentState = bot.getUservar(userId, "state");
 
         if(currentState.equals("recommend")) {            	
@@ -149,7 +150,7 @@ public class StateManager {
                 replyText.add(((InputMenuState) states.get("input_menu")).replyImage(userId, jpg, bot));
             }
             else{
-                replyText.add(((InputMenuState) states.get("AdminState")).replyImage(userId, jpg, bot));
+                replyText.add(((AdminState) states.get("AdminState")).replyImage(userId, jpg, bot));
                 adminAccessing = false;
             }
         }
