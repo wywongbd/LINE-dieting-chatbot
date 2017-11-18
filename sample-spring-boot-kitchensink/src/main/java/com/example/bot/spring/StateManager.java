@@ -209,7 +209,6 @@ public class StateManager {
                 }
                 if ( args[3].equals("true") ) {
                     temp.add("nut");
-
                 }
                 if ( args[4].equals("true") ) {
                     temp.add("seafood");

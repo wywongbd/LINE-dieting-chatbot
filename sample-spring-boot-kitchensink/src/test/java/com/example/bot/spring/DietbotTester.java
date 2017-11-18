@@ -74,36 +74,43 @@ import java.util.Arrays;
 @SpringBootTest(classes = { DietbotTester.class, SQLDatabaseEngine.class })
 public class DietbotTester {
 	@Autowired
-	private SQLDatabaseEngine databaseEngine;
+	private static SQLDatabaseEngine databaseEngine;
 	private RiveScript bot;
 	private StateManager stateManager;
-	
 
-	@Before
-	public void addTestUser() {
+	static {
+		databaseEngine = new SQLDatabaseEngine();
+	}
+	
+	public DietbotTester() {
+		bot = new RiveScript();
+		stateManager = new StateManager("src/main/resources/rivescript");
+	}
+
+	@BeforeClass
+	public static void addTestUser() {
 		ArrayList<String> menu = new ArrayList<String>();
 		menu.add("chicken potato soup");
 		ArrayList<String> allergies = new ArrayList<String>();
 		allergies.add("seafood");
 
-		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, 3, "testTopic", "testState");
-		this.databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, allergies, 3, "testTopic", "testState");
-		this.databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, 3, "testTopic", "testState");
-		this.databaseEngine.addMenu("testUser", menu);
-		this.databaseEngine.addRecommendations("testUser");
+		databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, allergies, "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, "testTopic", "testState");
+		databaseEngine.addMenu("testUser", menu);
+		databaseEngine.addRecommendations("testUser");
 	}
 
-
-	@After
-	public void removeTestUser() {
-		this.databaseEngine.reset("testUser", "userinfo");
-		this.databaseEngine.reset("testUser", "menu");
-		this.databaseEngine.reset("testUser", "recommendations");
-		this.databaseEngine.reset("testUser", "userallergies");
-		this.databaseEngine.reset("testUserIntake", "userinfo");
-		this.databaseEngine.reset("testUserIntake", "userallergies");
-		this.databaseEngine.reset("testUserAllergy", "userinfo");
-		this.databaseEngine.reset("testUserAllergy", "userallergies");
+	@AfterClass
+	public static void removeTestUser() {
+		databaseEngine.reset("testUser", "userinfo");
+		databaseEngine.reset("testUser", "menu");
+		databaseEngine.reset("testUser", "recommendations");
+		databaseEngine.reset("testUser", "userallergies");
+		databaseEngine.reset("testUserIntake", "userinfo");
+		databaseEngine.reset("testUserIntake", "userallergies");
+		databaseEngine.reset("testUserAllergy", "userinfo");
+		databaseEngine.reset("testUserAllergy", "userallergies");
 	}
 
 	
@@ -111,7 +118,7 @@ public class DietbotTester {
 	public void writeUserInfoExisting() {
 		ArrayList<String> allergies = null;
 
-		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, 3, "testTopic", "testState");
+		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "testTopic", "testState");
 		assertThat(this.databaseEngine.searchUser("testUser", "userinfo")).isEqualTo(true);
 	}
 	
@@ -121,7 +128,7 @@ public class DietbotTester {
 		ArrayList<String> allergies = new ArrayList<String>();
 		allergies.add("milk");
 
-		this.databaseEngine.writeUserInfo("testUserNonExisting", 21, "female", 1.64, 55, allergies, 3, "testTopic", "testState");
+		this.databaseEngine.writeUserInfo("testUserNonExisting", 21, "female", 1.64, 55, allergies, "testTopic", "testState");
 		assertThat(this.databaseEngine.searchUser("testUserNonExisting", "userinfo")).isEqualTo(true);
 		this.databaseEngine.deleteUserInfo("testUserNonExisting");
 	}
