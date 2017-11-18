@@ -11,7 +11,6 @@ public class PostEatingState extends State {
      * Default constructor for PostEatingState
      */
 	public PostEatingState() {
-		extractFood = false;
 	}
 
     /**
