@@ -18,10 +18,14 @@ public class CollectUserInfoState extends State {
      * @param text A String data type
      * @return A String data type
      */
+    public void updateDatabase(String userId, RiveScript bot){
+    	return;
+    }
+
 	public String reply(String userId, String text, RiveScript bot) {
-		int currentState = decodeState(bot.getUservar(userId, "state")); 
+		int currentState = bot.getUservar(userId, "state"); 
 		String output = bot.reply(userId, text);
-		int afterState = decodeState(bot.getUservar(userId, "state"));
+		int afterState = bot.getUservar(userId, "state");
 				
 		if (currentState != afterState) {
 			// write to DB
@@ -50,6 +54,8 @@ public class CollectUserInfoState extends State {
 				System.out.println("Exception while inserting user info into user database: " + e.toString());
 			}
 		}
+
+		updateDatabase(userId, bot);
 		return output;
 	}
 }

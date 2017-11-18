@@ -42,11 +42,10 @@ public class RecommendationState extends State {
 			recommended = "I would recommend you to eat " + recommended; 
 		}
 		
-		System.out.println(recommended);
-		
 		bot.setUservar(userId, "topic", "standby");
         bot.setUservar(userId, "state", "standby");
 		
+		updateDatabase(userId, bot);
 		return recommended;
 	}
 	
@@ -67,7 +66,8 @@ public class RecommendationState extends State {
 			sql.processRecommendationsByAllergies(userId);
 			sql.processRecommendationsByIntake(userId);
 			foodWeightage = sql.getRecommendations(userId);
-      // Might remove these in the future for multiple recommendations
+      		
+      		// Might remove these in the future for multiple recommendations
 			sql.resetMenu(userId);
 			sql.resetRecommendations(userId);
 

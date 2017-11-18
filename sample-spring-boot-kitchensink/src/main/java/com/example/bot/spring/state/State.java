@@ -14,7 +14,12 @@ abstract class State {
      * @param text A String data type
      * @return A String data type
      */
-	public abstract String reply(String userId, String text, RiveScript bot);
+    public void updateDatabase(String userId, RiveScript bot){
+        sql.setUserInfo(userId, "state", bot.getUservar(userId, "state"));
+        sql.setUserInfo(userId, "topic", bot.getUservar(userId, "topic"));
+    }
+
+    public abstract String reply(String userId, String text, RiveScript bot);
 	
 	public int decodeState(String text) {
         switch(text) {

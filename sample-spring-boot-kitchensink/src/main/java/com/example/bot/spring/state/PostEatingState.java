@@ -18,12 +18,12 @@ public class PostEatingState extends State {
      * @return A String data type
      */
 	public String reply(String userId, String text, RiveScript bot) {
-		int currentState = decodeState(bot.getUservar(userId, "state")); 
+		int currentState = bot.getUservar(userId, "state"); 
 		String output = bot.reply(userId, text);
-		int afterState = decodeState(bot.getUservar(userId, "state"));
+		int afterState = bot.getUservar(userId, "state");
 		
 		// write to DB
-		
+		updateDatabase(userId, bot);
 		return output;
 	}
 }
