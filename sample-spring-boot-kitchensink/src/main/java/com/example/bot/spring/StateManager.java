@@ -104,6 +104,8 @@ public class StateManager {
         	replyText.add(states.get(currentState).reply(userId, text, bot));
             currentState = bot.getUservar(userId, "state");
             
+            System.out.println("point 4");
+
             if(currentState == "recommend") {            	
             	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	          	
             	replyText.add(0, splitString[0]);         	          	
@@ -113,7 +115,7 @@ public class StateManager {
             	replyText.add(temp);
             }
             
-            System.out.println("point 4");
+            System.out.println("point 5");
             
         } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
             // Text is not recognized, does not modify current state
