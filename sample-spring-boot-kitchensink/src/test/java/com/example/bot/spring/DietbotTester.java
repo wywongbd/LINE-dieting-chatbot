@@ -457,7 +457,6 @@ public class DietbotTester {
 
 	// 	try{
 	// 		stateManager = new StateManager("src/test/resources/rivescriptChatbot");
-
 	// 		//random input at first when the user start chatting
 	// 		input = "fajsofifeojfeoijj";
  //    		expectedResponse = "Hi! I am your personal Dieting Chatbot!\n"
@@ -738,8 +737,6 @@ public class DietbotTester {
  //    						+"I have a better understanding of your physical conditions now.";
  //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
  //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-
  //    		assertThat(db.getUserInfo(userId, "age")).isEqualTo("20");
  //    		assertThat(db.getUserInfo(userId, "gender")).isEqualTo("male");
  //    		assertThat(db.getUserInfo(userId, "height")).isEqualTo("181.0");
