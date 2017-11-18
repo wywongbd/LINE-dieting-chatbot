@@ -66,7 +66,7 @@ public class StateManager {
         String currentState = null;        
         String currentTopic = null;
         boolean isRegisteredUser = true;
-        isRegisteredUser = sql.searchUser(userId);
+        isRegisteredUser = sql.searchUser(userId, "userinfo");
 
         if (!isRegisteredUser) {
             currentState = "collect_user_info";
@@ -111,7 +111,7 @@ public class StateManager {
     	String currentState = null;        
         String currentTopic = null;
         boolean isRegisteredUser = true;
-        isRegisteredUser = sql.searchUser(userId);
+        isRegisteredUser = sql.searchUser(userId, "userinfo");
 
         if (!isRegisteredUser) {
             replyText.add("Please finish giving us your personal information before sharing photos!");
