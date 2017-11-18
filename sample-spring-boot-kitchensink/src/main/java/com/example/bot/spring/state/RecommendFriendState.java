@@ -32,7 +32,7 @@ public class RecommendFriendState extends State {
 		if(text.matches(CODE_TRIGGER_REGEX)) {
 			return "CODE";
 		}
-		return null;
+		return "nothing";
     }
 
     public String decodeCodeMessage(String text) {
