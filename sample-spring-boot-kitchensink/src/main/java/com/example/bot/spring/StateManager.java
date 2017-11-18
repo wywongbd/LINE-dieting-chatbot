@@ -107,7 +107,7 @@ public class StateManager {
             // Just for testing
         	if(debug == true) {
         		replyText.add("Current state is " + bot.getUservar(userId, "state"));
-                replyText.add("Current topic is " + bot.getUservar(userId, "topic"));
+                // replyText.add("Current topic is " + bot.getUservar(userId, "topic"));
         	}
         	return replyText;
         }
@@ -159,7 +159,7 @@ public class StateManager {
             // Just for testing
         	if(debug == true) {
         		replyText.add("Current state is " +  bot.getUservar(userId, "state"));
-                replyText.add("Current topic is " +  bot.getUservar(userId, "topic"));
+                // replyText.add("Current topic is " +  bot.getUservar(userId, "topic"));
         	}
         	return replyText;
         }
