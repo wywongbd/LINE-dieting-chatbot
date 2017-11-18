@@ -88,26 +88,24 @@ public class InputMenuState extends State {
      * @return A String data type
      */
     public String replyImage(String userId, DownloadedContent jpg, RiveScript bot) {
-    	ArrayList<String> processedOcrImage = processImage(jpg);
-        String replyText = null;
-    	
-        System.out.println("Image chat point 1");
-
-    	if(processedOcrImage.size() > 0){
-            // Convert to string to be replied as message for testing
-    		bot.setUservar(userId, "img_received", "true");
-    		bot.setUservar(userId, "topic", "input_menu");
-            bot.setUservar(userId, "state", "input_menu");
-        	replyText = bot.reply(userId, "InputImage");
-        	bot.setUservar(userId, "img_received", "false");
-            bot.setUservar(userId, "topic", "recommend");
-            bot.setUservar(userId, "state", "recommend");
-        	
-            updateDatabase(userId, bot);
-            return replyText + "AAAAAAAAAA" + Arrays.toString(processedOcrImage.toArray());
+	    	ArrayList<String> processedOcrImage = processImage(jpg);
+	    String replyText = null;
+	    	
+	    	if(processedOcrImage.size() > 0){
+	            // Convert to string to be replied as message for testing
+	    		bot.setUservar(userId, "img_received", "true");
+	    		bot.setUservar(userId, "topic", "input_menu");
+	        bot.setUservar(userId, "state", "input_menu");
+	        	replyText = bot.reply(userId, "InputImage");
+	        	bot.setUservar(userId, "img_received", "false");
+	        bot.setUservar(userId, "topic", "recommend");
+	        bot.setUservar(userId, "state", "recommend");
+	        	
+	        updateDatabase(userId, bot);
+	        return replyText + "AAAAAAAAAA" + Arrays.toString(processedOcrImage.toArray());
         }
         else {
-        	bot.setUservar(userId, "img_received", "false");
+        		bot.setUservar(userId, "img_received", "false");
             updateDatabase(userId, bot);
             return "There is no useful information in your image!";
         }

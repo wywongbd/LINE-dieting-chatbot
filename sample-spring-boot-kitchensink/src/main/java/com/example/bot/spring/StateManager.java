@@ -12,44 +12,6 @@ import java.util.*;
 import com.example.bot.spring.DietbotController.DownloadedContent;
 
 public class StateManager {
-
-    //use for save user info to database inside Rivescript
-    public class setVariableToDB implements Subroutine {
-
-        // assume the order of parameter is: variable name, value, userID
-        public String call(RiveScript rs, String[] args) {
-
-            SQLDatabaseEngine sql = new SQLDatabaseEngine();
-
-            try {
-
-                if (args[0] == "weight" || args[0] == "height") {
-                    // double
-                    if (args.length == 3) {
-                        sql.setUserInfo(args[2], args[0], Double.parseDouble(args[1]));
-                    }
-                } else if (args[0] == "age") {
-                    // integer
-                    if (args.length == 3) {
-                        sql.setUserInfo(args[2], args[0], Integer.parseInt(args[1]));
-                    }
-                } else if (args[0] == "allergies") {
-                    // leave to be implemented later
-                } else {
-                    // string
-                    if (args.length == 3) {
-                        sql.setUserInfo(args[2], args[0], args[1]);
-                    }
-                }
-
-            } catch(Exception e) {
-
-            }
-
-            return "";
-        }
-    }
-
     // Constant values
     private final int STANDBY_STATE = 0;
     private final int INPUT_MENU_STATE = 3;
@@ -61,8 +23,9 @@ public class StateManager {
     // Value to keep track current state
     // private static Map<String, Integer> currentState; 
     
-    private static final Map<String, State> states; 
+    public static final Map<String, State> states; 
     private static RiveScript bot;    
+    private static boolean adminAccessing;
 
     static
     {
@@ -76,6 +39,9 @@ public class StateManager {
         states.put("provide_info", new ProvideInfoState());  
         states.put("post_eating", new PostEatingState());
         states.put("update_user_info", new UpdateUserInfoState());
+        states.put("admin", new AdminState());
+
+        adminAccessing = false;
     };
     
     /**
@@ -117,6 +83,11 @@ public class StateManager {
             currentState = bot.getUservar(userId, "state");
             currentTopic = bot.getUservar(userId, "topic");
             bot.setUservar(userId, "met", "true");
+        }
+
+        if(currentState.equals("standby") && (((AdminState) states.get("admin")).matchTrigger(text) == 1)){
+            currentState = "admin";
+            adminAccessing = true;
         }
         
     	replyText.add(states.get(currentState).reply(userId, text, bot));
@@ -170,7 +141,12 @@ public class StateManager {
         }
 
         if (currentState.equals("input_menu") || currentState.equals("standby")){
-            replyText.add(((InputMenuState) states.get("input_menu")).replyImage(userId, jpg, bot));
+            if (adminAccessing == false) {
+                replyText.add(((InputMenuState) states.get("input_menu")).replyImage(userId, jpg, bot));
+            }
+            else{
+                replyText.add(((InputMenuState) states.get("AdminState")).replyImage(userId, jpg, bot));
+            }
         }
   
         currentState = bot.getUservar(userId, "state");
@@ -194,4 +170,40 @@ public class StateManager {
         throw new Exception("NOT FOUND");
     }
     
+    //use for save user info to database inside Rivescript
+    public class setVariableToDB implements Subroutine {
+
+        // assume the order of parameter is: variable name, value, userID
+        public String call(RiveScript rs, String[] args) {
+
+            SQLDatabaseEngine sql = new SQLDatabaseEngine();
+
+            try {
+
+                if (args[0] == "weight" || args[0] == "height") {
+                    // double
+                    if (args.length == 3) {
+                        sql.setUserInfo(args[2], args[0], Double.parseDouble(args[1]));
+                    }
+                } else if (args[0] == "age") {
+                    // integer
+                    if (args.length == 3) {
+                        sql.setUserInfo(args[2], args[0], Integer.parseInt(args[1]));
+                    }
+                } else if (args[0] == "allergies") {
+                    // leave to be implemented later
+                } else {
+                    // string
+                    if (args.length == 3) {
+                        sql.setUserInfo(args[2], args[0], args[1]);
+                    }
+                }
+
+            } catch(Exception e) {
+
+            }
+
+            return "";
+        }
+    }
 }
