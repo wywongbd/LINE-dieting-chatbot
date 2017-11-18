@@ -286,7 +286,7 @@ public class DietbotTester {
 
 
 	@Test
-	public void testAddCampaignUser() {
+	public void addCampaignUser() {
 		this.databaseEngine.addCampaignUser("testUser");
 		assertThat(this.databaseEngine.searchUser("testUser", "campaign_user")).isEqualTo(true);
 		this.databaseEngine.reset("testUser", "campaign_user");
@@ -295,16 +295,27 @@ public class DietbotTester {
 
 
 	@Test
-	public void testGenerateAndStoreCode() {
+	public void generateAndStoreCode() {
 		ArrayList<String> result = new ArrayList<String>();
 
 		this.databaseEngine.addCampaignUser("testUserCode");
 		this.databaseEngine.generateAndStoreCode("testUserCode");
 		result = this.databaseEngine.getCodeInfo(100000);
+		assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(true);
 		assertThat(result.get(0)).isEqualTo("testUserCode");
 		assertThat(result.get(1)).isEqualTo(null);
 		this.databaseEngine.reset("testUserCode", "campaign_user");
 		this.databaseEngine.reset("testUserCode", "coupon_code");
+		assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(false);
+	}
+
+
+	@Test
+	public void setCouponUrl() {
+		String url = "testCouponUrlButIPurposedlyMakeItLongerJustToTestIfItCanHandleLongLengths";
+
+		this.databaseEngine.setCouponUrl(url);
+		assertThat(this.databaseEngine.getCouponUrl()).isEqualTo(url);
 	}
 
 
