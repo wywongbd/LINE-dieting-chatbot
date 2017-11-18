@@ -1,3 +1,4 @@
+! local concat = newline
 ///////////////////////////////////////standby
 
 > topic standby
@@ -51,7 +52,7 @@
     - OK. Tell me when you need help~~~~{topic=standby}<set state=standby>
 
     + *
-    - {topic=standby}<set state=standby>{@ <star>}
+    - I don't understand. Do you want to update your personal information? (yes/no)
 < topic
 
 // still in standby state
