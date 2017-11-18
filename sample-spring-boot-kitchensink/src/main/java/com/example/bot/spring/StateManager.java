@@ -52,16 +52,10 @@ public class StateManager {
     public void updateBot(String userId){
         SQLDatabaseEngine sql = new SQLDatabaseEngine();
 
-        try {
-            System.out.println("updating bot, current state is " + sql.getUserInfo(userId, "state"));
-            System.out.println("updating bot, current topic is " + sql.getUserInfo(userId, "topic"));
-            bot.setUservar(userId, "topic", sql.getUserInfo(userId, "topic"));
-            bot.setUservar(userId, "state", sql.getUserInfo(userId, "state"));
-        }
-        catch (Exception e) {
-            System.out.println("Database error!");
-        }
-
+        System.out.println("updating bot, current state is " + sql.getUserInfo(userId, "state"));
+        System.out.println("updating bot, current topic is " + sql.getUserInfo(userId, "topic"));
+        bot.setUservar(userId, "topic", sql.getUserInfo(userId, "topic"));
+        bot.setUservar(userId, "state", sql.getUserInfo(userId, "state"));
     }
 
     /**
@@ -74,56 +68,40 @@ public class StateManager {
         SQLDatabaseEngine sql = new SQLDatabaseEngine();
         String currentState = null;        
         String currentTopic = null;
+        boolean isRegisteredUser = true;
+        isRegisteredUser = sql.searchUser(userId);
 
-        try{
-            // If user id is not seen before, record it and set to collect_user_info. 
-            try{
-                boolean isRegisteredUser = true;
-                isRegisteredUser = sql.searchUser(userId);
+        System.out.println("point 1");
+        System.out.println(isRegisteredUser == false);
 
-                System.out.println("point 1");
-                System.out.println(isRegisteredUser == false);
-
-                if (!isRegisteredUser) {
-                    currentState = "collect_user_info";
-                    bot.setUservar(userId, "state", "collect_user_info");
-                }
-                else{
-                    // update bot status
-                    updateBot(userId);
-                    currentState = bot.getUservar(userId, "topic");
-                    currentTopic = bot.getUservar(userId, "state");
-                }
-
-                System.out.println("point 2");
-
-            } catch (Exception e) {
-                replyText.add("Database error!");
-                return replyText;
-            }
-            
-            System.out.println("point 3");
-        	replyText.add(states.get(currentState).reply(userId, text, bot));
-            currentState = bot.getUservar(userId, "state");
-            
-            System.out.println("point 4");
-
-            if(currentState == "recommend") {            	
-            	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	          	
-            	replyText.add(0, splitString[0]);         	          	
-            	replyText.remove(replyText.size() - 1);
-            
-            	String temp = states.get(currentState).reply(userId, splitString[1], bot);           	
-            	replyText.add(temp);
-            }
-            
-            System.out.println("point 5");
-            
-        } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
-            // Text is not recognized, does not modify current state
-        	replyText.clear();
-            replyText.add("Your text is not recognized by us!");
+        if (!isRegisteredUser) {
+            currentState = "collect_user_info";
+            bot.setUservar(userId, "state", "collect_user_info");
         }
+        else{
+            // update bot status
+            updateBot(userId);
+            currentState = bot.getUservar(userId, "topic");
+            currentTopic = bot.getUservar(userId, "state");
+        }
+
+        System.out.println("point 2");
+        
+    	replyText.add(states.get(currentState).reply(userId, text, bot));
+        currentState = bot.getUservar(userId, "state");
+        
+        System.out.println("point 3");
+
+        if(currentState == "recommend") {            	
+        	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	          	
+        	replyText.add(0, splitString[0]);         	          	
+        	replyText.remove(replyText.size() - 1);
+        
+        	String temp = states.get(currentState).reply(userId, splitString[1], bot);           	
+        	replyText.add(temp);
+        }
+        
+        System.out.println("point 4");
         
         if(replyText.size() > 0) {
             // Just for testing
@@ -146,50 +124,37 @@ public class StateManager {
         SQLDatabaseEngine sql = new SQLDatabaseEngine();
     	String currentState = null;        
         String currentTopic = null;
+        boolean isRegisteredUser = true;
+        isRegisteredUser = sql.searchUser(userId);
 
-        try{
-            try{
-                boolean isRegisteredUser = true;
-                isRegisteredUser = sql.searchUser(userId);
-
-                if (!isRegisteredUser) {
-                    currentState = "collect_user_info";
-                    replyText.add("Please finish giving us your personal information before sharing photos!");
-                    return replyText;
-                }
-                else{
-                	updateBot(userId);
-                    currentState = bot.getUservar(userId, "topic");
-                    currentTopic = bot.getUservar(userId, "state");
-                    
-                    if (currentState == "update_user_info"){
-                        replyText.add("Please finish updating your personal information before sharing photos!");
-                        return replyText;
-                    }
-                }
-            } catch (Exception e) {
-                replyText.add("Database error!");
+        if (!isRegisteredUser) {
+            currentState = "collect_user_info";
+            replyText.add("Please finish giving us your personal information before sharing photos!");
+            return replyText;
+        }
+        else{
+        	updateBot(userId);
+            currentState = bot.getUservar(userId, "topic");
+            currentTopic = bot.getUservar(userId, "state");
+            
+            if (currentState == "update_user_info"){
+                replyText.add("Please finish updating your personal information before sharing photos!");
                 return replyText;
             }
-
-            // Pass the image into InputMenuState to check if the image is recognized as menu
-            replyText.add(((InputMenuState) states.get(currentState)).replyImage(userId, jpg, bot));
-            currentState = bot.getUservar(userId, "state");
-            
-            if(currentState == "recommend") {               
-                String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");                                       
-                replyText.add(0, splitString[0]);                       
-                replyText.remove(replyText.size() - 1);
-            
-                String temp = states.get(currentState).reply(userId, splitString[1], bot);              
-                replyText.add(temp);
-            }
-
-        } catch (Exception e) {    // Modify to custom exception ImageNotRecognized later
-            // Image is not recognized as menu, does not modify current state
-        	replyText.clear();
-            replyText.add("Your img is not recognized by us!");
         }
+        // Pass the image into InputMenuState to check if the image is recognized as menu
+        replyText.add(((InputMenuState) states.get(currentState)).replyImage(userId, jpg, bot));
+        currentState = bot.getUservar(userId, "state");
+        
+        if(currentState == "recommend") {               
+            String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");                                       
+            replyText.add(0, splitString[0]);                       
+            replyText.remove(replyText.size() - 1);
+        
+            String temp = states.get(currentState).reply(userId, splitString[1], bot);              
+            replyText.add(temp);
+        }
+
         if(replyText.size() > 0) {
             // Just for testing
         	if(debug == true) {
