@@ -25,7 +25,7 @@ public class PostEatingState extends State {
         String topic = bot.getUservar(userId, "topic");
 
         if (topic.equals("post_eating")) {
-            // extract food from text
+            string[] foods = text.split(",");
         }
 
 

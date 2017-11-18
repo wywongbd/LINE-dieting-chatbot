@@ -12,6 +12,7 @@ import java.util.*;
 import com.example.bot.spring.DietbotController.DownloadedContent;
 
 public class StateManager {
+    
     // Constant values
     private final int STANDBY_STATE = 0;
     private final int INPUT_MENU_STATE = 3;
@@ -171,37 +172,56 @@ public class StateManager {
         throw new Exception("NOT FOUND");
     }
     
+
     //use for save user info to database inside Rivescript
     public class setVariableToDB implements Subroutine {
 
-        // assume the order of parameter is: variable name, value, userID
+        // assume the order of parameter is: variable name, value1, ... , userID
         public String call(RiveScript rs, String[] args) {
 
             SQLDatabaseEngine sql = new SQLDatabaseEngine();
 
-            try {
+            if ( args[0].equals("weight") || args[0].equals("height") ) {
 
-                if (args[0] == "weight" || args[0] == "height") {
-                    // double
-                    if (args.length == 3) {
-                        sql.setUserInfo(args[2], args[0], Double.parseDouble(args[1]));
-                    }
-                } else if (args[0] == "age") {
-                    // integer
-                    if (args.length == 3) {
-                        sql.setUserInfo(args[2], args[0], Integer.parseInt(args[1]));
-                    }
-                } else if (args[0] == "allergies") {
-                    // leave to be implemented later
-                } else {
-                    // string
-                    if (args.length == 3) {
-                        sql.setUserInfo(args[2], args[0], args[1]);
-                    }
+                // double
+                if ( args.length == 3 ) {
+                    sql.setUserInfo(args[2], args[0], Double.parseDouble(args[1]));
                 }
 
-            } catch(Exception e) {
+            } else if ( args[0].equals("age") ) {
 
+                // integer
+                if ( args.length == 3 ) {
+                    sql.setUserInfo(args[2], args[0], Integer.parseInt(args[1]));
+                }
+
+            } else if ( args[0].equals("allergies") ) {
+
+                if (args.length == 6) {
+
+                    // leave to be implemented later
+                    ArrayList<String> temp = new ArrayList<String>();
+                    if ( args[1].equals("true") ) {
+                        temp.add("milk");
+                    }
+                    if ( args[2].equals("true") ) {
+                        temp.add("eggs");
+                    }
+                    if ( args[3].equals("true") ) {
+                        temp.add("nuts");
+                    }
+                    if ( args[4].equals("true") ) {
+                        temp.add("seafood");
+                    }
+                    sql.setUserAllergies(args[5], temp);
+                }
+
+            } else {
+
+                // string
+                if (args.length == 3) {
+                    sql.setUserInfo(args[2], args[0], args[1]);
+                }
             }
 
             return "";
