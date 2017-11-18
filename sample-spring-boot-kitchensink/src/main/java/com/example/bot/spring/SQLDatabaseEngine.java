@@ -154,7 +154,7 @@ public class SQLDatabaseEngine {
 
 	// Sets the value of a single column for a user in userinfo table 
 	// Overloaded function (Int)
-	public void setUserInfo(String userId, String info, int newInfo) throws Exception {
+	public void setUserInfo(String userId, String info, int newInfo) {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
 		String statement = null;
@@ -174,7 +174,7 @@ public class SQLDatabaseEngine {
 			} catch (SQLException e) {
 				log.info("Exception while updating user info: {}", e.toString());
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {

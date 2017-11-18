@@ -53,6 +53,8 @@ public class StateManager {
         SQLDatabaseEngine sql = new SQLDatabaseEngine();
 
         try {
+            System.out.println("updating bot, current state is " + sql.getUserInfo(userId, "state"));
+            System.out.println("updating bot, current topic is " + sql.getUserInfo(userId, "topic"));
             bot.setUservar(userId, "topic", sql.getUserInfo(userId, "topic"));
             bot.setUservar(userId, "state", sql.getUserInfo(userId, "state"));
         }
