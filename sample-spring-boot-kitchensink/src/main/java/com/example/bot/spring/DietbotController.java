@@ -192,6 +192,7 @@ public class DietbotController {
         try {
 			UserProfileResponse profile = lineMessagingClient.getProfile(event.getSource().getUserId()).get();
 
+			System.out.println("-------------------");
 			// text: "code 123456"
 			// Exception couponIsValid
 			if (recommendFriendState.matchTrigger(text).equals("FRIEND")){
