@@ -58,7 +58,7 @@ public class CollectUserInfoState extends State {
 			allergies.toArray(temp);
 			
 			try {
-				sql.writeUserInfo(userId, age, gender, height, weight, temp, 3, "testTopic", "testState");
+				sql.writeUserInfo(userId, age, gender, height, weight, temp, 3, topic, state);
 			}
 			catch(Exception e) {
 				System.out.println("Exception while inserting user info into user database: " + e.toString());
