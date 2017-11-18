@@ -44,12 +44,17 @@ public class CollectUserInfoState extends State {
 			Double height = Double.parseDouble(bot.getUservar(userId, "height"));
 			String gender = bot.getUservar(userId, "gender");
 			String[] allergyFood = {"milk", "egg", "nut", "seafood"};
+<<<<<<< HEAD
 			Vector<String> allergies = new Vector<String>(0);
 			String state = bot.getUservar(userId, "state"); 
 			String topic = bot.getUservar(userId, "topic");
 
 			System.out.println("Adding to DB: state is " + state);
 			System.out.println("Adding to DB: topic is " + topic);
+=======
+			ArrayList<String> allergies = new ArrayList<String>();
+			
+>>>>>>> a5f06f72e2cea05be5220870c2c48494206535fd
 			
 			for (String food: allergyFood) {
 				if (bot.getUservar(userId, food + "_allergy").equals("true")) {
@@ -57,11 +62,12 @@ public class CollectUserInfoState extends State {
 				}
 			}
 			
-			String[] temp = new String[allergies.size()];
-			allergies.toArray(temp);
-			
 			try {
+<<<<<<< HEAD
 				sql.writeUserInfo(userId, age, gender, height, weight, temp, 3, topic, state);
+=======
+				sql.writeUserInfo(userId, age, gender, height, weight, allergies, 3, "testTopic", "testState");
+>>>>>>> a5f06f72e2cea05be5220870c2c48494206535fd
 			}
 			catch(Exception e) {
 				System.out.println("Exception while inserting user info into user database: " + e.toString());
