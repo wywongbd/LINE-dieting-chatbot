@@ -47,6 +47,9 @@ public class CollectUserInfoState extends State {
 			Vector<String> allergies = new Vector<String>(0);
 			String state = bot.getUservar(userId, "state"); 
 			String topic = bot.getUservar(userId, "topic");
+
+			System.out.println("Adding to DB: state is " + state);
+			System.out.println("Adding to DB: topic is " + topic);
 			
 			for (String food: allergyFood) {
 				if (bot.getUservar(userId, food + "_allergy").equals("true")) {
