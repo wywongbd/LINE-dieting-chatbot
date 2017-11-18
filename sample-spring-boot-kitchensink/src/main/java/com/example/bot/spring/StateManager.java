@@ -80,11 +80,12 @@ public class StateManager {
                 isRegisteredUser = sql.searchUser(userId);
 
                 System.out.println("point 1");
+                System.out.println(isRegisteredUser == false);
 
                 if (!isRegisteredUser) {
                     currentState = "collect_user_info";
-                    bot.setUservar(userId, "state", "collect_user_info");
-                    bot.setUservar(userId, "topic", "new_user");
+                    // bot.setUservar(userId, "state", "collect_user_info");
+                    // bot.setUservar(userId, "topic", "new_user");
                 }
                 else{
                     // update bot status
