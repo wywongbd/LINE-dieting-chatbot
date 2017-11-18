@@ -51,15 +51,8 @@ public class StateManager {
 
     public void updateBot(String userId){
         SQLDatabaseEngine sql = new SQLDatabaseEngine();
-
-        try {
-            bot.setUservar(userId, "topic", sql.getUserInfo(userId, "state"));
-            bot.setUservar(userId, "state", sql.getUserInfo(userId, "topic"));
-        }
-        catch (Exception e) {
-            System.out.println("Database error!");
-        }
-
+        bot.setUservar(userId, "topic", sql.getUserInfo(userId, "topic"));
+        bot.setUservar(userId, "state", sql.getUserInfo(userId, "state"));
     }
 
     /**
@@ -72,49 +65,32 @@ public class StateManager {
         SQLDatabaseEngine sql = new SQLDatabaseEngine();
         String currentState = null;        
         String currentTopic = null;
+        boolean isRegisteredUser = true;
+        isRegisteredUser = sql.searchUser(userId, "userinfo");
 
-        try{
-            // If user id is not seen before, record it and set to collect_user_info. 
-            try{
-                boolean isRegisteredUser = true;
-                isRegisteredUser = sql.searchUser(userId, "userinfo");
+        if (!isRegisteredUser) {
+            currentState = "collect_user_info";
+            bot.setUservar(userId, "state", "collect_user_info");
+        }
+        else{
+            updateBot(userId);
+            currentState = bot.getUservar(userId, "topic");
+            currentTopic = bot.getUservar(userId, "state");
+        }
+        
+    	replyText.add(states.get(currentState).reply(userId, text, bot));
+        currentState = bot.getUservar(userId, "state");
 
-                if (!isRegisteredUser) {
-                    currentState = "collect_user_info";
-                    bot.setUservar(userId, "state", "collect_user_info");
-                }
-                else{
-                    // update bot status
-                    updateBot(userId);
-                    currentState = bot.getUservar(userId, "topic");
-                    currentTopic = bot.getUservar(userId, "state");
-                }
-
-            } catch (Exception e) {
-                replyText.add("Database error!");
-                return replyText;
-            }
-            
-        	replyText.add(states.get(currentState).reply(userId, text, bot));
-            currentState = bot.getUservar(userId, "state");
-            
-            if(currentState == "recommend") {            	
-            	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	          	
-            	replyText.add(0, splitString[0]);         	          	
-            	replyText.remove(replyText.size() - 1);
-            
-            	String temp = states.get(currentState).reply(userId, splitString[1], bot);           	
-            	replyText.add(temp);
-            }
-            
-        } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
-            // Text is not recognized, does not modify current state
-        	replyText.clear();
-            replyText.add("Your text is not recognized by us!");
+        if(currentState.equals("recommend")) {            	
+        	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	          	
+        	replyText.add(0, splitString[0]);         	          	
+        	replyText.remove(replyText.size() - 1);
+        
+        	String temp = states.get(currentState).reply(userId, splitString[1], bot);           	
+        	replyText.add(temp);
         }
         
         if(replyText.size() > 0) {
-            // Just for testing
         	if(debug == true) {
         		replyText.add("Current state is " + bot.getUservar(userId, "state"));
                 replyText.add("Current topic is " + bot.getUservar(userId, "topic"));
@@ -134,52 +110,40 @@ public class StateManager {
         SQLDatabaseEngine sql = new SQLDatabaseEngine();
     	String currentState = null;        
         String currentTopic = null;
+        boolean isRegisteredUser = true;
+        isRegisteredUser = sql.searchUser(userId, "userinfo");
 
-        try{
-            try{
-                boolean isRegisteredUser = true;
-                isRegisteredUser = sql.searchUser(userId, "userinfo");
-
-                if (!isRegisteredUser) {
-                    currentState = "collect_user_info";
-                    replyText.add("Please finish giving us your personal information before sharing photos!");
-                    return replyText;
-                }
-                else{
-                	updateBot(userId);
-                    currentState = bot.getUservar(userId, "topic");
-                    currentTopic = bot.getUservar(userId, "state");
-                    
-                    if (currentState == "update_user_info"){
-                        replyText.add("Please finish updating your personal information before sharing photos!");
-                        return replyText;
-                    }
-                }
-            } catch (Exception e) {
-                replyText.add("Database error!");
+        if (!isRegisteredUser) {
+            replyText.add("Please finish giving us your personal information before sharing photos!");
+            return replyText;
+        }
+        else{
+        	updateBot(userId);
+            currentState = bot.getUservar(userId, "state");
+            currentTopic = bot.getUservar(userId, "topic");
+            
+            if (currentState.equals("update_user_info")){
+                replyText.add("Please finish updating your personal information before sharing photos!");
                 return replyText;
             }
-
-            // Pass the image into InputMenuState to check if the image is recognized as menu
-            replyText.add(((InputMenuState) states.get(currentState)).replyImage(userId, jpg, bot));
-            currentState = bot.getUservar(userId, "state");
-            
-            if(currentState == "recommend") {               
-                String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");                                       
-                replyText.add(0, splitString[0]);                       
-                replyText.remove(replyText.size() - 1);
-            
-                String temp = states.get(currentState).reply(userId, splitString[1], bot);              
-                replyText.add(temp);
-            }
-
-        } catch (Exception e) {    // Modify to custom exception ImageNotRecognized later
-            // Image is not recognized as menu, does not modify current state
-        	replyText.clear();
-            replyText.add("Your img is not recognized by us!");
         }
+
+        if (currentState.equals("input_menu") || currentState.equals("standby")){
+            replyText.add(((InputMenuState) states.get("input_menu")).replyImage(userId, jpg, bot));
+        }
+  
+        currentState = bot.getUservar(userId, "state");
+        
+        if(currentState.equals("recommend")) {               
+            String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");                                       
+            replyText.add(0, splitString[0]);                       
+            replyText.remove(replyText.size() - 1);
+        
+            String temp = states.get(currentState).reply(userId, splitString[1], bot);              
+            replyText.add(temp);
+        }
+
         if(replyText.size() > 0) {
-            // Just for testing
         	if(debug == true) {
         		replyText.add("Current state is " +  bot.getUservar(userId, "state"));
                 replyText.add("Current topic is " +  bot.getUservar(userId, "topic"));
@@ -187,28 +151,6 @@ public class StateManager {
         	return replyText;
         }
         throw new Exception("NOT FOUND");
-    }
-    
-    /**
-     * Get the next state after inputting text
-     * @param text A String data type
-     * @return A int data type
-     */
-    public int decodeState(String text) {
-        switch(text) {
-            case "standby":
-                return 0;
-            case "collect_user_info":
-                return 1;
-            case "input_menu":
-                return 3;
-            case "post_eating":
-                return 5;
-            case "provide_info":
-                return 2;
-            default:
-                return 4;
-        }
     }
     
 }

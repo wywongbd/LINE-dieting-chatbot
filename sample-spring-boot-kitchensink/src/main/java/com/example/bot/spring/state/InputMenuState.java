@@ -91,6 +91,8 @@ public class InputMenuState extends State {
     	ArrayList<String> processedOcrImage = processImage(jpg);
         String replyText = null;
     	
+        System.out.println("Image chat point 1");
+
     	if(processedOcrImage.size() > 0){
             // Convert to string to be replied as message for testing
     		bot.setUservar(userId, "img_received", "true");
