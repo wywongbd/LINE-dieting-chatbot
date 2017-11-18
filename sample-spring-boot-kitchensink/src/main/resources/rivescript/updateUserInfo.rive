@@ -168,11 +168,11 @@
 >topic update_user_allergy_seafood
 
     + @yes [*]
-    - <set seafood_allergy=true>Thank you for your update. I'll take note of that.<set state=standby>{topic=standby}
+    - <set seafood_allergy=true>Thank you for your update. I'll take note of that.<set state=standby>{topic=standby}<call>setVariableToDB allergies <get milk_allergy> <get egg_allergy> <get nut_allergy> <get seafood_allergy> <id> </call>
 
 
     + @no [*]
-    - <set seafood_allergy=false>Thank you for your update. I'll take note of that.<set state=standby>{topic=standby}
+    - <set seafood_allergy=false>Thank you for your update. I'll take note of that.<set state=standby>{topic=standby}<call>setVariableToDB allergies <get milk_allergy> <get egg_allergy> <get nut_allergy> <get seafood_allergy> <id> </call>
 
     + *
     - I am sorry. I do not understand. Are you allergic to seafood? (Yes/No)
