@@ -216,7 +216,6 @@ public class StateManager {
                         temp.add("seafood");
                     }
                     sql.setUserAllergies(args[5], temp);
-                }
 
             } else {
 
