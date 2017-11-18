@@ -95,7 +95,7 @@ public class StateManager {
         
         System.out.println("point 3");
 
-        if(currentState == "recommend") {            	
+        if(currentState.equals("recommend")) {            	
         	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	          	
         	replyText.add(0, splitString[0]);         	          	
         	replyText.remove(replyText.size() - 1);
@@ -141,7 +141,7 @@ public class StateManager {
             currentState = bot.getUservar(userId, "state");
             currentTopic = bot.getUservar(userId, "topic");
             
-            if (currentState == "update_user_info"){
+            if (currentState.equals("update_user_info")){
                 replyText.add("Please finish updating your personal information before sharing photos!");
                 return replyText;
             }
