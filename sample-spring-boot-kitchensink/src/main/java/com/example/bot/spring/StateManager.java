@@ -51,9 +51,6 @@ public class StateManager {
 
     public void updateBot(String userId){
         SQLDatabaseEngine sql = new SQLDatabaseEngine();
-
-        System.out.println("updating bot, current state is " + sql.getUserInfo(userId, "state"));
-        System.out.println("updating bot, current topic is " + sql.getUserInfo(userId, "topic"));
         bot.setUservar(userId, "topic", sql.getUserInfo(userId, "topic"));
         bot.setUservar(userId, "state", sql.getUserInfo(userId, "state"));
     }
@@ -71,29 +68,18 @@ public class StateManager {
         boolean isRegisteredUser = true;
         isRegisteredUser = sql.searchUser(userId);
 
-        System.out.println("point 1");
-        System.out.println(isRegisteredUser == false);
-
         if (!isRegisteredUser) {
             currentState = "collect_user_info";
             bot.setUservar(userId, "state", "collect_user_info");
         }
         else{
-            // update bot status
             updateBot(userId);
             currentState = bot.getUservar(userId, "topic");
             currentTopic = bot.getUservar(userId, "state");
         }
-
-        System.out.println("point 2");
         
     	replyText.add(states.get(currentState).reply(userId, text, bot));
-
-        System.out.println("point 2.5");
-
         currentState = bot.getUservar(userId, "state");
-        
-        System.out.println("point 3");
 
         if(currentState.equals("recommend")) {            	
         	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	          	
@@ -104,10 +90,7 @@ public class StateManager {
         	replyText.add(temp);
         }
         
-        System.out.println("point 4");
-        
         if(replyText.size() > 0) {
-            // Just for testing
         	if(debug == true) {
         		replyText.add("Current state is " + bot.getUservar(userId, "state"));
                 replyText.add("Current topic is " + bot.getUservar(userId, "topic"));
@@ -130,8 +113,6 @@ public class StateManager {
         boolean isRegisteredUser = true;
         isRegisteredUser = sql.searchUser(userId);
 
-        System.out.println("Image chat point 1");
-
         if (!isRegisteredUser) {
             replyText.add("Please finish giving us your personal information before sharing photos!");
             return replyText;
@@ -147,16 +128,11 @@ public class StateManager {
             }
         }
 
-        System.out.println("Image chat point 2");
-
-        // Pass the image into InputMenuState to check if the image is recognized as menu
         if (currentState.equals("input_menu") || currentState.equals("standby")){
             replyText.add(((InputMenuState) states.get("input_menu")).replyImage(userId, jpg, bot));
         }
   
         currentState = bot.getUservar(userId, "state");
-
-        System.out.println("Image chat point 3");
         
         if(currentState.equals("recommend")) {               
             String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");                                       
@@ -167,10 +143,7 @@ public class StateManager {
             replyText.add(temp);
         }
 
-        System.out.println("Image chat point 4");
-
         if(replyText.size() > 0) {
-            // Just for testing
         	if(debug == true) {
         		replyText.add("Current state is " +  bot.getUservar(userId, "state"));
                 replyText.add("Current topic is " +  bot.getUservar(userId, "topic"));
@@ -178,28 +151,6 @@ public class StateManager {
         	return replyText;
         }
         throw new Exception("NOT FOUND");
-    }
-    
-    /**
-     * Get the next state after inputting text
-     * @param text A String data type
-     * @return A int data type
-     */
-    public int decodeState(String text) {
-        switch(text) {
-            case "standby":
-                return 0;
-            case "collect_user_info":
-                return 1;
-            case "input_menu":
-                return 3;
-            case "post_eating":
-                return 5;
-            case "provide_info":
-                return 2;
-            default:
-                return 4;
-        }
     }
     
 }

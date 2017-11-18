@@ -16,30 +16,9 @@ abstract class State {
      */
     public void updateDatabase(String userId, RiveScript bot){
 		SQLDatabaseEngine sql = new SQLDatabaseEngine();
-
-        System.out.println("updating DB, current state is " + bot.getUservar(userId, "state"));
-        System.out.println("updating DB, current topic is " + bot.getUservar(userId, "topic"));
-
 		sql.setUserInfo(userId, "state", bot.getUservar(userId, "state"));
 		sql.setUserInfo(userId, "topic", bot.getUservar(userId, "topic"));
     }
 
     public abstract String reply(String userId, String text, RiveScript bot);
-	
-	public int decodeState(String text) {
-        switch(text) {
-            case "standby":
-                return 0;
-            case "collect_user_info":
-                return 1;
-            case "input_menu":
-                return 3;
-            case "post_eating":
-                return 5;
-            case "provide_info":
-                return 2;
-            default:
-                return 4;
-        }
-    }
 }
