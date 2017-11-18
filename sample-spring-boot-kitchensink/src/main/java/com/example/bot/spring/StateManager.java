@@ -110,7 +110,7 @@ public class StateManager {
             // Just for testing
         	if(debug == true) {
         		replyText.add("Current state is " + bot.getUservar(userId, "state"));
-                // replyText.add("Current topic is " + bot.getUservar(userId, "topic"));
+                replyText.add("Current topic is " + bot.getUservar(userId, "topic"));
         	}
         	return replyText;
         }
@@ -130,8 +130,9 @@ public class StateManager {
         boolean isRegisteredUser = true;
         isRegisteredUser = sql.searchUser(userId);
 
+        System.out.println("Image chat point 1");
+
         if (!isRegisteredUser) {
-            currentState = "collect_user_info";
             replyText.add("Please finish giving us your personal information before sharing photos!");
             return replyText;
         }
@@ -145,9 +146,14 @@ public class StateManager {
                 return replyText;
             }
         }
+
+        System.out.println("Image chat point 2");
+
         // Pass the image into InputMenuState to check if the image is recognized as menu
         replyText.add(((InputMenuState) states.get(currentState)).replyImage(userId, jpg, bot));
         currentState = bot.getUservar(userId, "state");
+
+        System.out.println("Image chat point 3");
         
         if(currentState == "recommend") {               
             String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");                                       
@@ -162,7 +168,7 @@ public class StateManager {
             // Just for testing
         	if(debug == true) {
         		replyText.add("Current state is " +  bot.getUservar(userId, "state"));
-                // replyText.add("Current topic is " +  bot.getUservar(userId, "topic"));
+                replyText.add("Current topic is " +  bot.getUservar(userId, "topic"));
         	}
         	return replyText;
         }
