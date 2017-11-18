@@ -53,8 +53,8 @@ public class StateManager {
         SQLDatabaseEngine sql = new SQLDatabaseEngine();
 
         try {
-            bot.setUservar(userId, "topic", sql.getUserInfo(userId, "state"));
-            bot.setUservar(userId, "state", sql.getUserInfo(userId, "topic"));
+            bot.setUservar(userId, "topic", sql.getUserInfo(userId, "topic"));
+            bot.setUservar(userId, "state", sql.getUserInfo(userId, "state"));
         }
         catch (Exception e) {
             System.out.println("Database error!");
