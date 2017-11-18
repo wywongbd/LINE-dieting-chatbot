@@ -1,0 +1,85 @@
+///////////////////////////////////////standby
+
+> topic standby
+
+    // don't know what user said and tell them what can we do
+    + *
+    - Sorry, I'm not sure how to respond to that.
+    ^ Please tell me what you want to do :P
+    ^ * Input a food menu and get food recommendation
+    ^ * Record what you have eaten last meal
+    ^ * Update personal information
+    ^ * Ask for dieting history
+
+    + [*] google *
+    - Google results for "<star>": <a href="http://google.com/search?q=<star>">Click Here</a>
+
+    // trigger to collect_user_info state
+    + [*] ((tweak|change|alter|update|modify|adjust)|(info|information|details|particulars|name|age|gender|height|weight|allergy|allergies)) [*]
+    - Do you want to update your personal information?{topic=update_user_info_confirmation}<set state=update_user_info>
+
+    // trigger to input_menu state (possibly go to recommend state later)
+    + [*] (input|eating|restaurant|help me|look|check out|menu|recommend|recommendation|suggest|suggestion|decide|should|what to eat) [*]
+    - Please let me have a look at your menu first. You can either take a photo, or share the menu url with me.{topic=input_menu}<set state=input_menu>
+
+    // trigger to record what the user ate
+    + [*] (ate|have eaten|has eaten|had eaten|record|last meal|finished|finish|@meals) [*]
+    - Please tell me what you ate.{topic=post_eating}<set state=post_eating>
+
+// implement later
+//    // trigger to query dieting history
+//  + [*] (what [did|had] i (had|eat|eaten) (yesterday|just now|not long ago)|what is my (fat|carbohydrate|sodium|vitamin) intake) [*]
+//  - Please wait while I check your eating history.{topic=provide_info}<set state=provide_info>
+
+    + [*] (talk later|see you|bye) [*]
+    - Okay see you later.
+< topic
+
+// still in standby state
+> topic update_user_info_confirmation
+
+    + @yes [*]
+    - OK. Which one do you want to update? Pick one.
+    ^ - name
+    ^ - age
+    ^ - gender
+    ^ - weight
+    ^ - height
+    ^ - allergy{topic=update_user_info_select_variable}
+
+    + @no [*]
+    - OK. Tell me when you need help~~~~{topic=standby}<set state=standby>
+
+    + *
+    - {topic=standby}<set state=standby>{@ <star>}
+< topic
+
+// still in standby state
+> topic update_user_info_select_variable
+
+    + [*] (name|age|gender|weight|height|allergy) [*]
+    * <star> == name    => What is your name?{topic=update_user_name}
+    * <star> == age     => What is your age?{topic=update_user_age}
+    * <star> == gender  => What is your gender?{topic=update_user_gender}
+    * <star> == weight  => What is your weight?{topic=update_user_weight}
+    * <star> == height  => What is your height?{topic=update_user_height}
+    * <star> == allergy => Are you allergic to milk? (Yes/No){topic=update_user_allergy_milk}
+    - This is a bug.
+
+    + *
+    - Sorry, I don't understand. Which one do you want to update? Pick one.
+    ^ - name
+    ^ - age
+    ^ - gender
+    ^ - weight
+    ^ - height
+    ^ - allergy
+    ^ Type "cancel" if you want to cancel the update
+
+    + cancel
+    - You have cancelled the update of information.<set state=standby>{topic=standby}
+< topic
+
+
+
+///////////////////////////////////////standby
