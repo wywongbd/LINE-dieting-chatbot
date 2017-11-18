@@ -27,7 +27,7 @@ public class PostEatingState extends State {
         if (topic.equals("post_eating")) {
             String[] foods = text.split(",");
 
-            if (foods.lenght == 1) {
+            if (foods.length == 1) {
 
             }
         }
