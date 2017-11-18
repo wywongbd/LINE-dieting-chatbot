@@ -29,7 +29,7 @@ public class CollectUserInfoState extends State {
 		String output = bot.reply(userId, text);
 		String afterState = bot.getUservar(userId, "state");
 				
-		if (currentState.equals(afterState)) {
+		if (!currentState.equals(afterState)) {
 			// write to DB
 			SQLDatabaseEngine sql = new SQLDatabaseEngine();
 			int age = Integer.parseInt(bot.getUservar(userId, "age"));
