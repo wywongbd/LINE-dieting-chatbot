@@ -56,6 +56,8 @@ public class CollectUserInfoState extends State {
 			}
 		}
 
+
+        
 		updateDatabase(userId, bot);
 		return output;
 	}
