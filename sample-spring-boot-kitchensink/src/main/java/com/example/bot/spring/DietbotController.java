@@ -24,6 +24,7 @@ import com.google.common.io.ByteStreams;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.MessageContentResponse;
 import com.linecorp.bot.model.ReplyMessage;
+import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.action.MessageAction;
 import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.action.URIAction;
@@ -75,6 +76,7 @@ public class DietbotController {
 	
 	private StateManager stateManager;
 	private final String defaultString = "I don't understand"; 
+	private RecommendFriendState recommendFriendState = new RecommendFriendState();
 	
 	protected DietbotController() {
 		stateManager = new StateManager("sample-spring-boot-kitchensink/src/main/resources/rivescript");
@@ -111,6 +113,13 @@ public class DietbotController {
     public void handleFollowEvent(FollowEvent event) {
         String replyToken = event.getReplyToken();
         this.replyText(replyToken, "Got followed event");
+        String userId = event.getSource().getUserId();
+		SQLDatabaseEngine sql = new SQLDatabaseEngine();
+
+		if(!sql.searchUser(userId, "userinfo")
+			&& !sql.searchUser(userId, "campaign_user")){
+			sql.addCampaignUser(userId);
+		}
     }
 	
 	private void replyText(@NonNull String replyToken, @NonNull String message) {
@@ -142,26 +151,71 @@ public class DietbotController {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
+	private void pushText(@NonNull String to, @NonNull String message) {
+		if (to.isEmpty()) {
+			throw new IllegalArgumentException("user id must not be empty");
+		}
+		if (message.length() > 1000) {
+			message = message.substring(0, 1000 - 2) + "..";
+		}
+		this.push(to, new TextMessage(message));
+	}
+
+	private void pushImage(@NonNull String to, @NonNull String url) {
+		if (to.isEmpty()) {
+			throw new IllegalArgumentException("user id must not be empty");
+		}
+		this.push(to, new ImageMessage(url, url));
+	}
+
+	private void push(@NonNull String to, @NonNull Message message) {
+		push(to, Collections.singletonList(message));
+	}
+
+	private void push(@NonNull String to, @NonNull List<Message> messages) {
+		try {
+			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(to, messages)).get();
+			log.info("Sent messages: {}", apiResponse);
+		} catch (InterruptedException | ExecutionException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content) {
         String text = content.getText();
         log.info("Got text message from {}: {}", replyToken, text);
         
         Vector<String> reply = null;
         List<Message> replyList = new ArrayList<Message>(0);
+        String userId = event.getSource().getUserId();
         try {
 			UserProfileResponse profile = lineMessagingClient.getProfile(event.getSource().getUserId()).get();
 
 			// text: "code 123456"
 			// Exception couponIsValid
-			if (text.equals("debug_coupon")){
-				String url = AdminState.getImageUrl();
-				replyImage(replyToken, url);
-				return;
+			if (recommendFriendState.matchTrigger(text).equals("FRIEND")){
+				reply = recommendFriendState.replyForFriendCommand(userId);
 			}
 
-    		reply = stateManager.chat(event.getSource().getUserId(), text, true);
-    			
+			else if (recommendFriendState.matchTrigger(text).equals("CODE")){
+				String code = recommendFriendState.decodeCodeMessage(text);
+				reply = recommendFriendState.actionForCodeCommand(userId, code);
+				if(reply.size() == 2) {
+					SQLDatabaseEngine sql = new SQLDatabaseEngine();
+					String url = sql.getCouponUrl();
+					String requestUser = reply.get(0);
+            		String claimUser = reply.get(1);				
+            		// Reply image to claimUser
+            		this.replyImage(replyToken, url);
+            		// Push image to requestUser
+            		pushImage(requestUser, url);
+					return;
+				}
+			}
+			else {
+				reply = stateManager.chat(userId, text, true);
+			}
     		} catch (Exception e) {
     			this.replyText(replyToken,defaultString);
     			return;

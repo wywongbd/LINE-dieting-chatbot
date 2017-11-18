@@ -27,6 +27,7 @@ public class AdminState extends State {
         
     }
 
+
     public int matchTrigger(String text) {
 		if(text.equals(ADMIN_TRIGGER)) {
 			return 1;
