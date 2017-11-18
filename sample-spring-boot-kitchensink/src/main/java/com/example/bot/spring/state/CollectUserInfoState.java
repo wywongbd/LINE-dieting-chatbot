@@ -33,6 +33,7 @@ public class CollectUserInfoState extends State {
 
 		System.out.println(currentState);
 		System.out.println(afterState);
+		
 				
 		if (currentState != afterState) {
 			System.out.println("Adding to DB");
