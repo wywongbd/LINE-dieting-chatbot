@@ -270,7 +270,7 @@ public class SQLDatabaseEngine {
 	
 
 	// Sets the user allergies
-	public void setUserAllergy(String userId, ArrayList<String> allergies) {
+	public void setUserAllergies(String userId, ArrayList<String> allergies) {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
 		String statement = null;
@@ -321,7 +321,7 @@ public class SQLDatabaseEngine {
 
 
 	// Returns the allergies of the input user
-	public ArrayList<String> getUserAllergy(String userId) {
+	public ArrayList<String> getUserAllergies(String userId) {
 		ArrayList<String> result = new ArrayList<String>();
 		Connection connection = null;
 		PreparedStatement stmtQuery = null;
