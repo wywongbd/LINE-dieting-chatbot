@@ -5,12 +5,51 @@
 package com.example.bot.spring;
 
 import com.rivescript.RiveScript;
+import com.rivescript.macro.Subroutine;
 import java.io.File;
 import java.util.*;
 
 import com.example.bot.spring.DietbotController.DownloadedContent;
 
 public class StateManager {
+
+    //use for save user info to database inside Rivescript
+    public class setVariableToDB implements Subroutine {
+
+        // assume the order of parameter is: variable name, value, userID
+        public String call(RiveScript rs, String[] args) {
+
+            SQLDatabaseEngine sql = new SQLDatabaseEngine();
+
+            try {
+
+                if (args[0] == "weight" || args[0] == "height") {
+                    // double
+                    if (args.length == 3) {
+                        sql.setUserInfo(args[2], args[0], Double.parseDouble(args[1]));
+                    }
+                } else if (args[0] == "age") {
+                    // integer
+                    if (args.length == 3) {
+                        sql.setUserInfo(args[2], args[0], Integer.parseInt(args[1]));
+                    }
+                } else if (args[0] == "allergies") {
+                    // leave to be implemented later
+                } else {
+                    // string
+                    if (args.length == 3) {
+                        sql.setUserInfo(args[2], args[0], Integer.parseInt(args[1]));
+                    }
+                }
+
+            } catch(Exception e) {
+
+            }
+
+            return "";
+        }
+    }
+
     // Constant values
     private final int STANDBY_STATE = 0;
     private final int INPUT_MENU_STATE = 3;
@@ -47,6 +86,7 @@ public class StateManager {
         File resourcesDirectory = new File(path);
         bot.loadDirectory(resourcesDirectory.getAbsolutePath());
         bot.sortReplies();
+        bot.setSubroutine("setVariableToDB", new setVariableToDB());
     }
 
     public void updateBot(String userId){
