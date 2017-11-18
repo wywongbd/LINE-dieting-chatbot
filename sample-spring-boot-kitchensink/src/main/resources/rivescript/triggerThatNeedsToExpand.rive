@@ -27,7 +27,10 @@
 	+ talk later
 	- Okay see you later.{topic=standby}<set state=standby>
 
-	+ * 
+//    + 
+//    - So, you ate ... ?
+
+	+ *
 	- post_eating
 < topic
 

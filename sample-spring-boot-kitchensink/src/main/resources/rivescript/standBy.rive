@@ -24,7 +24,7 @@
 
     // trigger to record what the user ate
     + [*] (ate|have eaten|has eaten|had eaten|record|last meal|finished|finish|@meals) [*]
-    - Please tell me what you ate.{topic=post_eating}<set state=post_eating>
+    - Please tell me what you ate. Separate each food by a comma if there are more than one.{topic=post_eating}<set state=post_eating>
 
 // implement later
 //    // trigger to query dieting history
