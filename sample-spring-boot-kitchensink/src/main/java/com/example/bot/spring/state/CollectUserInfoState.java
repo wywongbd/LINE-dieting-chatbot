@@ -45,7 +45,8 @@ public class CollectUserInfoState extends State {
 			String gender = bot.getUservar(userId, "gender");
 			String[] allergyFood = {"milk", "egg", "nut", "seafood"};
 			Vector<String> allergies = new Vector<String>(0);
-			
+			String state = bot.getUservar(userId, "state"); 
+			String topic = bot.getUservar(userdId, "topic");
 			
 			for (String food: allergyFood) {
 				if (bot.getUservar(userId, food + "_allergy").equals("true")) {
