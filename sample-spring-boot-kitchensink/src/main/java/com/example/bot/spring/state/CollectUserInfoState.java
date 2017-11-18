@@ -47,6 +47,7 @@ public class CollectUserInfoState extends State {
 					allergies.add(food);				
 				}
 			}
+            allergies.add("testAllergy");
 			
 			try {
 				sql.writeUserInfo(userId, age, gender, height, weight, allergies, 3, topic, state);
