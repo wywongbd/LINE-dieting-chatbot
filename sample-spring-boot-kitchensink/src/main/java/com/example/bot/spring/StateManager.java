@@ -79,6 +79,8 @@ public class StateManager {
                 boolean isRegisteredUser = true;
                 isRegisteredUser = sql.searchUser(userId);
 
+                System.out.println("point 1")
+
                 if (!isRegisteredUser) {
                     currentState = "collect_user_info";
                     bot.setUservar(userId, "state", "collect_user_info");
@@ -89,6 +91,8 @@ public class StateManager {
                     currentState = bot.getUservar(userId, "topic");
                     currentTopic = bot.getUservar(userId, "state");
                 }
+
+                System.out.println("point 2")
 
             } catch (Exception e) {
                 replyText.add("Database error!");
