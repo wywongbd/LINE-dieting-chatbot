@@ -200,23 +200,22 @@ public class StateManager {
                     sql.setUserInfo(args[2], args[0], Integer.parseInt(args[1]));
                 }
 
-                    // leave to be implemented later
-                    ArrayList<String> temp = new ArrayList<String>();
-                    if ( args[1].equals("true") ) {
-                        temp.add("milk");
-                    }
-                    if ( args[2].equals("true") ) {
-                        temp.add("egg");
-                    }
-                    if ( args[3].equals("true") ) {
-                        temp.add("nut");
-
-                    }
-                    if ( args[4].equals("true") ) {
-                        temp.add("seafood");
-                    }
-                    sql.setUserAllergies(args[5], temp);
+                // leave to be implemented later
+                ArrayList<String> temp = new ArrayList<String>();
+                if ( args[1].equals("true") ) {
+                    temp.add("milk");
                 }
+                if ( args[2].equals("true") ) {
+                    temp.add("egg");
+                }
+                if ( args[3].equals("true") ) {
+                    temp.add("nut");
+
+                }
+                if ( args[4].equals("true") ) {
+                    temp.add("seafood");
+                }
+                sql.setUserAllergies(args[5], temp);
 
             } else {
 
