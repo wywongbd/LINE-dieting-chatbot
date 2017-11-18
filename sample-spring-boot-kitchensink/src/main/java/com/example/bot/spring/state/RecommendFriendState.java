@@ -1,6 +1,7 @@
 package com.example.bot.spring;
 
 import com.example.bot.spring.DietbotController.DownloadedContent;
+import com.rivescript.RiveScript;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -24,17 +25,17 @@ public class RecommendFriendState extends State {
     }
 
     public int matchTrigger(String text) {
-    		if(text.equals(CODE_TRIGGER)) {
+    		if(text.equals(FRIEND_TRIGGER)) {
     			return 1;
     		}
-    		if(text.matches(FRIEND_TRIGGER_REGEX)) {
+    		if(text.matches(CODE_TRIGGER_REGEX)) {
     			return 2;
     		}
     		return 0;
     }
 
-    public int decodeCode(String text) {
-    		return str.split(" ")[1];
+    public String decodeCode(String text) {
+    		return text.split(" ")[1];
     }
  
     /**
@@ -44,14 +45,15 @@ public class RecommendFriendState extends State {
      */
 	public String reply(String userId, String text, RiveScript bot) {
 		if(text.equals(FRIEND_TRIGGER)) {
-			int newCode = generateAndStoreCode(userId);
-			return "Your code is" + Integer.toString(newCode);
+//			int newCode = generateAndStoreCode(userId);
+//			return "Your code is" + Integer.toString(newCode);
+			return "Haha";
 		}
 		else {
-			int inputCode = decodeCode(text);
-			String[] info = getInfoOfCode(inputCode);
+			String inputCode = decodeCode(text);
+//			String[] info = getInfoOfCode(inputCode);
 
-			return "haha";
+			return "Haha";
 		}
 	}
 }

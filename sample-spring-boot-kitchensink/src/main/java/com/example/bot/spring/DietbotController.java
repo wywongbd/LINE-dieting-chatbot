@@ -116,6 +116,13 @@ public class DietbotController {
 		}
 		this.reply(replyToken, new TextMessage(message));
 	}
+
+	private void replyImage(@NonNull String replyToken, @NonNull String url) {
+		if (replyToken.isEmpty()) {
+			throw new IllegalArgumentException("replyToken must not be empty");
+		}
+		this.reply(replyToken, new ImageMessage(url, url));
+	}
 	
 	private void reply(@NonNull String replyToken, @NonNull Message message) {
 		reply(replyToken, Collections.singletonList(message));
@@ -136,15 +143,16 @@ public class DietbotController {
         
         Vector<String> reply = null;
         List<Message> replyList = new ArrayList<Message>(0);
-    	try {
+        try {
 			UserProfileResponse profile = lineMessagingClient.getProfile(event.getSource().getUserId()).get();
-    		reply = stateManager.chat(event.getSource().getUserId(), text, true);
-    	} catch (Exception e) {
-    		this.replyText(replyToken,defaultString);
-    		return;
-    	}
+    			reply = stateManager.chat(event.getSource().getUserId(), text, true);
+    			
+    		} catch (Exception e) {
+    			this.replyText(replyToken,defaultString);
+    			return;
+    		}
     	
-    	for (String replyMessage:reply) {
+    		for (String replyMessage:reply) {
          	log.info("Returns echo message {}: {}", replyToken, replyMessage);
          	replyList.add(new TextMessage(replyMessage));
         }
@@ -156,19 +164,18 @@ public class DietbotController {
 	private void handleImageContent(String replyToken, Event event, DownloadedContent jpg) {
 		Vector<String> reply = null;
 		List<Message> replyList = new ArrayList<Message>(0);
-    	try {
-    		reply = stateManager.chat(event.getSource().getUserId(), jpg, true);
-    	} catch (Exception e) {
-    		this.replyText(replyToken,defaultString);
-    		return;
-    	}
-        
-    	for (String replyMessage:reply) {
-         	log.info("Returns echo message {}: {}", replyToken, replyMessage);
-         	replyList.add(new TextMessage(replyMessage));
-        }
-    	
-        this.reply(replyToken,replyList);
+	    	try {
+	    		reply = stateManager.chat(event.getSource().getUserId(), jpg, true);
+	    	} catch (Exception e) {
+	    		this.replyText(replyToken,defaultString);
+	    		return;
+	    	}
+	        
+	    	for (String replyMessage:reply) {
+	         log.info("Returns echo message {}: {}", replyToken, replyMessage);
+	         replyList.add(new TextMessage(replyMessage));
+	    	}
+	    this.reply(replyToken,replyList);
     }
 	
 	private static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
@@ -205,6 +212,9 @@ public class DietbotController {
 
 		public String getPathString() {
 			return path.toString();
+		}
+		public String getUrl() {
+			return uri;
 		}
 	}
 }
