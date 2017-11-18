@@ -51,9 +51,7 @@ public class CollectUserInfoState extends State {
 			
 			sql.writeUserInfo(userId, age, gender, height, weight, allergies, 3, topic, state);
 		}
-
-
-        
+               
 		updateDatabase(userId, bot);
 		return output;
 	}
