@@ -83,7 +83,10 @@ public class DietbotTester {
 	public void addTestUser() {
 		ArrayList<String> menu = new ArrayList<String>();
 		menu.add("chicken potato soup");
+		ArrayList<String> allergies = new ArrayList<String>();
+		allergies.add("seafood");
 
+		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, 3, "testTopic", "testState");
 		this.databaseEngine.addMenu("testUser", menu);
 		this.databaseEngine.addRecommendations("testUser");
 	}
@@ -91,8 +94,8 @@ public class DietbotTester {
 
 	@After
 	public void removeTestUser() {
-		this.databaseEngine.resetMenu("testUser");
-		this.databaseEngine.resetRecommendations("testUser");
+		this.databaseEngine.reset("testUser", "menu");
+		this.databaseEngine.reset("testUser", "recommendations");
 	}
 
 	
@@ -101,7 +104,7 @@ public class DietbotTester {
 		ArrayList<String> allergies = null;
 
 		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, 3, "testTopic", "testState");
-		assertThat(this.databaseEngine.searchUser("testUser")).isEqualTo(true);
+		assertThat(this.databaseEngine.searchUser("testUser", "userinfo")).isEqualTo(true);
 	}
 	
 	
@@ -111,7 +114,7 @@ public class DietbotTester {
 		allergies.add("milk");
 
 		this.databaseEngine.writeUserInfo("testUserNonExisting", 21, "female", 1.64, 55, allergies, 3, "testTopic", "testState");
-		assertThat(this.databaseEngine.searchUser("testUserNonExisting")).isEqualTo(true);
+		assertThat(this.databaseEngine.searchUser("testUserNonExisting", "userinfo")).isEqualTo(true);
 		this.databaseEngine.deleteUserInfo("testUserNonExisting");
 	}
 	
@@ -140,6 +143,22 @@ public class DietbotTester {
 		assertThat(this.databaseEngine.getUserInfo("testUser", "height")).isEqualTo("2.17");
 		this.databaseEngine.setUserInfo("testUser", "height", 1.75);
 		assertThat(this.databaseEngine.getUserInfo("testUser", "height")).isEqualTo("1.75");
+	}
+
+
+	@Test
+	public void setUserAllergies() {
+		ArrayList<String> allergies = new ArrayList<String>();
+		allergies.add("nut");
+
+		this.databaseEngine.setUserAllergies("testUser", allergies);
+		assertThat(this.databaseEngine.getUserAllergies("testUser")).isEqualTo(allergies);
+
+		allergies.remove("nut");
+		allergies.add("seafood");
+
+		this.databaseEngine.setUserAllergies("testUser", allergies);
+		assertThat(this.databaseEngine.getUserAllergies("testUser")).isEqualTo(allergies);
 	}
 
 
@@ -173,8 +192,8 @@ public class DietbotTester {
 		menu.add("frozen water");
 		menu.add("molten ice");
 
-		this.databaseEngine.resetMenu("testUserAddReset");
-		this.databaseEngine.resetRecommendations("testUserAddReset");
+		this.databaseEngine.reset("testUserAddReset", "menu");
+		this.databaseEngine.reset("testUserAddReset", "recommendations");
 		this.databaseEngine.addMenu("testUserAddReset", menu);
 		this.databaseEngine.addRecommendations("testUserAddReset");
 		assertThat(this.databaseEngine.getMenu("testUserAddReset", "frozen")).isEqualTo("frozen water");
@@ -191,8 +210,8 @@ public class DietbotTester {
 
 		this.databaseEngine.addMenu("testUserAddReset", menu);
 		this.databaseEngine.addRecommendations("testUserAddReset");
-		this.databaseEngine.resetMenu("testUserAddReset");
-		this.databaseEngine.resetRecommendations("testUserAddReset");
+		this.databaseEngine.reset("testUserAddReset", "menu");
+		this.databaseEngine.reset("testUserAddReset", "recommendations");
 		assertThat(this.databaseEngine.getMenu("testUserAddReset", "frozen")).isEqualTo(null);
 		assertThat(this.databaseEngine.getMenu("testUserAddReset", "molten")).isEqualTo(null);
 		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "frozen")).isEqualTo(null);
@@ -210,8 +229,8 @@ public class DietbotTester {
 		this.databaseEngine.processRecommendationsByAllergies("testUserAllergy");
 		assertThat(this.databaseEngine.getRecommendation("testUserAllergy", "chicken")).isEqualTo("chicken potato soup");
 		assertThat(this.databaseEngine.getRecommendation("testUserAllergy", "salmon")).isEqualTo(null);
-		this.databaseEngine.resetMenu("testUserAllergy");
-		this.databaseEngine.resetRecommendations("testUserAllergy");
+		this.databaseEngine.reset("testUserAllergy", "menu");
+		this.databaseEngine.reset("testUserAllergy", "recommendations");
 	}
 	
 
@@ -219,15 +238,15 @@ public class DietbotTester {
 	public void testUpdateRecommendationsByIntake() {
 		ArrayList<String> menu = new ArrayList<String>();
 		menu.add("chicken potato soup");
-		menu.add("fruit salad");
+		menu.add("caramel apples");
 
 		this.databaseEngine.addMenu("testUserIntake", menu);
 		this.databaseEngine.addRecommendations("testUserIntake");
 		this.databaseEngine.processRecommendationsByIntake("testUserIntake");
 		assertThat(this.databaseEngine.getWeightage("testUserIntake", "chicken")).isEqualTo(2.5);
-		assertThat(this.databaseEngine.getWeightage("testUserIntake", "fruit")).isEqualTo(6);
-		this.databaseEngine.resetMenu("testUserIntake");
-		this.databaseEngine.resetRecommendations("testUserIntake");
+		assertThat(this.databaseEngine.getWeightage("testUserIntake", "apples")).isEqualTo(2);
+		this.databaseEngine.reset("testUserIntake", "menu");
+		this.databaseEngine.reset("testUserIntake", "recommendations");
 	}
 	
 
@@ -254,6 +273,14 @@ public class DietbotTester {
 		result = recommend.recommendFood("testUser", foodList);
 		assertThat(resultString.contains(result));
 	}
+
+
+	// @Test
+	// public void testGenerateAndStoreCode() {
+	// 	this.databaseEngine.addCampaignUser("testUser");
+	// 	this.databaseEngine.generateAndStoreCode("testUser");
+	// 	this.databaseEngine.claimCode("testClaimUser", 100000);
+	// }
 
 
 	@Test
@@ -430,9 +457,6 @@ public class DietbotTester {
 
 	// 	try{
 	// 		stateManager = new StateManager("src/test/resources/rivescriptChatbot");
-
-
-
 	// 		//random input at first when the user start chatting
 	// 		input = "fajsofifeojfeoijj";
  //    		expectedResponse = "Hi! I am your personal Dieting Chatbot!\n"
@@ -713,9 +737,6 @@ public class DietbotTester {
  //    						+"I have a better understanding of your physical conditions now.";
  //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
  //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-
-
  //    		assertThat(db.getUserInfo(userId, "age")).isEqualTo("20");
  //    		assertThat(db.getUserInfo(userId, "gender")).isEqualTo("male");
  //    		assertThat(db.getUserInfo(userId, "height")).isEqualTo("181.0");

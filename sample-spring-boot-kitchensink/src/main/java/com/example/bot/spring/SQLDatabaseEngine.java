@@ -235,7 +235,7 @@ public class SQLDatabaseEngine {
 				queryString = "SELECT " + info + " FROM userinfo WHERE userid = '" + userId + "'"; 
 				stmtQuery = connection.prepareStatement(queryString);
 				rs = stmtQuery.executeQuery();
-				while (rs.next()) {
+				while (result == null && rs.next()) {
 					if (info.equals("age")) {
 						result = Integer.toString(rs.getInt(1));
 
@@ -270,7 +270,7 @@ public class SQLDatabaseEngine {
 	
 
 	// Sets the user allergies
-	public void setUserAllergy(String userId, ArrayList<String> allergies) {
+	public void setUserAllergies(String userId, ArrayList<String> allergies) {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
 		String statement = null;
@@ -321,7 +321,7 @@ public class SQLDatabaseEngine {
 
 
 	// Returns the allergies of the input user
-	public ArrayList<String> getUserAllergy(String userId) {
+	public ArrayList<String> getUserAllergies(String userId) {
 		ArrayList<String> result = new ArrayList<String>();
 		Connection connection = null;
 		PreparedStatement stmtQuery = null;
@@ -433,38 +433,6 @@ public class SQLDatabaseEngine {
 		}
 	}
 	
-
-	// Deletes all records corresponding to the user in the menu table
-	public void resetMenu(String userId) {
-		Connection connection = null;
-		PreparedStatement stmtUpdate = null;
-		
-		try {
-			connection = this.getConnection();
-			
-			// Deletes records corresponding to the user from menu table
-			try {
-				stmtUpdate = connection.prepareStatement(
-					"DELETE FROM menu " +
-					"WHERE userid = ?"
-				);
-				stmtUpdate.setString(1, userId);
-				stmtUpdate.executeUpdate();
-			} catch (Exception e) {
-				log.info("Exception while deleting records from menu table: {}", e.toString());
-			}
-		} catch (Exception e) {
-			log.info("Exception while connecting to database: {}", e.toString());
-		} finally {
-			try {
-				if (stmtUpdate != null) {stmtUpdate.close();}
-				if (connection != null) {connection.close();}
-			} catch (Exception e) {
-				log.info("Exception while closing connection to database: {}", e.toString());
-			}
-		}		
-	}
-	
 	
 	/*
 	 *  Reads meal names from meal table and matches them to the food in our nutrient table
@@ -510,38 +478,6 @@ public class SQLDatabaseEngine {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
 		}		
-	}
-	
-	
-	// Deletes all records corresponding to the user in the recommendations table
-	public void resetRecommendations(String userId) {
-		Connection connection = null;
-		PreparedStatement stmtUpdate = null;
-		
-		try {
-			connection = this.getConnection();
-			
-			// Deletes records corresponding to the user from recommendations table
-			try {
-				stmtUpdate = connection.prepareStatement(
-					"DELETE FROM recommendations " +
-					"WHERE userid = ?"
-				);
-				stmtUpdate.setString(1, userId);
-				stmtUpdate.executeUpdate();
-			} catch (Exception e) {
-				log.info("Exception while deleting records from recommendations table: {}", e.toString());
-			}
-		} catch (Exception e) {
-			log.info("Exception while connecting to database: {}", e.toString());
-		} finally {
-			try {
-				if (stmtUpdate != null) {stmtUpdate.close();}
-				if (connection != null) {connection.close();}
-			} catch (Exception e) {
-				log.info("Exception while closing connection to database: {}", e.toString());
-			}
-		}
 	}
 	
 	
@@ -694,18 +630,17 @@ public class SQLDatabaseEngine {
 	}
 	
 	
-	// Searchers for a user in the userinfo table
-	public boolean searchUser(String userId) {
+	// Searchers for a user in the input table
+	public boolean searchUser(String userId, String table) {
 		String result = null;
 		Connection connection = null;
 		PreparedStatement stmtQuery = null;
+		String statement = null;
 		ResultSet rs = null;
 		try {
 			connection = this.getConnection();
-			stmtQuery = connection.prepareStatement(
-				"SELECT userid FROM userinfo " +
-				"WHERE userid = ?"
-			);
+			statement = "SELECT userid FROM " + table + " WHERE userid = ?";
+			stmtQuery = connection.prepareStatement(statement);
 			stmtQuery.setString(1, userId);
 			rs = stmtQuery.executeQuery(); 
 			while(result == null && rs.next()) {
@@ -840,5 +775,148 @@ public class SQLDatabaseEngine {
 			}
 		}
 		return result;
+	}
+
+
+	// Adds the input userId into the campaign_user table
+	public void addCampaignUser(String userId) {
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			try {
+				stmtUpdate = connection.prepareStatement(
+					"INSERT INTO campaign_user " +
+					"VALUES (?)"
+				);
+				stmtUpdate.setString(1, userId);
+				stmtUpdate.executeUpdate();
+			} catch (Exception e) {
+				log.info("Exception while generating and storing code into the coupon_code table: {}", e.toString());
+			}
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (Exception e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}	
+	}
+
+
+	// Generates and stores a unique 6-digit code in the coupon_code database, with the userId of the user who requested it. Returns the code to the user.
+	public int generateAndStoreCode(String userId) {
+		int result = -1;
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		PreparedStatement stmtQuery = null;
+		ResultSet rs = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Generate and insert the code into the coupon_code database, together with the userId
+			try {
+				stmtQuery = connection.prepareStatement(
+					"SELECT count(*)+100000 " +
+					"FROM coupon_code;"
+				);
+				rs = stmtQuery.executeQuery(); 
+				while(result == -1 && rs.next()) {
+					result = (rs.getInt(1));
+				}
+
+				stmtUpdate = connection.prepareStatement(
+					"INSERT INTO coupon_code " +
+					"VALUES (?, ?)"
+				);
+				stmtUpdate.setInt(1, result);
+				stmtUpdate.setString(2, userId);
+				stmtUpdate.executeUpdate();
+			} catch (Exception e) {
+				log.info("Exception while generating and storing code into the coupon_code table: {}", e.toString());
+			}
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (Exception e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+		return result;
+	}
+
+
+	// Sets the value of a the claimUser column with corresponding code to userId in the coupon_code table
+	public void claimCode(String userId, int code) {
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			try {
+				stmtUpdate = connection.prepareStatement(
+					"UPDATE coupon_code " +
+					"SET claimUser = ? " +
+					"WHERE code = ?"
+				);
+				stmtUpdate.setString(1, userId);
+				stmtUpdate.setInt(2, code);
+				stmtUpdate.executeUpdate();
+			} catch (Exception e) {
+				log.info("Exception while updating user info: {}", e.toString());
+			}
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (Exception e) {  // Exception or IOException??
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+	}
+
+
+	// Deletes all records corresponding to the userId in the input table
+	public void reset(String userId, String table) {
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		String statement = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Deletes records corresponding to the user from the input table
+			try {
+				statement = "DELETE FROM " + table + " WHERE userid = ?";
+				stmtUpdate = connection.prepareStatement(statement);
+				stmtUpdate.setString(1, userId);
+				stmtUpdate.executeUpdate();
+			} catch (Exception e) {
+				log.info("Exception while deleting records from recommendations table: {}", e.toString());
+			}
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (Exception e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
 	}
 }
