@@ -94,8 +94,8 @@ public class DietbotTester {
 
 	@After
 	public void removeTestUser() {
-		this.databaseEngine.resetMenu("testUser");
-		this.databaseEngine.resetRecommendations("testUser");
+		this.databaseEngine.reset("testUser", "menu");
+		this.databaseEngine.reset("testUser", "recommendations");
 	}
 
 	
@@ -104,7 +104,7 @@ public class DietbotTester {
 		ArrayList<String> allergies = null;
 
 		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, 3, "testTopic", "testState");
-		assertThat(this.databaseEngine.searchUser("testUser")).isEqualTo(true);
+		assertThat(this.databaseEngine.searchUser("testUser", "userinfo")).isEqualTo(true);
 	}
 	
 	
@@ -114,7 +114,7 @@ public class DietbotTester {
 		allergies.add("milk");
 
 		this.databaseEngine.writeUserInfo("testUserNonExisting", 21, "female", 1.64, 55, allergies, 3, "testTopic", "testState");
-		assertThat(this.databaseEngine.searchUser("testUserNonExisting")).isEqualTo(true);
+		assertThat(this.databaseEngine.searchUser("testUserNonExisting", "userinfo")).isEqualTo(true);
 		this.databaseEngine.deleteUserInfo("testUserNonExisting");
 	}
 	
@@ -192,8 +192,8 @@ public class DietbotTester {
 		menu.add("frozen water");
 		menu.add("molten ice");
 
-		this.databaseEngine.resetMenu("testUserAddReset");
-		this.databaseEngine.resetRecommendations("testUserAddReset");
+		this.databaseEngine.reset("testUserAddReset", "menu");
+		this.databaseEngine.reset("testUserAddReset", "recommendations");
 		this.databaseEngine.addMenu("testUserAddReset", menu);
 		this.databaseEngine.addRecommendations("testUserAddReset");
 		assertThat(this.databaseEngine.getMenu("testUserAddReset", "frozen")).isEqualTo("frozen water");
@@ -210,8 +210,8 @@ public class DietbotTester {
 
 		this.databaseEngine.addMenu("testUserAddReset", menu);
 		this.databaseEngine.addRecommendations("testUserAddReset");
-		this.databaseEngine.resetMenu("testUserAddReset");
-		this.databaseEngine.resetRecommendations("testUserAddReset");
+		this.databaseEngine.reset("testUserAddReset", "menu");
+		this.databaseEngine.reset("testUserAddReset", "recommendations");
 		assertThat(this.databaseEngine.getMenu("testUserAddReset", "frozen")).isEqualTo(null);
 		assertThat(this.databaseEngine.getMenu("testUserAddReset", "molten")).isEqualTo(null);
 		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "frozen")).isEqualTo(null);
@@ -229,8 +229,8 @@ public class DietbotTester {
 		this.databaseEngine.processRecommendationsByAllergies("testUserAllergy");
 		assertThat(this.databaseEngine.getRecommendation("testUserAllergy", "chicken")).isEqualTo("chicken potato soup");
 		assertThat(this.databaseEngine.getRecommendation("testUserAllergy", "salmon")).isEqualTo(null);
-		this.databaseEngine.resetMenu("testUserAllergy");
-		this.databaseEngine.resetRecommendations("testUserAllergy");
+		this.databaseEngine.reset("testUserAllergy", "menu");
+		this.databaseEngine.reset("testUserAllergy", "recommendations");
 	}
 	
 
@@ -245,8 +245,8 @@ public class DietbotTester {
 		this.databaseEngine.processRecommendationsByIntake("testUserIntake");
 		assertThat(this.databaseEngine.getWeightage("testUserIntake", "chicken")).isEqualTo(2.5);
 		assertThat(this.databaseEngine.getWeightage("testUserIntake", "apples")).isEqualTo(2);
-		this.databaseEngine.resetMenu("testUserIntake");
-		this.databaseEngine.resetRecommendations("testUserIntake");
+		this.databaseEngine.reset("testUserIntake", "menu");
+		this.databaseEngine.reset("testUserIntake", "recommendations");
 	}
 	
 
@@ -273,6 +273,14 @@ public class DietbotTester {
 		result = recommend.recommendFood("testUser", foodList);
 		assertThat(resultString.contains(result));
 	}
+
+
+	// @Test
+	// public void testGenerateAndStoreCode() {
+	// 	this.databaseEngine.addCampaignUser("testUser");
+	// 	this.databaseEngine.generateAndStoreCode("testUser");
+	// 	this.databaseEngine.claimCode("testClaimUser", 100000);
+	// }
 
 
 	@Test

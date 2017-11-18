@@ -77,7 +77,7 @@ public class StateManager {
             // If user id is not seen before, record it and set to collect_user_info. 
             try{
                 boolean isRegisteredUser = true;
-                isRegisteredUser = sql.searchUser(userId);
+                isRegisteredUser = sql.searchUser(userId, "userinfo");
 
                 if (!isRegisteredUser) {
                     currentState = "collect_user_info";
@@ -138,7 +138,7 @@ public class StateManager {
         try{
             try{
                 boolean isRegisteredUser = true;
-                isRegisteredUser = sql.searchUser(userId);
+                isRegisteredUser = sql.searchUser(userId, "userinfo");
 
                 if (!isRegisteredUser) {
                     currentState = "collect_user_info";
