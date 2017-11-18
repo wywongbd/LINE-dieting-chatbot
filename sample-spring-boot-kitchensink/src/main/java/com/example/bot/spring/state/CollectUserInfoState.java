@@ -23,9 +23,13 @@ public class CollectUserInfoState extends State {
     }
 
 	public String reply(String userId, String text, RiveScript bot) {
+		System.out.println("CollectUserInfoState point 1");
+
 		String currentState = bot.getUservar(userId, "state"); 
 		String output = bot.reply(userId, text);
 		String afterState = bot.getUservar(userId, "state");
+
+		System.out.println("CollectUserInfoState point 2");
 				
 		if (currentState != afterState) {
 			// write to DB
@@ -54,8 +58,11 @@ public class CollectUserInfoState extends State {
 				System.out.println("Exception while inserting user info into user database: " + e.toString());
 			}
 		}
+		System.out.println("CollectUserInfoState point 3");
 
 		updateDatabase(userId, bot);
+
+		System.out.println("CollectUserInfoState point 4");
 		return output;
 	}
 }
