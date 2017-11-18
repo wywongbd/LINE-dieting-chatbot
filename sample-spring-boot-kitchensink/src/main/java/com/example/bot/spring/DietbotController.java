@@ -197,31 +197,30 @@ public class DietbotController {
 			if (recommendFriendState.matchTrigger(text).equals("FRIEND")){
 				reply = recommendFriendState.replyForFriendCommand(userId);
 			}
-
-			else if (recommendFriendState.matchTrigger(text).equals("CODE")){
-				String code = recommendFriendState.decodeCodeMessage(text);
-				reply = recommendFriendState.actionForCodeCommand(userId, code);
-				if(reply.size() == 2) {
-					SQLDatabaseEngine sql = new SQLDatabaseEngine();
-					String url = sql.getCouponUrl();
-					String requestUser = reply.get(0);
-            		String claimUser = reply.get(1);				
-            		// Reply image to claimUser
-            		this.replyImage(replyToken, url);
-            		// Push image to requestUser
-            		pushImage(requestUser, url);
-					return;
-				}
-			}
+			// else if (recommendFriendState.matchTrigger(text).equals("CODE")){
+			// 	String code = recommendFriendState.decodeCodeMessage(text);
+			// 	reply = recommendFriendState.actionForCodeCommand(userId, code);
+			// 	if(reply.size() == 2) {
+			// 		SQLDatabaseEngine sql = new SQLDatabaseEngine();
+			// 		String url = sql.getCouponUrl();
+			// 		String requestUser = reply.get(0);
+   //          		String claimUser = reply.get(1);				
+   //          		// Reply image to claimUser
+   //          		this.replyImage(replyToken, url);
+   //          		// Push image to requestUser
+   //          		this.pushImage(requestUser, url);
+			// 		return;
+			// 	}
+			// }
 			else {
 				reply = stateManager.chat(userId, text, true);
 			}
-    		} catch (Exception e) {
-    			this.replyText(replyToken,defaultString);
-    			return;
-    		}
+    	} catch (Exception e) {
+    		this.replyText(replyToken,defaultString);
+    		return;
+    	}
     	
-    		for (String replyMessage:reply) {
+    	for (String replyMessage:reply) {
          	log.info("Returns echo message {}: {}", replyToken, replyMessage);
          	replyList.add(new TextMessage(replyMessage));
         }
