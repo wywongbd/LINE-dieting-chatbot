@@ -150,7 +150,10 @@ public class StateManager {
         System.out.println("Image chat point 2");
 
         // Pass the image into InputMenuState to check if the image is recognized as menu
-        replyText.add(((InputMenuState) states.get(currentState)).replyImage(userId, jpg, bot));
+        if (currentState.equals("input_menu") || currentState.equals("standby")){
+            replyText.add(((InputMenuState) states.get("input_menu")).replyImage(userId, jpg, bot));
+        }
+  
         currentState = bot.getUservar(userId, "state");
 
         System.out.println("Image chat point 3");
