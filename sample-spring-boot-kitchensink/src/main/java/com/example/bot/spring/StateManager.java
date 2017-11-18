@@ -99,6 +99,7 @@ public class StateManager {
                 return replyText;
             }
             
+            System.out.println("point 3");
         	replyText.add(states.get(currentState).reply(userId, text, bot));
             currentState = bot.getUservar(userId, "state");
             
@@ -110,6 +111,8 @@ public class StateManager {
             	String temp = states.get(currentState).reply(userId, splitString[1], bot);           	
             	replyText.add(temp);
             }
+            
+            System.out.println("point 4");
             
         } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
             // Text is not recognized, does not modify current state
