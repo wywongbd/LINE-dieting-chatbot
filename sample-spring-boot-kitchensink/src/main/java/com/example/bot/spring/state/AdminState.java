@@ -18,7 +18,7 @@ import java.awt.image.BufferedImage;
 public class AdminState extends State {
     // Constant values
     private static final String ADMIN_TRIGGER = "admin_upload_image";
-    public static String couponImageUrl = null;
+    private static String couponImageUrl = null;
 
     /**
      * Default constructor for AdminState
@@ -35,21 +35,13 @@ public class AdminState extends State {
     }
 
     public String replyImage(String userId, DownloadedContent jpg, RiveScript bot) {
-    		return "Your image has been well received!";
+		// To do: modify url in DB
+        couponImageUrl = jpg.getUrl();
+		return "Your image has been well received!";
+    }
 
-//    		BufferedImage coupon_image = null;
-//    		String pathString = jpg.getPathString();
-//    		try {
-//    			couponImage = ImageIO.read(new File(pathString));
-//    			File outputfile = new File("coupon_image.jpg");
-//    			ImageIO.write(couponImage, "jpg", outputfile);
-//    			return "Your coupon image has been well received!";
-//    		} catch(FileNotFoundException e) {
-//    			return "FileNotFoundException, image cannot be found!";
-//    		}
-//    		} catch(IOException e) {
-//    			return "IOException, problem happends when closing the FileOutputStream!";
-//    		}
+    public static String getImageUrl() {
+		return couponImageUrl;
     }
 
     /**

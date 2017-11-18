@@ -151,7 +151,16 @@ public class DietbotController {
         List<Message> replyList = new ArrayList<Message>(0);
         try {
 			UserProfileResponse profile = lineMessagingClient.getProfile(event.getSource().getUserId()).get();
-    			reply = stateManager.chat(event.getSource().getUserId(), text, true);
+
+			// text: "code 123456"
+			// Exception couponIsValid
+			if (text.equals("debug_coupon")){
+				String url = AdminState.getImageUrl();
+				replyImage(replyToken, url);
+				return;
+			}
+
+    		reply = stateManager.chat(event.getSource().getUserId(), text, true);
     			
     		} catch (Exception e) {
     			this.replyText(replyToken,defaultString);
