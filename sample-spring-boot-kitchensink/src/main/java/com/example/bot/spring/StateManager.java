@@ -86,10 +86,10 @@ public class StateManager {
         }
 
         if(currentState.equals("standby") && (((AdminState) states.get("admin")).matchTrigger(text) == 1)){
-            currentState = "admin";
+            // currentState = "admin";
             adminAccessing = true;
         }
-        
+
     	replyText.add(states.get(currentState).reply(userId, text, bot));
         currentState = bot.getUservar(userId, "state");
 
@@ -146,9 +146,10 @@ public class StateManager {
             }
             else{
                 replyText.add(((InputMenuState) states.get("AdminState")).replyImage(userId, jpg, bot));
+                adminAccessing = false;
             }
         }
-  
+
         currentState = bot.getUservar(userId, "state");
         
         if(currentState.equals("recommend")) {               
