@@ -17,36 +17,49 @@ public class StateManager {
     private final int RECOMMEND_STATE = 4;
     // Must first go through InputMenuState before going to RecommendationState,
     // so 4 is not included
-    private final int[] FROM_STANDBY_STATE = {1, 2, 3, 5};
+//    private final int[] FROM_STANDBY_STATE = {1, 2, 3, 5};
 
     // Value to keep track current state
-    private static Map<String, Integer> currentState; 
+    // private static Map<String, Integer> currentState; 
     
-    private State[] states = {
-            new StandbyState(),
-            new CollectUserInfoState(),
-            new ProvideInfoState(),
-            new InputMenuState(),
-            new RecommendationState(),
-            new PostEatingState()
-        };
-    
-    private RiveScript bot;    
+    private static final Map<String, State> states; 
+    private static RiveScript bot;    
+
+    static
+    {
+        bot = new RiveScript();
+        
+        states = new HashMap<String, State>();
+        states.put("standby", new StandbyState());
+        states.put("collect_user_info", new CollectUserInfoState());    
+        states.put("recommend", new RecommendationState());
+        states.put("input_menu", new InputMenuState());    
+        states.put("provide_info", new ProvideInfoState());  
+        states.put("post_eating", new PostEatingState());
+        states.put("update_user_info", new UpdateUserInfoState());
+    };
     
     /**
      * Default constructor for StateManager
      */
     public StateManager(String path) {
+        // Load rive files for Rivescript object
+        File resourcesDirectory = new File(path);
+        bot.loadDirectory(resourcesDirectory.getAbsolutePath());
+        bot.sortReplies();
+    }
 
-            // Rivescript objectg
-            bot = new RiveScript();
-            
-            currentState = new HashMap<String, Integer>();
+    public void updateBot(String userId){
+        SQLDatabaseEngine sql = new SQLDatabaseEngine();
 
-            // Load rive files for Rivescript object
-            File resourcesDirectory = new File(path);
-            bot.loadDirectory(resourcesDirectory.getAbsolutePath());
-            bot.sortReplies();
+        try {
+            bot.setUservar(userId, "topic", sql.getUserInfo(userId, "state"));
+            bot.setUservar(userId, "state", sql.getUserInfo(userId, "topic"));
+        }
+        catch (Exception e) {
+            System.out.println("Database error!");
+        }
+
     }
 
     /**
@@ -56,26 +69,43 @@ public class StateManager {
      */
     public Vector<String> chat(String userId, String text, boolean debug) throws Exception {
     	Vector<String> replyText = new Vector<String>(0);
+        SQLDatabaseEngine sql = new SQLDatabaseEngine();
+        String currentState = null;        
+        String currentTopic = null;
 
         try{
-            // Get the next state after current message
-            if (currentState.containsKey(userId) == false) {
-                currentState.put(userId, 1);
-                bot.setUservar(userId, "state", "collect_user_info");
+            // If user id is not seen before, record it and set to collect_user_info. 
+            try{
+                boolean isRegisteredUser = true;
+                isRegisteredUser = sql.searchUser(userId);
+
+                if (!isRegisteredUser) {
+                    currentState = "collect_user_info";
+                    bot.setUservar(userId, "state", "collect_user_info");
+                }
+                else{
+                    // update bot status
+                    updateBot(userId);
+                    currentState = bot.getUservar(userId, "topic");
+                    currentTopic = bot.getUservar(userId, "state");
+                }
+
+            } catch (Exception e) {
+                replyText.add("Database error!");
+                return replyText;
             }
             
-        	replyText.add(states[currentState.get(userId)].reply(userId, text, bot));
-            currentState.put(userId, decodeState(bot.getUservar(userId, "state"))); 
+        	replyText.add(states.get(currentState).reply(userId, text, bot));
+            currentState = bot.getUservar(userId, "state");
             
-            if(currentState.get(userId) == RECOMMEND_STATE) {            	
+            if(currentState == "recommend") {            	
             	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	          	
             	replyText.add(0, splitString[0]);         	          	
             	replyText.remove(replyText.size() - 1);
-         
-            	String temp = states[currentState.get(userId)].reply(userId, splitString[1], bot);           	
+            
+            	String temp = states.get(currentState).reply(userId, splitString[1], bot);           	
             	replyText.add(temp);
             }
-            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));
             
         } catch (Exception e) {    // Modify to custom exception TextNotRecognized later
             // Text is not recognized, does not modify current state
@@ -86,7 +116,8 @@ public class StateManager {
         if(replyText.size() > 0) {
             // Just for testing
         	if(debug == true) {
-        		replyText.add("Current state is " +  Integer.toString(currentState.get(userId)));
+        		replyText.add("Current state is " + bot.getUservar(userId, "state"));
+                replyText.add("Current topic is " + bot.getUservar(userId, "topic"));
         	}
         	return replyText;
         }
@@ -100,25 +131,47 @@ public class StateManager {
      */
     public Vector<String> chat(String userId, DownloadedContent jpg, boolean debug) throws Exception {
     	Vector<String> replyText = new Vector<String>(0);
-    	
+        SQLDatabaseEngine sql = new SQLDatabaseEngine();
+    	String currentState = null;        
+        String currentTopic = null;
+
         try{
-            if (currentState.containsKey(userId) == false || currentState.get(userId) == 1) {
-            	replyText.add("Please finish giving us your personal information before sending photos!");
+            try{
+                boolean isRegisteredUser = true;
+                isRegisteredUser = sql.searchUser(userId);
+
+                if (!isRegisteredUser) {
+                    currentState = "collect_user_info";
+                    replyText.add("Please finish giving us your personal information before sharing photos!");
+                    return replyText;
+                }
+                else{
+                	updateBot(userId);
+                    currentState = bot.getUservar(userId, "topic");
+                    currentTopic = bot.getUservar(userId, "state");
+                    
+                    if (currentState == "update_user_info"){
+                        replyText.add("Please finish updating your personal information before sharing photos!");
+                        return replyText;
+                    }
+                }
+            } catch (Exception e) {
+                replyText.add("Database error!");
                 return replyText;
             }
+
             // Pass the image into InputMenuState to check if the image is recognized as menu
-            replyText.add(((InputMenuState) states[INPUT_MENU_STATE]).replyImage(userId, jpg, bot));
-            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));
+            replyText.add(((InputMenuState) states.get(currentState)).replyImage(userId, jpg, bot));
+            currentState = bot.getUservar(userId, "state");
             
-            if(currentState.get(userId) == RECOMMEND_STATE) {            	
-            	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	          	
-            	replyText.add(0, splitString[0]);         	          	
-            	replyText.remove(replyText.size() - 1);
-         
-            	String temp = states[currentState.get(userId)].reply(userId, splitString[1], bot);           	
-            	replyText.add(temp);
+            if(currentState == "recommend") {               
+                String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");                                       
+                replyText.add(0, splitString[0]);                       
+                replyText.remove(replyText.size() - 1);
+            
+                String temp = states.get(currentState).reply(userId, splitString[1], bot);              
+                replyText.add(temp);
             }
-            currentState.put(userId, decodeState(bot.getUservar(userId, "state")));
 
         } catch (Exception e) {    // Modify to custom exception ImageNotRecognized later
             // Image is not recognized as menu, does not modify current state
@@ -128,7 +181,8 @@ public class StateManager {
         if(replyText.size() > 0) {
             // Just for testing
         	if(debug == true) {
-        		replyText.add("Current state is " +  Integer.toString(currentState.get(userId)));
+        		replyText.add("Current state is " +  bot.getUservar(userId, "state"));
+                replyText.add("Current topic is " +  bot.getUservar(userId, "topic"));
         	}
         	return replyText;
         }
