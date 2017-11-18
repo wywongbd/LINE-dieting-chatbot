@@ -84,8 +84,8 @@ public class StateManager {
 
                 if (!isRegisteredUser) {
                     currentState = "collect_user_info";
-                    // bot.setUservar(userId, "state", "collect_user_info");
-                    // bot.setUservar(userId, "topic", "new_user");
+                    bot.setUservar(userId, "state", "collect_user_info");
+                    bot.setUservar(userId, "topic", "new_user");
                 }
                 else{
                     // update bot status
