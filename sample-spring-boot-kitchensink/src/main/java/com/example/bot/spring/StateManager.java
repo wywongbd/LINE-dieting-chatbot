@@ -17,7 +17,7 @@ public class StateManager {
     private final int RECOMMEND_STATE = 4;
     // Must first go through InputMenuState before going to RecommendationState,
     // so 4 is not included
-    private final int[] FROM_STANDBY_STATE = {1, 2, 3, 5};
+//    private final int[] FROM_STANDBY_STATE = {1, 2, 3, 5};
 
     // Value to keep track current state
     // private static Map<String, Integer> currentState; 
@@ -52,6 +52,14 @@ public class StateManager {
     public void updateBot(String userId){
         SQLDatabaseEngine sql = new SQLDatabaseEngine();
 
+        try {
+            bot.setUservar(userId, "topic", sql.getUserInfo(userId, "state"));
+            bot.setUservar(userId, "state", sql.getUserInfo(userId, "topic"));
+        }
+        catch (Exception e) {
+            System.out.println("Database error!");
+        }
+
     }
 
     /**
@@ -77,21 +85,20 @@ public class StateManager {
                 }
                 else{
                     // update bot status
-                    currentState = sql.getUserInfo(userId, "state");
-                    currentTopic = sql.getUserInfo(userId, "topic");
-                    bot.setUservar(userId, "topic", currentTopic);
-                    bot.setUservar(userId, "state", currentState);
+                    updateBot(userId);
+                    currentState = bot.getUservar(userId, "topic");
+                    currentTopic = bot.getUservar(userId, "state");
                 }
 
             } catch (Exception e) {
-                replyText.add("Sorry, we are having technical issues.");
+                replyText.add("Database error!");
                 return replyText;
             }
             
         	replyText.add(states.get(currentState).reply(userId, text, bot));
             currentState = bot.getUservar(userId, "state");
             
-            if(currentState == RECOMMEND_STATE) {            	
+            if(currentState == "recommend") {            	
             	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	          	
             	replyText.add(0, splitString[0]);         	          	
             	replyText.remove(replyText.size() - 1);
@@ -139,22 +146,25 @@ public class StateManager {
                     return replyText;
                 }
                 else{
-                    currentState = sql.getUserInfo(userId, "state");
+                	updateBot(userId);
+                    currentState = bot.getUservar(userId, "topic");
+                    currentTopic = bot.getUservar(userId, "state");
+                    
                     if (currentState == "update_user_info"){
                         replyText.add("Please finish updating your personal information before sharing photos!");
                         return replyText;
                     }
                 }
             } catch (Exception e) {
-                replyText.add("Sorry, we are having technical issues.");
+                replyText.add("Database error!");
                 return replyText;
             }
 
             // Pass the image into InputMenuState to check if the image is recognized as menu
-            replyText.add(((InputMenuState) states[INPUT_MENU_STATE]).replyImage(userId, jpg, bot));
+            replyText.add(((InputMenuState) states.get(currentState)).replyImage(userId, jpg, bot));
             currentState = bot.getUservar(userId, "state");
             
-            if(currentState == RECOMMEND_STATE) {               
+            if(currentState == "recommend") {               
                 String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");                                       
                 replyText.add(0, splitString[0]);                       
                 replyText.remove(replyText.size() - 1);
