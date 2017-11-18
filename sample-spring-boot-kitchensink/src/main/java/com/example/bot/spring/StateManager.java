@@ -205,10 +205,10 @@ public class StateManager {
                         temp.add("milk");
                     }
                     if ( args[2].equals("true") ) {
-                        temp.add("eggs");
+                        temp.add("egg");
                     }
                     if ( args[3].equals("true") ) {
-                        temp.add("nuts");
+                        temp.add("nut");
                     }
                     if ( args[4].equals("true") ) {
                         temp.add("seafood");
