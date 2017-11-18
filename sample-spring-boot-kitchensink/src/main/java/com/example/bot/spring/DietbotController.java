@@ -204,8 +204,8 @@ public class DietbotController {
 				if(reply.size() == 2) {
 					SQLDatabaseEngine sql = new SQLDatabaseEngine();
 					String url = sql.getCouponUrl();
-					String requestUser = reply[0];
-            		String claimUser = reply[1];				
+					String requestUser = reply.get(0);
+            		String claimUser = reply.get(1);				
             		// Reply image to claimUser
             		this.replyImage(replyToken, url);
             		// Push image to requestUser

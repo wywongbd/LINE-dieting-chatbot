@@ -58,8 +58,8 @@ public class RecommendFriendState extends State {
         }
         else{
             ArrayList<String> ls = sql.getCodeInfo(Integer.valueOf(code));
-            String requestUser = ls[0];
-            String claimUser = ls[1];
+            String requestUser = ls.get(0);
+            String claimUser = ls.get(1);
             if(requestUser == null){
                 // This code does not exist
                 vec.add("Sorry, this code does not exist!");
@@ -82,6 +82,6 @@ public class RecommendFriendState extends State {
      * @return A String data type
      */
 	public String reply(String userId, String text, RiveScript bot) {
-
+		return "This function is not used";
 	}
 }
