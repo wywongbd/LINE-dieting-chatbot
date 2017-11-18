@@ -14,6 +14,8 @@ import java.util.concurrent.TimeUnit;
 import org.assertj.core.api.Condition;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,25 +79,26 @@ public class DietbotTester {
 	private StateManager stateManager;
 	
 
-	// @Test
-	// public void addTestUser() throws Exception {
-	// 	boolean thrown = false;
-	// 	ArrayList<String> menu = new ArrayList<String>();
-	// 	menu.add("chicken potato soup");
+	@Before
+	public void addTestUser() {
+		ArrayList<String> menu = new ArrayList<String>();
+		menu.add("chicken potato soup");
 
-	// 	try {
-	// 		this.databaseEngine.addMenu("testUser", menu);
-	// 		this.databaseEngine.addRecommendations("testUser");
-	// 	} catch (Exception e) {
-	// 		thrown = true;
-	// 	}
-	// 	assertThat(thrown).isEqualTo(false);
-	// }
+		this.databaseEngine.addMenu("testUser", menu);
+		this.databaseEngine.addRecommendations("testUser");
+	}
+
+
+	@After
+	public void removeTestUser() {
+		this.databaseEngine.resetMenu("testUser");
+		this.databaseEngine.resetRecommendations("testUser");
+	}
 
 	
 	@Test
 	public void writeUserInfoExisting() {
-		String[] allergies = null;
+		ArrayList<String> allergies = null;
 
 		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, 3, "testTopic", "testState");
 		assertThat(this.databaseEngine.searchUser("testUser")).isEqualTo(true);
@@ -104,7 +107,8 @@ public class DietbotTester {
 	
 	@Test
 	public void writeUserInfoNonExisting() {
-		String[] allergies = {"milk"};
+		ArrayList<String> allergies = new ArrayList<String>();
+		allergies.add("milk");
 
 		this.databaseEngine.writeUserInfo("testUserNonExisting", 21, "female", 1.64, 55, allergies, 3, "testTopic", "testState");
 		assertThat(this.databaseEngine.searchUser("testUserNonExisting")).isEqualTo(true);
@@ -238,7 +242,6 @@ public class DietbotTester {
 
 	@Test
 	public void recommendFood() {
-		boolean thrown = false;
 		String result = null;
 		String resultString = "grilled salmon vege fish chip mayo rice fried chicken fish";
 		RecommendationState recommend = new RecommendationState();
@@ -722,7 +725,6 @@ public class DietbotTester {
 			thrown = true;
 		}
 		assertThat(thrown).isEqualTo(false);
-
 	}
 
  }

@@ -38,7 +38,7 @@ public class SQLDatabaseEngine {
 	 * Unit for height: m
 	 * Unit for weight: kg
 	 */
-	public void writeUserInfo(String userId, int age, String gender, double height, double weight, String[] allergies, int foodHistPeriod, String topic, String state) {
+	public void writeUserInfo(String userId, int age, String gender, double height, double weight, ArrayList<String> allergies, int foodHistPeriod, String topic, String state) {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
 		
@@ -89,7 +89,7 @@ public class SQLDatabaseEngine {
 			}
 
 			// Insert user allergies into the database if they have any
-			if (allergies != null) {
+			if (allergies.size() != 0) {
 				for (String allergy: allergies) {
 					try {
 						stmtUpdate = connection.prepareStatement(
@@ -103,7 +103,7 @@ public class SQLDatabaseEngine {
 						log.info("Exception while inserting user allergies into database: {}", e.toString());
 					}						
 				}
-			}	
+			}
 		} catch (Exception e) {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
@@ -127,7 +127,6 @@ public class SQLDatabaseEngine {
 		try {
 			connection = this.getConnection();
 			
-			// Delete user info if it already exists
 			try {
 				statement = "UPDATE userinfo " +
 							"SET " + info + " = ? " +
@@ -162,7 +161,6 @@ public class SQLDatabaseEngine {
 		try {
 			connection = this.getConnection();
 			
-			// Delete user info if it already exists
 			try {
 				statement = "UPDATE userinfo " +
 							"SET " + info + " = ? " +
@@ -197,7 +195,6 @@ public class SQLDatabaseEngine {
 		try {
 			connection = this.getConnection();
 			
-			// Delete user info if it already exists
 			try {
 				statement = "UPDATE userinfo " +
 							"SET " + info + " = ? " +
@@ -239,15 +236,15 @@ public class SQLDatabaseEngine {
 				stmtQuery = connection.prepareStatement(queryString);
 				rs = stmtQuery.executeQuery();
 				while (rs.next()) {
-					if (info.equals("gender")) {
-						result = rs.getString(1);
-					}
-					else if (info.equals("age")) {
+					if (info.equals("age")) {
 						result = Integer.toString(rs.getInt(1));
 
 					}
 					else if (info.equals("height") || (info.equals("weight"))) {
 						result = Double.toString(rs.getDouble(1));
+					}
+					else {
+						result = rs.getString(1);
 					}
 				}
 			} catch (Exception e) {
@@ -271,6 +268,92 @@ public class SQLDatabaseEngine {
 		}
 	}
 	
+
+	// Sets the user allergies
+	public void setUserAllergy(String userId, ArrayList<String> allergies) {
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		String statement = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Delete user allergies if it already exists
+			try {
+				stmtUpdate = connection.prepareStatement(
+					"DELETE FROM userallergies " +
+					"WHERE userId = ?"
+				);
+				stmtUpdate.setString(1, userId);
+				stmtUpdate.executeUpdate();
+			} catch (Exception e) {
+				log.info("Exception while deleting existing user allergies from database: {}", e.toString());
+			}
+
+			// Insert user allergies into the database if they have any
+			if (allergies.size() != 0) {
+				try {
+					stmtUpdate = connection.prepareStatement(
+						"INSERT INTO userallergies " +
+						"VALUES (?, ?)"
+					);
+					for (String allergy: allergies) {
+						stmtUpdate.setString(1, userId);
+						stmtUpdate.setString(2, allergy);
+						stmtUpdate.addBatch();						
+					}
+					stmtUpdate.executeBatch();
+				} catch (Exception e) {
+					log.info("Exception while inserting user allergies into database: {}", e.toString());					
+				}
+			}
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (Exception e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+	}
+
+
+	// Returns the allergies of the input user
+	public ArrayList<String> getUserAllergy(String userId) {
+		ArrayList<String> result = new ArrayList<String>();
+		Connection connection = null;
+		PreparedStatement stmtQuery = null;
+		ResultSet rs = null;
+		try {
+			connection = this.getConnection();
+			stmtQuery = connection.prepareStatement(
+				"SELECT allergy FROM userallergies " +
+				"WHERE userid = ?"
+			);
+			stmtQuery.setString(1, userId);
+			rs = stmtQuery.executeQuery(); 
+			while(rs.next()) {
+				result.add(rs.getString(1));
+			}
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmtQuery != null)
+					stmtQuery.close();
+				if (connection != null)
+					connection.close();
+			} catch (Exception ex) {  // Exception or IOException??
+				log.info("Exception while closing connection of database: {}", ex.toString());
+			}
+		}
+		return result;
+	}
+
 	
 	// Deletes user info from database
 	public void deleteUserInfo(String userId) {
