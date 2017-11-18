@@ -35,7 +35,7 @@ public class CollectUserInfoState extends State {
 		System.out.println(afterState);
 		
 				
-		if (currentState != afterState) {
+		if (currentState.equals(afterState) == false) {
 			System.out.println("Adding to DB");
 			// write to DB
 			SQLDatabaseEngine sql = new SQLDatabaseEngine();
