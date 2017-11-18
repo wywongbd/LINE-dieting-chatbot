@@ -114,8 +114,8 @@ public class StateManager {
         }
         else{
             updateBot(userId);
-            currentState = bot.getUservar(userId, "topic");
-            currentTopic = bot.getUservar(userId, "state");
+            currentState = bot.getUservar(userId, "state");
+            currentTopic = bot.getUservar(userId, "topic");
         }
         
     	replyText.add(states.get(currentState).reply(userId, text, bot));
