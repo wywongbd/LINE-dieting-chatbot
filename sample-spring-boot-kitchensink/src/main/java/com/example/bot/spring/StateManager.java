@@ -150,7 +150,7 @@ public class StateManager {
                 replyText.add(((InputMenuState) states.get("input_menu")).replyImage(userId, jpg, bot));
             }
             else{
-                replyText.add(((AdminState) states.get("AdminState")).replyImage(userId, jpg, bot));
+                replyText.add(((AdminState) states.get("admin")).replyImage(userId, jpg, bot));
                 adminAccessing = false;
             }
         }
