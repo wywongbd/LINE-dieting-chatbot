@@ -155,7 +155,7 @@ public class StateManager {
 
         System.out.println("Image chat point 3");
         
-        if(currentState == "recommend") {               
+        if(currentState.equals("recommend")) {               
             String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");                                       
             replyText.add(0, splitString[0]);                       
             replyText.remove(replyText.size() - 1);
