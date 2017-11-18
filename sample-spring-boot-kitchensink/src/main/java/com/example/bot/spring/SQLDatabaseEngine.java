@@ -890,6 +890,42 @@ public class SQLDatabaseEngine {
 	}
 
 
+	// Returns the allergies of the input user
+	public ArrayList<String> getCodeInfo(int code) {
+		ArrayList<String> result = new ArrayList<String>();
+		Connection connection = null;
+		PreparedStatement stmtQuery = null;
+		ResultSet rs = null;
+		try {
+			connection = this.getConnection();
+			stmtQuery = connection.prepareStatement(
+				"SELECT requestUser, claimUser FROM coupon_code " +
+				"WHERE code = ?"
+			);
+			stmtQuery.setInt(1, code);
+			rs = stmtQuery.executeQuery(); 
+			while(result.size() <= 0 && rs.next()) {
+				result.add(rs.getString(1));
+				result.add(rs.getString(2));
+			}
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmtQuery != null)
+					stmtQuery.close();
+				if (connection != null)
+					connection.close();
+			} catch (Exception ex) {  // Exception or IOException??
+				log.info("Exception while closing connection of database: {}", ex.toString());
+			}
+		}
+		return result;
+	}
+
+
 	// Deletes all records corresponding to the userId in the input table
 	public void reset(String userId, String table) {
 		Connection connection = null;
