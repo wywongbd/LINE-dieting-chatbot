@@ -22,6 +22,7 @@ abstract class State {
      * @param text A String data type
      * @return A String data type
      */
+    
     public void syncSQLWithRiveScript(String userId, RiveScript bot){
 		sql.setUserInfo(userId, "state", bot.getUservar(userId, "state"));
 		sql.setUserInfo(userId, "topic", bot.getUservar(userId, "topic"));
