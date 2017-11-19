@@ -121,6 +121,21 @@ public class DietbotController {
 			sql.addCampaignUser(userId);
 		}
     }
+
+    @EventMapping
+    public void handlePostbackEvent(PostbackEvent event) {
+        String replyToken = event.getReplyToken();
+        String userId = event.getSource().getUserId();
+        List<Message> replyList = null;
+
+		// replyList = stateManager.chat(userId, text, true);
+
+        this.reply(replyToken, new TextMessage(event.getPostbackContent().getData()));
+
+        // this.replyText(replyToken, "Got postback data " + event.getPostbackContent().getData()
+        // 	+ ", param " + event.getPostbackContent().getParams().toString());
+    }
+
 	
 	private void replyText(@NonNull String replyToken, @NonNull String message) {
 		if (replyToken.isEmpty()) {
@@ -187,7 +202,7 @@ public class DietbotController {
         log.info("Got text message from {}: {}", replyToken, text);
         
         Vector<String> reply = null;
-        List<Message> replyList = new ArrayList<Message>(0);
+        List<Message> replyList = null;
         String userId = event.getSource().getUserId();
         SQLDatabaseEngine sql = new SQLDatabaseEngine();
 
@@ -209,21 +224,25 @@ public class DietbotController {
             		this.pushImage(requestUser, url);
 					return;
 				}
+
+				// create a List of Message object for this condition
+				replyList = new ArrayList<Message>(0);
+		    	for (String replyMessage:reply) {
+		         	log.info("Returns echo message {}: {}", replyToken, replyMessage);
+		         	replyList.add(new TextMessage(replyMessage));
+		        }
+    	
 			}
 			else {
-				reply = stateManager.chat(userId, text, true);
+				// a general List of message
+				replyList = stateManager.chat(userId, text, true);
 			}
     	} catch (Exception e) {
-    		this.replyText(replyToken,defaultString);
+    		this.replyText(replyToken, defaultString);
     		return;
     	}
     	
-    	for (String replyMessage:reply) {
-         	log.info("Returns echo message {}: {}", replyToken, replyMessage);
-         	replyList.add(new TextMessage(replyMessage));
-        }
-    	
-        this.reply(replyToken,replyList);
+        this.reply(replyToken, replyList);
      
     }
 	

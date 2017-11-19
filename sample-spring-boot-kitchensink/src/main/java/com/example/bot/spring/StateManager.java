@@ -11,6 +11,54 @@ import java.util.*;
 
 import com.example.bot.spring.DietbotController.DownloadedContent;
 
+// line api
+import com.linecorp.bot.client.LineMessagingClient;
+import com.linecorp.bot.client.MessageContentResponse;
+import com.linecorp.bot.model.ReplyMessage;
+import com.linecorp.bot.model.PushMessage;
+import com.linecorp.bot.model.action.MessageAction;
+import com.linecorp.bot.model.action.PostbackAction;
+import com.linecorp.bot.model.action.URIAction;
+import com.linecorp.bot.model.event.BeaconEvent;
+import com.linecorp.bot.model.event.Event;
+import com.linecorp.bot.model.event.FollowEvent;
+import com.linecorp.bot.model.event.JoinEvent;
+import com.linecorp.bot.model.event.MessageEvent;
+import com.linecorp.bot.model.event.PostbackEvent;
+import com.linecorp.bot.model.event.UnfollowEvent;
+import com.linecorp.bot.model.event.message.AudioMessageContent;
+import com.linecorp.bot.model.event.message.ImageMessageContent;
+import com.linecorp.bot.model.event.message.LocationMessageContent;
+import com.linecorp.bot.model.event.message.StickerMessageContent;
+import com.linecorp.bot.model.event.message.TextMessageContent;
+import com.linecorp.bot.model.event.source.GroupSource;
+import com.linecorp.bot.model.event.source.RoomSource;
+import com.linecorp.bot.model.event.source.Source;
+import com.linecorp.bot.model.message.AudioMessage;
+import com.linecorp.bot.model.message.ImageMessage;
+import com.linecorp.bot.model.message.ImagemapMessage;
+import com.linecorp.bot.model.message.LocationMessage;
+import com.linecorp.bot.model.message.Message;
+import com.linecorp.bot.model.message.StickerMessage;
+import com.linecorp.bot.model.message.TemplateMessage;
+import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.message.imagemap.ImagemapArea;
+import com.linecorp.bot.model.message.imagemap.ImagemapBaseSize;
+import com.linecorp.bot.model.message.imagemap.MessageImagemapAction;
+import com.linecorp.bot.model.message.imagemap.URIImagemapAction;
+import com.linecorp.bot.model.message.template.ButtonsTemplate;
+import com.linecorp.bot.model.message.template.CarouselColumn;
+import com.linecorp.bot.model.message.template.CarouselTemplate;
+import com.linecorp.bot.model.message.template.ConfirmTemplate;
+import com.linecorp.bot.model.response.BotApiResponse;
+import com.linecorp.bot.spring.boot.annotation.EventMapping;
+import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
+
+import lombok.NonNull;
+import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class StateManager {
     
     // Constant values
@@ -94,10 +142,12 @@ public class StateManager {
      * @param text A String data type
      * @return A String data type
      */
-    public Vector<String> chat(String userId, String text, boolean debug) throws Exception {
+    public List<Message> chat(String userId, String text, boolean debug) throws Exception {
     	Vector<String> replyMessages = new Vector<String>(0);
-        String currentState = null;        
+        String currentState = null;
+        String currentTopic = null;
         String userStatus = syncRiveScriptWithSQL(userId);
+        List<Message> replyList = new ArrayList<Message>(0);
 
         if (userStatus.equals("NEW USER")) {
             bot.setUservar(userId, "state", "collect_user_info");
@@ -114,10 +164,13 @@ public class StateManager {
                 replyMessages.add(((RecommendFriendState) states.get("recommend_friend")).replyForFriendCommand(userId));
             }
             else{
+
+                // normally will enter here
                 replyMessages.add(states.get(currentState).reply(userId, text, bot));
                 currentState = bot.getUservar(userId, "state");
+                currentTopic = bot.getUservar(userId, "topic");
 
-                if (currentState.equals("recommend")) {              
+                if (currentState.equals("recommend")) {
                     String[] splitString = (replyMessages.lastElement()).split("AAAAAAAAAA");                                       
                     replyMessages.add(0, splitString[0]);                       
                     replyMessages.remove(replyMessages.size() - 1);
@@ -125,12 +178,35 @@ public class StateManager {
                     String recommendation = states.get("recommend").reply(userId, splitString[1], bot);              
                     replyMessages.add(recommendation);
                 }
+
+                // reply button message for this specific case
+                if ( currentTopic.equals("provide_info_choose_history_or_nutrient") ) {
+                    
+                    ButtonsTemplate buttonsTemplate = new ButtonsTemplate(
+                            null, // image url
+                            null, // title
+                            replyMessages.get(0), // reply from rivescript
+                            Arrays.asList(
+                                    new PostbackAction("Check your nutrient history",
+                                                       "check_nutrient_history"),
+                                    new PostbackAction("Check nutrient for a food",
+                                                       "check_food_nutrient"),
+                                    new PostbackAction("Leave",
+                                                       "leave")
+                            ));
+                    TemplateMessage templateMessage = new TemplateMessage("Button alt text", buttonsTemplate);
+                }
             }
         }
 
         if(replyMessages.size() > 0) {
             debugMessage(userId, replyMessages, debug);
-            return replyMessages;
+
+            for (String message : replyMessages) {
+                log.info("In StateManager returns echo message, userId: {} message: {}", userId, message);
+                replyList.add(new TextMessage(message));
+            }
+            return replyList;
         }
         else{
             throw new Exception("NOT FOUND");

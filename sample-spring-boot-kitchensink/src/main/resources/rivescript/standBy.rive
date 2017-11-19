@@ -11,7 +11,7 @@
         ^ * Input a food menu and get food recommendation
         ^ * Record what you have eaten last meal
         ^ * Update personal information
-        ^ * Ask for dieting history
+        ^ * Check your nutrient history or food nutrient
 
     + [*] google *
     - Google results for "<star>": <a href="http://google.com/search?q=<star>">Click Here</a>
@@ -31,10 +31,9 @@
         ^ Separate each food by a comma if there are more than one.
         ^ Type "leave" if you don't want to record any food.{topic=post_eating}<set state=post_eating>
 
-// implement later
-//    // trigger to query dieting history
-//  + [*] (what [did|had] i (had|eat|eaten) (yesterday|just now|not long ago)|what is my (fat|carbohydrate|sodium|vitamin) intake) [*]
-//  - Please wait while I check your eating history.{topic=provide_info}<set state=provide_info>
+    // trigger to query dieting history
+    + [*] (intake[s]|[food ]nutrient|[food ]nutrients|[dieting ]history|@nutrients) [*]
+    - Please select one to proceed~{topic=provide_info_choose_history_or_nutrient}<set state=provide_info>
 
     + [*] (talk later|see you|bye) [*]
     - Okay see you later.
