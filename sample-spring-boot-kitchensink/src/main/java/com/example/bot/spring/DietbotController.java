@@ -205,6 +205,7 @@ public class DietbotController {
         List<Message> replyList = null;
         String userId = event.getSource().getUserId();
         SQLDatabaseEngine sql = new SQLDatabaseEngine();
+            System.out.println("controller 1");
 
         try {
 			UserProfileResponse profile = lineMessagingClient.getProfile(event.getSource().getUserId()).get();
@@ -224,6 +225,7 @@ public class DietbotController {
             		this.pushImage(requestUser, url);
 					return;
 				}
+            System.out.println("controller 2");
 
 				// create a List of Message object for this condition
 				replyList = new ArrayList<Message>(0);
@@ -232,10 +234,14 @@ public class DietbotController {
 		         	replyList.add(new TextMessage(replyMessage));
 		        }
     	
+            System.out.println("controller 3");
 			}
 			else {
+            System.out.println("controller 4");
 				// a general List of message
 				replyList = stateManager.chat(userId, text, true);
+
+            System.out.println("controller 5");
 			}
     	} catch (Exception e) {
     		this.replyText(replyToken, defaultString);
