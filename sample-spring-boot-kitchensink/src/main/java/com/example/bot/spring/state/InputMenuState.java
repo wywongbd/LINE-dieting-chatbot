@@ -57,12 +57,10 @@ public class InputMenuState extends State {
 		else {
             // input text menu
 			bot.setUservar(userId, "url_received", "false");
-            // bot.setUservar(userId, "text_menu_received", "true");
-			replyText = bot.reply(userId, "inputTextMenu");
             bot.setUservar(userId, "topic", "recommend");
             bot.setUservar(userId, "state", "recommend");
             syncSQLWithRiveScript(userId, bot);
-			return replyText +  "AAAAAAAAAA" + text;
+			return  "Thanks, I'm looking at your text menu now! I'll try to give you some recommendations." + "AAAAAAAAAA" + text;
 		}
 	}
 
