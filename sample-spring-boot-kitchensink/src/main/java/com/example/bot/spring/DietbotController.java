@@ -146,7 +146,7 @@ public class DietbotController {
         try {
 
 			replyList = stateManager.chat(userId, data, true);
-	        this.reply(replyToken, new TextMessage(replyList));
+	        this.reply(replyToken, replyList);
 
     	} catch (Exception e) {
     		this.replyText(replyToken, defaultString);
