@@ -203,7 +203,7 @@ public class DietbotController {
 				if(reply.size() == 2) {
 					String url = sql.getCouponUrl();
 					String requestUser = reply.get(0);
-            		// String claimUser = reply.get(1);			
+            		// String temp = reply.get(1);			
             		// Reply image to claimUser
             		this.replyImage(replyToken, url);
             		// Push image to requestUser
