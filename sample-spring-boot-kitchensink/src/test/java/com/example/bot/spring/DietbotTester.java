@@ -97,6 +97,7 @@ public class DietbotTester {
 		databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "testTopic", "testState");
 		databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, new ArrayList<String>(), "testTopic", "testState");
 		databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserHistory", 21, "male", 1.73, 65, allergies, "testTopic", "testState");
 		databaseEngine.addMenu("testUser", menu);
 		databaseEngine.addRecommendations("testUser");
 	}
@@ -111,6 +112,8 @@ public class DietbotTester {
 		databaseEngine.reset("testUserIntake", "userallergies");
 		databaseEngine.reset("testUserAllergy", "userinfo");
 		databaseEngine.reset("testUserAllergy", "userallergies");
+		databaseEngine.reset("testUserHistory", "userinfo");
+		databaseEngine.reset("testUserHistory", "userallergies");
 	}
 
 	
@@ -203,16 +206,17 @@ public class DietbotTester {
 	@Test
 	public void testAdd() {
 		ArrayList<String> menu = new ArrayList<String>();
-		menu.add("frozen water");
-		menu.add("molten ice");
+		menu.add("fish and chips");
+		menu.add("sausages and chicken wings");
 
 		this.databaseEngine.reset("testUserAddReset", "menu");
 		this.databaseEngine.reset("testUserAddReset", "recommendations");
 		this.databaseEngine.addMenu("testUserAddReset", menu);
 		this.databaseEngine.addRecommendations("testUserAddReset");
-		assertThat(this.databaseEngine.getMenu("testUserAddReset", "frozen")).isEqualTo("frozen water");
-		assertThat(this.databaseEngine.getMenu("testUserAddReset", "molten")).isEqualTo("molten ice");
-		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "frozen")).isEqualTo("frozen water");
+		assertThat(this.databaseEngine.getMenu("testUserAddReset", "fish")).isEqualTo("fish and chips");
+		assertThat(this.databaseEngine.getMenu("testUserAddReset", "sausage")).isEqualTo("sausages and chicken wings");
+		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "fish")).isEqualTo("fish and chips");
+		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "sausage")).isEqualTo("sausages and chicken wings");
 		this.databaseEngine.reset("testUserAddReset", "menu");
 		this.databaseEngine.reset("testUserAddReset", "recommendations");
 	}
@@ -232,10 +236,23 @@ public class DietbotTester {
 		assertThat(this.databaseEngine.getMenu("testUserAddReset", "molten")).isEqualTo(null);
 		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "frozen")).isEqualTo(null);
 	}
+
+
+	@Test
+	public void addUserEatingHistory() {
+		String meals1 = "chicken soup, spaghetti bolognese";
+		String meals2 = "apples, chocolate cake";
+		this.databaseEngine.addUserEatingHistory("testUserEating", meals1);
+		this.databaseEngine.addUserEatingHistory("testUserEating", meals2);
+		assertThat(this.databaseEngine.searchUser("testUserEating", "eating_history")).isEqualTo(true);
+		assertThat(this.databaseEngine.getUserEatingHistory("testUserEating", 1).get(0)).isEqualTo(meals1);
+		assertThat(this.databaseEngine.getUserEatingHistory("testUserEating", 1).get(1)).isEqualTo(meals2);
+		this.databaseEngine.reset("testUserEating", "eating_history");
+	}
 	
 
 	@Test
-	public void testRemoveAllergies() {
+	public void processRecommendationsByAllergies() {
 		ArrayList<String> menu = new ArrayList<String>();
 		menu.add("chicken potato soup");
 		menu.add("grilled salmon");
@@ -251,7 +268,7 @@ public class DietbotTester {
 	
 
 	@Test
-	public void testUpdateRecommendationsByIntake() {
+	public void processRecommendationsByIntake() {
 		ArrayList<String> menu = new ArrayList<String>();
 		menu.add("chicken potato soup");
 		menu.add("caramel apples");
@@ -265,6 +282,32 @@ public class DietbotTester {
 		this.databaseEngine.reset("testUserIntake", "recommendations");
 	}
 	
+
+	@Test
+	public void processRecommendationsByEatingHistory() {
+		ArrayList<String> menu = new ArrayList<String>();
+		menu.add("apple");
+		menu.add("banana");
+		menu.add("orange");
+		String meals1 = "apples";
+		String meals2 = "bananas";
+
+		this.databaseEngine.addMenu("testUserHistory", menu);
+		this.databaseEngine.addRecommendations("testUserHistory");
+		this.databaseEngine.addUserEatingHistory("testUserHistory", meals1);
+		this.databaseEngine.addUserEatingHistory("testUserHistory", meals1);
+		this.databaseEngine.addUserEatingHistory("testUserHistory", meals2);
+		this.databaseEngine.processRecommendationsByIntake("testUserHistory");
+		this.databaseEngine.processRecommendationsByEatingHistory("testUserHistory");
+
+		assertThat(this.databaseEngine.getWeightage("testUserHistory", "apple")).isEqualTo(0.5);
+		assertThat(this.databaseEngine.getWeightage("testUserHistory", "banana")).isEqualTo(1);
+		assertThat(this.databaseEngine.getWeightage("testUserHistory", "orange")).isEqualTo(2);
+		this.databaseEngine.reset("testUserHistory", "menu");
+		this.databaseEngine.reset("testUserHistory", "recommendations");
+		this.databaseEngine.reset("testUserHistory", "eating_history");
+	}
+
 
 	@Test
 	public void getRecommendationList() {
@@ -335,19 +378,6 @@ public class DietbotTester {
 
 		this.databaseEngine.setCouponUrl(url);
 		assertThat(this.databaseEngine.getCouponUrl()).isEqualTo(url);
-	}
-
-
-	@Test
-	public void addUserEatingHistory() {
-		String meals1 = "chicken soup, spaghetti bolognese";
-		String meals2 = "apples, chocolate cake";
-		this.databaseEngine.addUserEatingHistory("testUserEating", meals1);
-		this.databaseEngine.addUserEatingHistory("testUserEating", meals2);
-		assertThat(this.databaseEngine.searchUser("testUserEating", "eating_history")).isEqualTo(true);
-		assertThat(this.databaseEngine.getUserEatingHistory("testUserEating", 1).get(0)).isEqualTo(meals1);
-		assertThat(this.databaseEngine.getUserEatingHistory("testUserEating", 1).get(1)).isEqualTo(meals2);
-		this.databaseEngine.reset("testUserEating", "eating_history");
 	}
 
 
