@@ -18,7 +18,7 @@ public class CollectUserInfoState extends State {
      * @param text A String data type
      * @return A String data type
      */
-    public void updateDatabase(String userId, RiveScript bot){
+    public void syncSQLWithRiveScript(String userId, RiveScript bot){
     	return;
     }
 
@@ -51,7 +51,7 @@ public class CollectUserInfoState extends State {
 			sql.writeUserInfo(userId, age, gender, height, weight, allergies, topic, state);
 		}
                
-		updateDatabase(userId, bot);
+		syncSQLWithRiveScript(userId, bot);
 		return output;
 	}
 

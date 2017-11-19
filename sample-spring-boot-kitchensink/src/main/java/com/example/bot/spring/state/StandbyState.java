@@ -21,8 +21,9 @@ public class StandbyState extends State {
 		String currentState = bot.getUservar(userId, "state"); 
 		String output = bot.reply(userId, text);
 		String afterState = bot.getUservar(userId, "state");
-		
-		updateDatabase(userId, bot);
+
+		bot.setUservar(userId, "img_received", "false");
+		syncSQLWithRiveScript(userId, bot);
 		return output;
 	}
 }
