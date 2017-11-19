@@ -108,7 +108,7 @@ public class StateManager {
         bot.loadDirectory(resourcesDirectory.getAbsolutePath());
         bot.sortReplies();
         bot.setSubroutine("setVariableToDB", new setVariableToDB());
-        bot.setSubroutine("getNutritionOfFood", new setVariableToDB());
+        bot.setSubroutine("getNutritionOfFood", new getNutritionOfFood());
     }
 
     public String syncRiveScriptWithSQL(String userId){

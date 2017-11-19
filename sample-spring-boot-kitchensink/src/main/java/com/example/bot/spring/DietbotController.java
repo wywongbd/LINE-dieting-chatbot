@@ -134,12 +134,13 @@ public class DietbotController {
         String date = event.getPostbackContent().getParams().toString();
         List<Message> replyList = null;
         date = date.replace("{date=", "").replace("}", "");
+        
         if (date.length() > 0) {
         	String[] temp = date.split("-");
         	LocalDate inputDate = LocalDate.of(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), Integer.parseInt(temp[2]));
         	LocalDate today = LocalDate.now().plusDays(1);
         	long daysBetween = ChronoUnit.DAYS.between(inputDate, today);
-        	data = data + Long.toString(daysBetween);
+        	data = data + " " + Long.toString(daysBetween);
         }
 
         try {
