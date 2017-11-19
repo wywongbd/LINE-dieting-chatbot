@@ -74,33 +74,43 @@ import java.util.Arrays;
 @SpringBootTest(classes = { DietbotTester.class, SQLDatabaseEngine.class })
 public class DietbotTester {
 	@Autowired
-	private SQLDatabaseEngine databaseEngine;
+	private static SQLDatabaseEngine databaseEngine;
 	private RiveScript bot;
 	private StateManager stateManager;
-	
 
-	@Before
-	public void addTestUser() {
+	static {
+		databaseEngine = new SQLDatabaseEngine();
+	}
+	
+	public DietbotTester() {
+		bot = new RiveScript();
+		stateManager = new StateManager("src/main/resources/rivescript");
+	}
+
+	@BeforeClass
+	public static void addTestUser() {
 		ArrayList<String> menu = new ArrayList<String>();
 		menu.add("chicken potato soup");
 		ArrayList<String> allergies = new ArrayList<String>();
 		allergies.add("seafood");
 
-		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, 3, "testTopic", "testState");
-		this.databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, allergies, 3, "testTopic", "testState");
-		this.databaseEngine.addMenu("testUser", menu);
-		this.databaseEngine.addRecommendations("testUser");
+		databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, allergies, "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, "testTopic", "testState");
+		databaseEngine.addMenu("testUser", menu);
+		databaseEngine.addRecommendations("testUser");
 	}
 
-
-	@After
-	public void removeTestUser() {
-		this.databaseEngine.reset("testUser", "userinfo");
-		this.databaseEngine.reset("testUser", "menu");
-		this.databaseEngine.reset("testUser", "recommendations");
-		this.databaseEngine.reset("testUser", "userallergies");
-		this.databaseEngine.reset("testUserIntake", "userinfo");
-		this.databaseEngine.reset("testUserIntake", "userallergies");
+	@AfterClass
+	public static void removeTestUser() {
+		databaseEngine.reset("testUser", "userinfo");
+		databaseEngine.reset("testUser", "menu");
+		databaseEngine.reset("testUser", "recommendations");
+		databaseEngine.reset("testUser", "userallergies");
+		databaseEngine.reset("testUserIntake", "userinfo");
+		databaseEngine.reset("testUserIntake", "userallergies");
+		databaseEngine.reset("testUserAllergy", "userinfo");
+		databaseEngine.reset("testUserAllergy", "userallergies");
 	}
 
 	
@@ -108,7 +118,7 @@ public class DietbotTester {
 	public void writeUserInfoExisting() {
 		ArrayList<String> allergies = null;
 
-		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, 3, "testTopic", "testState");
+		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "testTopic", "testState");
 		assertThat(this.databaseEngine.searchUser("testUser", "userinfo")).isEqualTo(true);
 	}
 	
@@ -118,7 +128,7 @@ public class DietbotTester {
 		ArrayList<String> allergies = new ArrayList<String>();
 		allergies.add("milk");
 
-		this.databaseEngine.writeUserInfo("testUserNonExisting", 21, "female", 1.64, 55, allergies, 3, "testTopic", "testState");
+		this.databaseEngine.writeUserInfo("testUserNonExisting", 21, "female", 1.64, 55, allergies, "testTopic", "testState");
 		assertThat(this.databaseEngine.searchUser("testUserNonExisting", "userinfo")).isEqualTo(true);
 		this.databaseEngine.deleteUserInfo("testUserNonExisting");
 	}
@@ -283,16 +293,36 @@ public class DietbotTester {
 
 
 	@Test
-	public void testGenerateAndStoreCode() {
+	public void addCampaignUser() {
+		this.databaseEngine.addCampaignUser("testUser");
+		assertThat(this.databaseEngine.searchUser("testUser", "campaign_user")).isEqualTo(true);
+		this.databaseEngine.reset("testUser", "campaign_user");
+		assertThat(this.databaseEngine.searchUser("testUser", "campaign_user")).isEqualTo(false);
+	}
+
+
+	@Test
+	public void generateAndStoreCode() {
 		ArrayList<String> result = new ArrayList<String>();
 
-		this.databaseEngine.addCampaignUser("testUser");
-		this.databaseEngine.generateAndStoreCode("testUser");
-		this.databaseEngine.claimCode("testClaimUser2", 100001);
-		result = this.databaseEngine.getCodeInfo(100002);
-
-		assertThat(result.get(0)).isEqualTo("testUser");
+		this.databaseEngine.addCampaignUser("testUserCode");
+		this.databaseEngine.generateAndStoreCode("testUserCode");
+		result = this.databaseEngine.getCodeInfo(100000);
+		assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(true);
+		assertThat(result.get(0)).isEqualTo("testUserCode");
 		assertThat(result.get(1)).isEqualTo(null);
+		this.databaseEngine.reset("testUserCode", "campaign_user");
+		this.databaseEngine.reset("testUserCode", "coupon_code");
+		assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(false);
+	}
+
+
+	@Test
+	public void setCouponUrl() {
+		String url = "testCouponUrlButIPurposedlyMakeItLongerJustToTestIfItCanHandleLongLengths";
+
+		this.databaseEngine.setCouponUrl(url);
+		assertThat(this.databaseEngine.getCouponUrl()).isEqualTo(url);
 	}
 
 
@@ -457,307 +487,307 @@ public class DietbotTester {
 	}
 
 
-	@Test
-	public void testCollectUserInformation() throws Exception {
-		boolean thrown = false;
-		String input = null;
-		String chatBotReponse = null;
-		String expectedResponse = null;
+	// @Test
+	// public void testCollectUserInformation() throws Exception {
+	// 	boolean thrown = false;
+	// 	String input = null;
+	// 	String chatBotReponse = null;
+	// 	String expectedResponse = null;
 
-		//example random userId from LINE
-		String userId = "123";
+	// 	//example random userId from LINE
+	// 	String userId = "123";
 
-		try{
-			stateManager = new StateManager("src/test/resources/rivescriptChatbot");
-			//random input at first when the user start chatting
-			input = "fajsofifeojfeoijj";
-    		expectedResponse = "Hi! I am your personal Dieting Chatbot!\n"
-    						+ "First, I need to ask you a few questions about your physical information.\n"
-    						+ "What is your name?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+	// 	try{
+	// 		stateManager = new StateManager("src/test/resources/rivescriptChatbot");
+	// 		//random input at first when the user start chatting
+	// 		input = "fajsofifeojfeoijj";
+ //    		expectedResponse = "Hi! I am your personal Dieting Chatbot!\n"
+ //    						+ "First, I need to ask you a few questions about your physical information.\n"
+ //    						+ "What is your name?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their name
-    		input = "gord";
-    		expectedResponse = "Is Gord your name?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their name
+ //    		input = "gord";
+ //    		expectedResponse = "Is Gord your name?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user entered a wrong name so they say no
-    		input = "no";
-    		expectedResponse = "Can you enter your name again? Pls~";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user entered a wrong name so they say no
+ //    		input = "no";
+ //    		expectedResponse = "Can you enter your name again? Pls~";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their name again
-    		input = "gordon";
-    		expectedResponse = "Is Gordon your name?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their name again
+ //    		input = "gordon";
+ //    		expectedResponse = "Is Gordon your name?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//confirm
-    		input = "yes";
-    		expectedResponse = "Ok. Nice to meet you Gordon! Next question! What is your age?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//confirm
+ //    		input = "yes";
+ //    		expectedResponse = "Ok. Nice to meet you Gordon! Next question! What is your age?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their age
-    		input = "i'm 8";
-    		expectedResponse = "Are you 8 years old?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their age
+ //    		input = "i'm 8";
+ //    		expectedResponse = "Are you 8 years old?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		input = "no";
-    		expectedResponse = "Can you enter your age again? Pls~";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		input = "no";
+ //    		expectedResponse = "Can you enter your age again? Pls~";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their age again
-    		input = "ok it should be 20";
-    		expectedResponse = "Are you 20 years old?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their age again
+ //    		input = "ok it should be 20";
+ //    		expectedResponse = "Are you 20 years old?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//confirm
-    		input = "yeah";
-    		expectedResponse = "Alright, what is your gender?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//confirm
+ //    		input = "yeah";
+ //    		expectedResponse = "Alright, what is your gender?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their gender
-    		input = "M";
-    		expectedResponse = "You are a m. Ok, so what is your weight (in kg)? Please input an integer.";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their gender
+ //    		input = "M";
+ //    		expectedResponse = "You are a m. Ok, so what is your weight (in kg)? Please input an integer.";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their weight
-    		input = "60kg";
-    		expectedResponse = "Is your weight 60kg?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their weight
+ //    		input = "60kg";
+ //    		expectedResponse = "Is your weight 60kg?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		input = "no";
-    		expectedResponse = "Can you enter your weight again? Please input an integer.";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		input = "no";
+ //    		expectedResponse = "Can you enter your weight again? Please input an integer.";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their weight again
-    		input = "62 kg";
-    		expectedResponse = "Is your weight 62kg?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their weight again
+ //    		input = "62 kg";
+ //    		expectedResponse = "Is your weight 62kg?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//confirm
-    		input = "Yes";
-    		expectedResponse = "Alright, then what is your height in cm?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//confirm
+ //    		input = "Yes";
+ //    		expectedResponse = "Alright, then what is your height in cm?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their height
-    		input = "175cm";
-    		expectedResponse = "Is your height 175cm?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their height
+ //    		input = "175cm";
+ //    		expectedResponse = "Is your height 175cm?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		input = "no";
-    		expectedResponse = "Can you enter your height (in cm) again? Please input an integer.";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		input = "no";
+ //    		expectedResponse = "Can you enter your height (in cm) again? Please input an integer.";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their height
-    		input = "176 cm";
-    		expectedResponse = "Is your height 176cm?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their height
+ //    		input = "176 cm";
+ //    		expectedResponse = "Is your height 176cm?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//confirm
-    		input = "yes";
-    		expectedResponse = "Great. Are you allergic to milk? (Yes/No)";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//confirm
+ //    		input = "yes";
+ //    		expectedResponse = "Great. Are you allergic to milk? (Yes/No)";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//answer allergy
-    		input = "yes";
-    		expectedResponse = "I see, I'll take note of that. Are you allergic to eggs? (Yes/No)";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//answer allergy
+ //    		input = "yes";
+ //    		expectedResponse = "I see, I'll take note of that. Are you allergic to eggs? (Yes/No)";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//answer allergy
-    		input = "yes";
-    		expectedResponse = "I see, I'll take note of that. Are you allergic to nuts in general? (Yes/No)";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//answer allergy
+ //    		input = "yes";
+ //    		expectedResponse = "I see, I'll take note of that. Are you allergic to nuts in general? (Yes/No)";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//answer allergy
-    		input = "yes";
-    		expectedResponse = "I see, I'll take note of that. Are you allergic to seafood? (Yes/No)";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//answer allergy
+ //    		input = "yes";
+ //    		expectedResponse = "I see, I'll take note of that. Are you allergic to seafood? (Yes/No)";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//answer allergy
-    		input = "yes";
-    		expectedResponse = "I see, I'll take note of that. Thank you for your cooperation, "
-    						+"I have a better understanding of your physical conditions now.";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//answer allergy
+ //    		input = "yes";
+ //    		expectedResponse = "I see, I'll take note of that. Thank you for your cooperation, "
+ //    						+"I have a better understanding of your physical conditions now.";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//query user information to check the correctness
-    		SQLDatabaseEngine db = new SQLDatabaseEngine();
-    		assertThat(db.getUserInfo(userId, "age")).isEqualTo("20");
-    		assertThat(db.getUserInfo(userId, "gender")).isEqualTo("male");
-    		assertThat(db.getUserInfo(userId, "height")).isEqualTo("176.0");
-    		assertThat(db.getUserInfo(userId, "weight")).isEqualTo("62.0");
-
-
-
-    		//user want to update their personal info
-    		input = "update";
-    		expectedResponse = "Do you want to update your personal information?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//query user information to check the correctness
+ //    		SQLDatabaseEngine db = new SQLDatabaseEngine();
+ //    		assertThat(db.getUserInfo(userId, "age")).isEqualTo("20");
+ //    		assertThat(db.getUserInfo(userId, "gender")).isEqualTo("male");
+ //    		assertThat(db.getUserInfo(userId, "height")).isEqualTo("176.0");
+ //    		assertThat(db.getUserInfo(userId, "weight")).isEqualTo("62.0");
 
 
-    		//confirm
-    		input = "yes";
-    		expectedResponse = "OK. What is your name?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+
+ //    		//user want to update their personal info
+ //    		input = "update";
+ //    		expectedResponse = "Do you want to update your personal information?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
 
-    		// repeat the questioning process
+ //    		//confirm
+ //    		input = "yes";
+ //    		expectedResponse = "OK. What is your name?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their name
-    		input = "gord";
-    		expectedResponse = "Is Gord your name?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user entered a wrong name so they say no
-    		input = "no";
-    		expectedResponse = "Can you enter your name again? Pls~";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		// repeat the questioning process
 
-    		//user enter their name again
-    		input = "gordon";
-    		expectedResponse = "Is Gordon your name?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their name
+ //    		input = "gord";
+ //    		expectedResponse = "Is Gord your name?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//confirm
-    		input = "yes";
-    		expectedResponse = "Ok. Nice to meet you Gordon! Next question! What is your age?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user entered a wrong name so they say no
+ //    		input = "no";
+ //    		expectedResponse = "Can you enter your name again? Pls~";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their age
-    		input = "i'm 8";
-    		expectedResponse = "Are you 8 years old?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their name again
+ //    		input = "gordon";
+ //    		expectedResponse = "Is Gordon your name?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		input = "no";
-    		expectedResponse = "Can you enter your age again? Pls~";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//confirm
+ //    		input = "yes";
+ //    		expectedResponse = "Ok. Nice to meet you Gordon! Next question! What is your age?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their age again
-    		input = "ok it should be 20";
-    		expectedResponse = "Are you 20 years old?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their age
+ //    		input = "i'm 8";
+ //    		expectedResponse = "Are you 8 years old?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//confirm
-    		input = "yeah";
-    		expectedResponse = "Alright, what is your gender?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		input = "no";
+ //    		expectedResponse = "Can you enter your age again? Pls~";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their gender
-    		input = "M";
-    		expectedResponse = "You are a m. Ok, so what is your weight (in kg)? Please input an integer.";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their age again
+ //    		input = "ok it should be 20";
+ //    		expectedResponse = "Are you 20 years old?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their weight
-    		input = "60kg";
-    		expectedResponse = "Is your weight 60kg?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//confirm
+ //    		input = "yeah";
+ //    		expectedResponse = "Alright, what is your gender?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		input = "no";
-    		expectedResponse = "Can you enter your weight again? Please input an integer.";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their gender
+ //    		input = "M";
+ //    		expectedResponse = "You are a m. Ok, so what is your weight (in kg)? Please input an integer.";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their weight again
-    		input = "80 kg";
-    		expectedResponse = "Is your weight 80kg?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their weight
+ //    		input = "60kg";
+ //    		expectedResponse = "Is your weight 60kg?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//confirm
-    		input = "Yes";
-    		expectedResponse = "Alright, then what is your height in cm?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		input = "no";
+ //    		expectedResponse = "Can you enter your weight again? Please input an integer.";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their height
-    		input = "180cm";
-    		expectedResponse = "Is your height 180cm?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their weight again
+ //    		input = "80 kg";
+ //    		expectedResponse = "Is your weight 80kg?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		input = "no";
-    		expectedResponse = "Can you enter your height (in cm) again? Please input an integer.";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//confirm
+ //    		input = "Yes";
+ //    		expectedResponse = "Alright, then what is your height in cm?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//user enter their height
-    		input = "181 cm";
-    		expectedResponse = "Is your height 181cm?";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their height
+ //    		input = "180cm";
+ //    		expectedResponse = "Is your height 180cm?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//confirm
-    		input = "yes";
-    		expectedResponse = "Great. Are you allergic to milk? (Yes/No)";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		input = "no";
+ //    		expectedResponse = "Can you enter your height (in cm) again? Please input an integer.";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//answer allergy
-    		input = "yes";
-    		expectedResponse = "I see, I'll take note of that. Are you allergic to eggs? (Yes/No)";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//user enter their height
+ //    		input = "181 cm";
+ //    		expectedResponse = "Is your height 181cm?";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//answer allergy
-    		input = "yes";
-    		expectedResponse = "I see, I'll take note of that. Are you allergic to nuts in general? (Yes/No)";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//confirm
+ //    		input = "yes";
+ //    		expectedResponse = "Great. Are you allergic to milk? (Yes/No)";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//answer allergy
-    		input = "yes";
-    		expectedResponse = "I see, I'll take note of that. Are you allergic to seafood? (Yes/No)";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		//answer allergy
+ //    		input = "yes";
+ //    		expectedResponse = "I see, I'll take note of that. Are you allergic to eggs? (Yes/No)";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-    		//answer allergy
-    		input = "yes";
-    		expectedResponse = "I see, I'll take note of that. Thank you for your cooperation, "
-    						+"I have a better understanding of your physical conditions now.";
-    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
-    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
-    		assertThat(db.getUserInfo(userId, "age")).isEqualTo("20");
-    		assertThat(db.getUserInfo(userId, "gender")).isEqualTo("male");
-    		assertThat(db.getUserInfo(userId, "height")).isEqualTo("181.0");
-    		assertThat(db.getUserInfo(userId, "weight")).isEqualTo("80.0");
+ //    		//answer allergy
+ //    		input = "yes";
+ //    		expectedResponse = "I see, I'll take note of that. Are you allergic to nuts in general? (Yes/No)";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
-		} catch (Exception e) {
-			thrown = true;
-		}
-		assertThat(thrown).isEqualTo(false);
-	}
+ //    		//answer allergy
+ //    		input = "yes";
+ //    		expectedResponse = "I see, I'll take note of that. Are you allergic to seafood? (Yes/No)";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+
+ //    		//answer allergy
+ //    		input = "yes";
+ //    		expectedResponse = "I see, I'll take note of that. Thank you for your cooperation, "
+ //    						+"I have a better understanding of your physical conditions now.";
+ //    		chatBotReponse = stateManager.chat(userId, input, false).firstElement();
+ //    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+ //    		assertThat(db.getUserInfo(userId, "age")).isEqualTo("20");
+ //    		assertThat(db.getUserInfo(userId, "gender")).isEqualTo("male");
+ //    		assertThat(db.getUserInfo(userId, "height")).isEqualTo("181.0");
+ //    		assertThat(db.getUserInfo(userId, "weight")).isEqualTo("80.0");
+
+	// 	} catch (Exception e) {
+	// 		thrown = true;
+	// 	}
+	// 	assertThat(thrown).isEqualTo(false);
+	// }
 
  }

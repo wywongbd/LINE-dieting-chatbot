@@ -12,48 +12,12 @@ import java.util.*;
 import com.example.bot.spring.DietbotController.DownloadedContent;
 
 public class StateManager {
-
-    //use for save user info to database inside Rivescript
-    public class setVariableToDB implements Subroutine {
-
-        // assume the order of parameter is: variable name, value, userID
-        public String call(RiveScript rs, String[] args) {
-
-            SQLDatabaseEngine sql = new SQLDatabaseEngine();
-
-            try {
-
-                if (args[0] == "weight" || args[0] == "height") {
-                    // double
-                    if (args.length == 3) {
-                        sql.setUserInfo(args[2], args[0], Double.parseDouble(args[1]));
-                    }
-                } else if (args[0] == "age") {
-                    // integer
-                    if (args.length == 3) {
-                        sql.setUserInfo(args[2], args[0], Integer.parseInt(args[1]));
-                    }
-                } else if (args[0] == "allergies") {
-                    // leave to be implemented later
-                } else {
-                    // string
-                    if (args.length == 3) {
-                        sql.setUserInfo(args[2], args[0], args[1]);
-                    }
-                }
-
-            } catch(Exception e) {
-
-            }
-
-            return "";
-        }
-    }
-
+    
     // Constant values
     private final int STANDBY_STATE = 0;
     private final int INPUT_MENU_STATE = 3;
     private final int RECOMMEND_STATE = 4;
+    private final String ADMIN_USER_ID = "Ub6f064e9c47d12622346a14556305165";
     // Must first go through InputMenuState before going to RecommendationState,
     // so 4 is not included
 //    private final int[] FROM_STANDBY_STATE = {1, 2, 3, 5};
@@ -61,8 +25,9 @@ public class StateManager {
     // Value to keep track current state
     // private static Map<String, Integer> currentState; 
     
-    private static final Map<String, State> states; 
+    public static final Map<String, State> states; 
     private static RiveScript bot;    
+    private static boolean adminAccessing;
 
     static
     {
@@ -76,6 +41,9 @@ public class StateManager {
         states.put("provide_info", new ProvideInfoState());  
         states.put("post_eating", new PostEatingState());
         states.put("update_user_info", new UpdateUserInfoState());
+        states.put("admin", new AdminState());
+
+        adminAccessing = false;
     };
     
     /**
@@ -118,8 +86,17 @@ public class StateManager {
             currentTopic = bot.getUservar(userId, "topic");
             bot.setUservar(userId, "met", "true");
         }
-        
-    	replyText.add(states.get(currentState).reply(userId, text, bot));
+
+        if(currentState.equals("standby") 
+            && (((AdminState) states.get("admin")).matchTrigger(text) == 1)
+            && userId.equals(ADMIN_USER_ID)){
+            adminAccessing = true;
+            replyText.add(states.get("admin").reply(userId, text, bot));
+        }
+        else{
+            replyText.add(states.get(currentState).reply(userId, text, bot));
+        }
+
         currentState = bot.getUservar(userId, "state");
 
         if(currentState.equals("recommend")) {            	
@@ -130,7 +107,7 @@ public class StateManager {
         	String temp = states.get(currentState).reply(userId, splitString[1], bot);           	
         	replyText.add(temp);
         }
-        
+
         if(replyText.size() > 0) {
         	if(debug == true) {
         		replyText.add("Current state is " + bot.getUservar(userId, "state"));
@@ -170,9 +147,15 @@ public class StateManager {
         }
 
         if (currentState.equals("input_menu") || currentState.equals("standby")){
-            replyText.add(((InputMenuState) states.get("input_menu")).replyImage(userId, jpg, bot));
+            if (adminAccessing == false) {
+                replyText.add(((InputMenuState) states.get("input_menu")).replyImage(userId, jpg, bot));
+            }
+            else{
+                replyText.add(((AdminState) states.get("admin")).replyImage(userId, jpg, bot));
+                adminAccessing = false;
+            }
         }
-  
+
         currentState = bot.getUservar(userId, "state");
         
         if(currentState.equals("recommend")) {               
@@ -194,4 +177,52 @@ public class StateManager {
         throw new Exception("NOT FOUND");
     }
     
+
+    //use for save user info to database inside Rivescript
+    public class setVariableToDB implements Subroutine {
+
+        // assume the order of parameter is: variable name, value1, ... , userID
+        public String call(RiveScript rs, String[] args) {
+
+            SQLDatabaseEngine sql = new SQLDatabaseEngine();
+
+            if ( args[0].equals("weight") || args[0].equals("height") ) {
+
+                // double
+                if ( args.length == 3 ) {
+                    sql.setUserInfo(args[2], args[0], Double.parseDouble(args[1]));
+                }
+
+            } else if ( args[0].equals("age") ) {
+
+                // integer
+                if ( args.length == 3 ) {
+                    sql.setUserInfo(args[2], args[0], Integer.parseInt(args[1]));
+                }
+                // leave to be implemented later
+                ArrayList<String> temp = new ArrayList<String>();
+                if ( args[1].equals("true") ) {
+                    temp.add("milk");
+                }
+                if ( args[2].equals("true") ) {
+                    temp.add("egg");
+                }
+                if ( args[3].equals("true") ) {
+                    temp.add("nut");
+                }
+                if ( args[4].equals("true") ) {
+                    temp.add("seafood");
+                }
+                sql.setUserAllergies(args[5], temp);
+
+            } else {
+                // string
+                if (args.length == 3) {
+                    sql.setUserInfo(args[2], args[0], args[1]);
+                }
+            }
+
+            return "";
+        }
+    }
 }

@@ -24,14 +24,13 @@
 
 
 > topic post_eating
-	+ talk later
-	- Okay see you later.{topic=standby}<set state=standby>
 
-//    + 
-//    - So, you ate ... ?
+	+ [*] leave [*]
+	- Okay. Tell me when you need help~~~{topic=standby}<set state=standby>
 
-	+ *
-	- post_eating
+    + *
+    - Okay. I have recorded that down. :D{topic=standby}<set state=standby>
+
 < topic
 
 

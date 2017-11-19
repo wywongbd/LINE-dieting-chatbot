@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.time.LocalDate;
 
 @Slf4j
 public class SQLDatabaseEngine {
@@ -38,7 +39,7 @@ public class SQLDatabaseEngine {
 	 * Unit for height: m
 	 * Unit for weight: kg
 	 */
-	public void writeUserInfo(String userId, int age, String gender, double height, double weight, ArrayList<String> allergies, int foodHistPeriod, String topic, String state) {
+	public void writeUserInfo(String userId, int age, String gender, double height, double weight, ArrayList<String> allergies, String topic, String state) {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
 		
@@ -73,16 +74,15 @@ public class SQLDatabaseEngine {
 			try {
 				stmtUpdate = connection.prepareStatement(
 					"INSERT INTO userinfo " +
-					"VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+					"VALUES (?, ?, ?, ?, ?, ?, ?)"
 				);
 				stmtUpdate.setString(1, userId);
 				stmtUpdate.setInt(2, age);
 				stmtUpdate.setString(3, gender);
 				stmtUpdate.setDouble(4, height);
 				stmtUpdate.setDouble(5, weight);
-				stmtUpdate.setInt(6, foodHistPeriod);
-				stmtUpdate.setString(7, topic);
-				stmtUpdate.setString(8, state);
+				stmtUpdate.setString(6, topic);
+				stmtUpdate.setString(7, state);
 				stmtUpdate.executeUpdate();
 			} catch (Exception e) {
 				log.info("Exception while inserting user info into database: {}", e.toString());
@@ -90,19 +90,20 @@ public class SQLDatabaseEngine {
 
 			// Insert user allergies into the database if they have any
 			if (allergies.size() != 0) {
-				for (String allergy: allergies) {
-					try {
-						stmtUpdate = connection.prepareStatement(
-							"INSERT INTO userallergies " +
-							"VALUES (?, ?)"
-						);
+				try {
+					stmtUpdate = connection.prepareStatement(
+						"INSERT INTO userallergies " +
+						"VALUES (?, ?)"
+					);
+					for (String allergy: allergies) {
 						stmtUpdate.setString(1, userId);
 						stmtUpdate.setString(2, allergy);
-						stmtUpdate.executeUpdate();
-					} catch (Exception e) {
-						log.info("Exception while inserting user allergies into database: {}", e.toString());
-					}						
-				}
+						stmtUpdate.addBatch();
+					}
+					stmtUpdate.executeBatch();
+				} catch (Exception e) {
+					log.info("Exception while inserting user allergies into database: {}", e.toString());
+				}						
 			}
 		} catch (Exception e) {
 			log.info("Exception while connecting to database: {}", e.toString());
@@ -110,7 +111,7 @@ public class SQLDatabaseEngine {
 			try {
 				if (stmtUpdate != null) {stmtUpdate.close();}
 				if (connection != null) {connection.close();}
-			} catch (Exception e) {  // Exception or IOException??
+			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
 		}
@@ -512,7 +513,7 @@ public class SQLDatabaseEngine {
 				stmtUpdate = connection.prepareStatement(
 					"DELETE FROM recommendations " + 
 					"WHERE description LIKE CONCAT('%', ?, '%')"
-				);				
+				);
 				while (rs.next()) {							
 					stmtUpdate.setString(1, rs.getString(1));
 					stmtUpdate.addBatch();
@@ -819,7 +820,7 @@ public class SQLDatabaseEngine {
 		
 		try {
 			connection = this.getConnection();
-			
+
 			// Generate and insert the code into the coupon_code database, together with the userId
 			try {
 				stmtQuery = connection.prepareStatement(
@@ -861,10 +862,10 @@ public class SQLDatabaseEngine {
 	public void claimCode(String userId, int code) {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
-		
+
 		try {
 			connection = this.getConnection();
-			
+			// Set claimUser of code to be userId
 			try {
 				stmtUpdate = connection.prepareStatement(
 					"UPDATE coupon_code " +
@@ -873,6 +874,18 @@ public class SQLDatabaseEngine {
 				);
 				stmtUpdate.setString(1, userId);
 				stmtUpdate.setInt(2, code);
+				stmtUpdate.executeUpdate();
+			} catch (Exception e) {
+				log.info("Exception while updating user info: {}", e.toString());
+			}
+
+			// Delete userId from campaignUser table
+			try {
+				stmtUpdate = connection.prepareStatement(
+					"DELETE FROM campaign_user " +
+					"WHERE userid = ?"
+				);
+				stmtUpdate.setString(1, userId);
 				stmtUpdate.executeUpdate();
 			} catch (Exception e) {
 				log.info("Exception while updating user info: {}", e.toString());
@@ -899,7 +912,8 @@ public class SQLDatabaseEngine {
 		try {
 			connection = this.getConnection();
 			stmtQuery = connection.prepareStatement(
-				"SELECT requestUser, claimUser FROM coupon_code " +
+				"SELECT requestUser, claimUser " +
+				"FROM coupon_code " +
 				"WHERE code = ?"
 			);
 			stmtQuery.setInt(1, code);
@@ -919,6 +933,154 @@ public class SQLDatabaseEngine {
 				if (connection != null)
 					connection.close();
 			} catch (Exception ex) {  // Exception or IOException??
+				log.info("Exception while closing connection of database: {}", ex.toString());
+			}
+		}
+		return result;
+	}
+
+
+	// Sets the url in the coupon_url database
+	public void setCouponUrl(String url) {
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		String statement = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Delete url if it already exists
+			try {
+				stmtUpdate = connection.prepareStatement(
+					"DELETE FROM coupon_url"
+				);
+				stmtUpdate.executeUpdate();
+			} catch (Exception e) {
+				log.info("Exception while deleting existing coupon url from database: {}", e.toString());
+			}
+
+			// Insert coupon url into database
+			try {
+				stmtUpdate = connection.prepareStatement(
+					"INSERT INTO coupon_url " +
+					"VALUES (?)"
+				);
+				stmtUpdate.setString(1, url);
+				stmtUpdate.executeUpdate();
+			} catch (Exception e) {
+				log.info("Exception while inserting coupon url into database: {}", e.toString());					
+			}
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (Exception e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+	}
+
+
+	// Returns the coupon url
+	public String getCouponUrl() {
+		String result = null;
+		Connection connection = null;
+		PreparedStatement stmtQuery = null;
+		ResultSet rs = null;
+		try {
+			connection = this.getConnection();
+			stmtQuery = connection.prepareStatement(
+				"SELECT url " +
+				"FROM coupon_url"
+			);
+			rs = stmtQuery.executeQuery(); 
+			while(result == null && rs.next()) {
+				result = rs.getString(1);
+			}
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmtQuery != null)
+					stmtQuery.close();
+				if (connection != null)
+					connection.close();
+			} catch (Exception ex) {
+				log.info("Exception while closing connection of database: {}", ex.toString());
+			}
+		}
+		return result;
+	}
+
+
+	// Adds the input meals to the user's eating history
+	public void addUserEatingHistory(String userId, String meals) {
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		// String date = LocalDate.now().toString();
+		
+		try {
+			connection = this.getConnection();
+			try {
+				stmtUpdate = connection.prepareStatement(
+					"INSERT INTO eating_history " +
+					"VALUES (?, ?, CURRENT_DATE)"
+				);
+				stmtUpdate.setString(1, userId);
+				stmtUpdate.setString(2, meals);
+				// stmtUpdate.setString(3, date);
+				stmtUpdate.executeUpdate();
+			} catch (Exception e) {
+				log.info("Exception while generating and storing code into the coupon_code table: {}", e.toString());
+			}
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (Exception e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}	
+	}
+
+
+	// Retrieves the user's eating history for the past 3 days
+	public ArrayList<String> getUserEatingHistory(String userId, int days) {
+		ArrayList<String> result = new ArrayList<String>();
+		Connection connection = null;
+		PreparedStatement stmtQuery = null;
+		ResultSet rs = null;
+		try {
+			connection = this.getConnection();
+			stmtQuery = connection.prepareStatement(
+				"SELECT meals " +
+				"FROM eating_history " +
+				"WHERE userid = ? " +
+					"AND date >= CURRENT_DATE - ?"
+			);
+			stmtQuery.setString(1, userId);
+			stmtQuery.setInt(2, days);
+			rs = stmtQuery.executeQuery(); 
+			while(rs.next()) {
+				result.add(rs.getString(1));
+			}
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmtQuery != null)
+					stmtQuery.close();
+				if (connection != null)
+					connection.close();
+			} catch (Exception ex) {
 				log.info("Exception while closing connection of database: {}", ex.toString());
 			}
 		}
