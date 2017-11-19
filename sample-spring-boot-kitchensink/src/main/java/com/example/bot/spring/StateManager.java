@@ -122,7 +122,7 @@ public class StateManager {
                     replyMessages.add(0, splitString[0]);                       
                     replyMessages.remove(replyMessages.size() - 1);
                 
-                    String recommendation = states.get(currentState).reply(userId, splitString[1], bot);              
+                    String recommendation = states.get("recommend").reply(userId, splitString[1], bot);              
                     replyMessages.add(recommendation);
                 }
             }
