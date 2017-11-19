@@ -320,10 +320,10 @@ public class StateManager {
         	String resultString = "";
         	if (args.length > 0) {
         		result = sql.getNutritionInfo(args[0]);
-				resultString = args[0] + " contains "
-								+ "\n energy: " + Double.toString(result.get(0)) + " kcal"
-								+ "\n sodium: " + Double.toString(result.get(0)) + " mg"
-								+ "\n fat: " 	+ Double.toString(result.get(0)) + " g";
+				resultString = args[0] + " contain "
+								+ "\n*energy: " + Double.toString(result.get(0)) + " kcal"
+								+ "\n*sodium: " + Double.toString(result.get(0)) + " mg"
+								+ "\n*fat: " 	+ Double.toString(result.get(0)) + " g";
 				return resultString;
         	}
 
