@@ -203,10 +203,14 @@ public class StateManager {
                 System.out.println("5");
                     TemplateMessage templateMessage = new TemplateMessage("Button alt text", buttonsTemplate);
 
+                    String temp = "";
+                    for (String s:replyMessages) {
+                    	temp += s;
+                    }
                     ButtonsTemplate buttonsTemplate1 = new ButtonsTemplate(
                             null, // image url
                             null, // title
-                            replyMessages.get(0)+debugMessage.get(1), // reply from rivescript
+                            temp, // reply from rivescript
                             Arrays.asList(
                                     new PostbackAction("Check",
                                                        "check_food_nutrient")
