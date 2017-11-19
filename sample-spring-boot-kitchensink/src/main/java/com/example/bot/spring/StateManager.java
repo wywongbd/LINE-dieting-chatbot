@@ -98,7 +98,6 @@ public class StateManager {
         else if (userStatus.equals("REGISTERED USER")){
             currentState = bot.getUservar(userId, "state");
             replyMessages.add(states.get(currentState).reply(userId, text, bot));
-
             currentState = bot.getUservar(userId, "state");
 
             if (currentState.equals("recommend")) {              
