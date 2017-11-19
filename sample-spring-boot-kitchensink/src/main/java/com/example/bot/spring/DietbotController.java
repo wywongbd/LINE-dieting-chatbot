@@ -129,9 +129,16 @@ public class DietbotController {
         String data = event.getPostbackContent().getData();
         List<Message> replyList = null;
 
-		replyList = stateManager.chat(userId, data, true);
-        this.reply(replyToken, new TextMessage(data + event.getPostbackContent().getParams().toString()));
 
+        try {
+        	
+			replyList = stateManager.chat(userId, data, true);
+	        this.reply(replyToken, new TextMessage(data + event.getPostbackContent().getParams().toString()));
+
+    	} catch (Exception e) {
+    		this.replyText(replyToken, defaultString);
+    		return;
+    	}
         // this.replyText(replyToken, "Got postback data " + event.getPostbackContent().getData()
         // 	+ ", param " + event.getPostbackContent().getParams().toString());
     }
