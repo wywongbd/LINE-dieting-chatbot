@@ -138,7 +138,7 @@ public class DietbotController {
         	String[] temp = date.split("-");
         	LocalDate inputDate = LocalDate.of(temp[0],temp[1],temp[2]);
         	LocalDate today = LocalDate.now().plus(1);
-        	long daysBetween = DAYS.between(inputDate, today);
+        	long daysBetween = ChronoUnit.DAYS.between(inputDate, today);
         	data = data + Long.toString(daysBetween);
         }
 
