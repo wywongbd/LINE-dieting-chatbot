@@ -78,7 +78,7 @@ public class RecommendFriendState extends State {
                 }
                 else{
                     // Can claim code!!
-                    claimCode(userId, code);
+                    sql.claimCode(userId, code);
                     vec.add(requestUser);
                     vec.add(" ");    // To indicate that it's successful
                 }
