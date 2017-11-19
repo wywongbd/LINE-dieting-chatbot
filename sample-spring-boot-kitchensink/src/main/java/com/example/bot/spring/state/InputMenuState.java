@@ -52,7 +52,7 @@ public class InputMenuState extends State {
 			}
 
             syncSQLWithRiveScript(userId, bot);
-            return replyText + "AAAAAAAAAA " + urlContent + " ";
+            return replyText + "AAAAAAAAAA" + urlContent;
 		}
 		else {
             // input text menu
@@ -60,7 +60,7 @@ public class InputMenuState extends State {
             bot.setUservar(userId, "topic", "recommend");
             bot.setUservar(userId, "state", "recommend");
             syncSQLWithRiveScript(userId, bot);
-			return  "Thanks, I'm looking at your text menu now! I'll try to give you some recommendations." + "AAAAAAAAAA" + text;
+			return  "Thanks, I'm looking at your text menu now! I'll try to give you some recommendations." + "AAAAAAAAAA " + text + " ";
 		}
 	}
 
