@@ -44,6 +44,7 @@ public class StateManager {
         states.put("post_eating", new PostEatingState());
         states.put("update_user_info", new UpdateUserInfoState());
         states.put("admin", new AdminState());
+        states.put("recommend_friend", new RecommendFriendState();)
 
         adminAccessing = false;
     };
@@ -166,7 +167,7 @@ public class StateManager {
                 replyMessages.add("Please let me finish recording your food intake before sharing me photos!");
             }
             else{
-                replyMessages.add("Sorry, I am lost and I don't know how to respond");
+                replyMessages.add("Sorry, I am lost and I don't know how to respond. Please continue with your previous activity first.");
             }
         }
 

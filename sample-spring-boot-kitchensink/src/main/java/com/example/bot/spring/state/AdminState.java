@@ -38,7 +38,7 @@ public class AdminState extends State {
     public String replyImage(String userId, DownloadedContent jpg, RiveScript bot) {
 		// To do: modify url in DB
         couponImageUrl = jpg.getUrl();
-		return "Your image has been well received!";
+		return "Hi Admin, your image has been well received!";
     }
 
     public static String getImageUrl() {
