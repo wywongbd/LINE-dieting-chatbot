@@ -44,12 +44,10 @@ public class RecommendFriendState extends State {
     	return text.split(" ")[1];
     }
  
-    public Vector<String> replyForFriendCommand(String userId) {
+    public String replyForFriendCommand(String userId) {
         int newCode = sql.generateAndStoreCode(userId);
         String newCodeString = "Thank you, your code is " + Integer.toString(newCode);
-        Vector<String> vec = new Vector<String>(0);
-        vec.add(newCodeString);
-        return vec;
+        return newCodeString;
     }
 
     public Vector<String> actionForCodeCommand(String userId, String code) {

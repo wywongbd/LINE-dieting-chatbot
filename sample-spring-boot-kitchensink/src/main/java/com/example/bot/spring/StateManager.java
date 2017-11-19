@@ -71,9 +71,9 @@ public class StateManager {
             return "REGISTERED USER";
         }
         else{
+            // rivescript still recognize this uesr, but DB doesn't -> set rivescript to default topic & state
             if (bot.getUservar(userId, "state") != null){
                 if (!bot.getUservar(userId, "state").equals("collect_user_info")){
-                    // rivescript still recognize this uesr, but DB doesn't -> set rivescript to default topic & state
                     bot.setUservar(userId, "state", "collect_user_info");
                     bot.setUservar(userId, "topic", "new_user");
                 }
@@ -111,7 +111,7 @@ public class StateManager {
                 replyMessages.add(states.get("admin").reply(userId, text, bot));
             }
             else if (currentState.equals("standby") && (((RecommendFriendState) states.get("recommend_friend")).matchTrigger(text).equals("FRIEND"))){
-                replyMessages = (((RecommendFriendState) states.get("recommend_friend")).replyForFriendCommand(userId));
+                replyMessages.add(((RecommendFriendState) states.get("recommend_friend")).replyForFriendCommand(userId));
             }
             else{
                 replyMessages.add(states.get(currentState).reply(userId, text, bot));
@@ -122,8 +122,8 @@ public class StateManager {
                     replyMessages.add(0, splitString[0]);                       
                     replyMessages.remove(replyMessages.size() - 1);
                 
-                    String temp = states.get(currentState).reply(userId, splitString[1], bot);              
-                    replyMessages.add(temp);
+                    String recommendation = states.get(currentState).reply(userId, splitString[1], bot);              
+                    replyMessages.add(recommendation);
                 }
             }
         }

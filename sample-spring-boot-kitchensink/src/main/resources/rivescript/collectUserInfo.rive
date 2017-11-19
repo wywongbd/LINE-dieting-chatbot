@@ -167,17 +167,38 @@
 >topic collect_user_allergy_seafood
 
     + @yes [*]
-    - <set seafood_allergy=true>I see, I'll take note of that. Thank you for your cooperation, I have a better understanding of your physical conditions now.<set state=standby>{topic=standby}
-
+    - <set seafood_allergy=true>I see, I'll take note of that. From a scale of 1 to 3, how urgent are you in cutting down your weight? Please input 1, 2 or 3. 
+        ^ - 1. I am ok with my current weight, but slimming down just a little would be perfect.
+        ^ - 2. I am not satisfied with my current weight, I hope to lose weight significantly to be more healthy.
+        ^ - 3. I am in an emergency and I need to lose weight immediately, the sooner the better!{topic=collect_user_goal}
 
     + @no [*]
-    - <set seafood_allergy=false>Great, thanks for cooperating. I have a better understanding of your physical condition now.<set state=standby>{topic=standby}
+    - <set seafood_allergy=false>From a scale of 1 to 3, how urgent are you in cutting down your weight? Please input 1, 2 or 3. 
+        ^ - 1. I am ok with my current weight, but slimming down just a little would be perfect.
+        ^ - 2. I am not satisfied with my current weight, I hope to lose weight significantly to be more healthy.
+        ^ - 3. I am in an emergency and I need to lose weight immediately, the sooner the better!{topic=collect_user_goal}
 
     + *
     - I am sorry. I do not understand. Are you allergic to seafood? (Yes/No)
 
 < topic
 
+>topic collect_user_goal
+    
+    + 1
+    - Great, thanks for cooperating. I have a better understanding of your physical condition now. I'll try my best to help you reach your health goal! <set state=standby><set diet=little_diet>{topic=standby}
 
+    + 2
+    - Great, thanks for cooperating. I have a better understanding of your physical condition now. I'll try my best to help you reach your health goal! <set state=standby><set diet=normal>{topic=standby}
+
+    + 3
+    - Great, thanks for cooperating. I have a better understanding of your physical condition now. I'll try my best to help you reach your health goals! <set state=standby><set diet=serious_diet>{topic=standby}
+
+    + *
+    - Sorry, I do not understand, could you try again? From a scale of 1 to 3, how urgent are you in cutting down your weight? Please input 1, 2 or 3. 
+        ^ - 1. I am ok with my current weight, but slimming down just a little would be perfect.
+        ^ - 2. I am not satisfied with my current weight, I hope to lose weight significantly to be more healthy.
+        ^ - 3. I am in an emergency and I need to lose weight immediately, the sooner the better!
+< topic
 
 //////////////////////////////////////collect_user_info

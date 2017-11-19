@@ -525,7 +525,7 @@ public class SQLDatabaseEngine {
 		PreparedStatement stmtQuery = null;
 		PreparedStatement stmtUpdate = null;
 		ResultSet rs = null;
-		
+
 		try {
 			connection = this.getConnection();
 			
