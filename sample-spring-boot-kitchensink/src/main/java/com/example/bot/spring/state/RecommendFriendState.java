@@ -77,16 +77,13 @@ public class RecommendFriendState extends State {
                     vec.add("Sorry, You cannot claim your own code!");
                 }
                 else{
-                    System.out.println("actionForCodeCommand: last if");
                     // Can claim code
                     sql.claimCode(userId, Integer.valueOf(code));
-                    System.out.println("actionForCodeCommand: last if 2");
                     vec.add(requestUser);
                     vec.add(" ");    // To indicate that it's successful
                 }
             }
         }
-        System.out.println("actionForCodeCommand: before return");
         return vec;
     }
 

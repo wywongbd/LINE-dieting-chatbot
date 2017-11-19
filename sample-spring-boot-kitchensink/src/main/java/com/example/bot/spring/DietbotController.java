@@ -197,11 +197,9 @@ public class DietbotController {
 			// text: "code 123456"
 			// Exception couponIsValid
 			if (recommendFriendState.matchTrigger(text).equals("CODE") && sql.searchUser(userId, "userinfo")){
-				System.out.println("HandleTextContent: CODE");
 				String code = recommendFriendState.decodeCodeMessage(text);
 				reply = recommendFriendState.actionForCodeCommand(userId, code);
 				if(reply.size() == 2) {
-					System.out.println("HandleTextContent: IF ");
 					String url = sql.getCouponUrl();
 					String requestUser = reply.get(0);
             		// String temp = reply.get(1);			
@@ -213,7 +211,6 @@ public class DietbotController {
 				}
 			}
 			else {
-				System.out.println("HandleTextContent: normal chatting");
 				reply = stateManager.chat(userId, text, true);
 			}
     	} catch (Exception e) {
