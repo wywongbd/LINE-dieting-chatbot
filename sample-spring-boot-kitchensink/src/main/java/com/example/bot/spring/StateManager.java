@@ -12,7 +12,6 @@ import java.util.*;
 import com.example.bot.spring.DietbotController.DownloadedContent;
 
 
-import com.linecorp.bot.model.action.DatetimePickerAction;
 
 // line api
 import com.linecorp.bot.client.LineMessagingClient;
@@ -189,7 +188,7 @@ public class StateManager {
                 	replyList.add(new TextMessage(replyMessages.get(0)));
 
                 	// reply datetime picker
-                	replyList.add(states.get("provide_info").getButton());
+                	replyList.add(((ProvideInfoState)states.get("provide_info")).getButton());
                     return replyList;
                 }
 
