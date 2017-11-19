@@ -52,7 +52,7 @@ public class InputMenuState extends State {
 			}
 
             syncSQLWithRiveScript(userId, bot);
-            return replyText + "AAAAAAAAAA" + urlContent;
+            return replyText + "AAAAAAAAAA " + urlContent + " ";
 		}
 		else {
             // input text menu
