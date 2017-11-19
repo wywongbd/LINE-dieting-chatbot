@@ -1171,6 +1171,49 @@ public class SQLDatabaseEngine {
 	}
 
 
+	// Returns the nutrition info of the input food
+	public ArrayList<Double> getNutritionInfo(String food) {
+		ArrayList<Double> result = new ArrayList<Double>();
+		Connection connection = null;
+		PreparedStatement stmtQuery = null;
+		ResultSet rs = null;
+		try {
+			connection = this.getConnection();
+
+			stmtQuery = connection.prepareStatement(
+				"SELECT " +
+					"DISTINCT ON (meal_name) " +
+					"? AS meal_name, " +
+					"energy_kcal, " +
+					"sodium_mg, " +
+					"fat_g, " +
+					"similarity(?, nutrient_table.description) AS sim " +
+				"FROM nutrient_table " +
+				"ORDER BY meal_name, sim DESC"
+			);
+			stmtQuery.setString(1, food);
+			stmtQuery.setString(2, food);
+			rs = stmtQuery.executeQuery(); 
+			while(rs.next()) {
+				result.add(rs.getDouble(2));
+				result.add(rs.getDouble(3));
+				result.add(rs.getDouble(4));
+			}
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
+			} catch (Exception ex) {
+				log.info("Exception while closing connection of database: {}", ex.toString());
+			}
+		}
+		return result;
+	}	
+
+
 	// Deletes all records corresponding to the userId in the input table
 	public void reset(String userId, String table) {
 		Connection connection = null;
