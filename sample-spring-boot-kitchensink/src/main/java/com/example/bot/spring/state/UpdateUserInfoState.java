@@ -11,7 +11,7 @@ public class UpdateUserInfoState extends State {
 
 	public String reply(String userId, String text, RiveScript bot) {
 		String output = bot.reply(userId, text);
-		updateDatabase(userId, bot);
+		syncSQLWithRiveScript(userId, bot);
 		return output;
 	}
 }

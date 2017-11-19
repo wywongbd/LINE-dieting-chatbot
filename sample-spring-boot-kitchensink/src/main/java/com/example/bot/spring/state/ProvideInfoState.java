@@ -22,6 +22,7 @@ public class ProvideInfoState extends State {
 		String output = bot.reply(userId, text);
 		String afterState = bot.getUservar(userId, "state");
 		
+		syncSQLWithRiveScript(userId, bot);
 		return output;
 	}
 }

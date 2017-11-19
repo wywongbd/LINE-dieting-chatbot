@@ -41,7 +41,7 @@ public class PostEatingState extends State {
 		afterState = bot.getUservar(userId, "state");
 
 		// write to DB
-		updateDatabase(userId, bot);
+		syncSQLWithRiveScript(userId, bot);
 		return output;
 	}
 }

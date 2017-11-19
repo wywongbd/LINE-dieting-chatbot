@@ -28,10 +28,12 @@ public class StateManager {
     public static final Map<String, State> states; 
     private static RiveScript bot;    
     private static boolean adminAccessing;
+    private static SQLDatabaseEngine sql;
 
     static
     {
         bot = new RiveScript();
+        sql = new SQLDatabaseEngine();
         
         states = new HashMap<String, State>();
         states.put("standby", new StandbyState());
@@ -57,10 +59,26 @@ public class StateManager {
         bot.setSubroutine("setVariableToDB", new setVariableToDB());
     }
 
-    public void updateBot(String userId){
-        SQLDatabaseEngine sql = new SQLDatabaseEngine();
-        bot.setUservar(userId, "topic", sql.getUserInfo(userId, "topic"));
-        bot.setUservar(userId, "state", sql.getUserInfo(userId, "state"));
+    public String syncRiveScriptWithSQL(String userId){
+        boolean isRegisteredUser = sql.searchUser(userId, "userinfo");
+        
+        if(isRegisteredUser){
+            bot.setUservar(userId, "topic", sql.getUserInfo(userId, "topic"));
+            bot.setUservar(userId, "state", sql.getUserInfo(userId, "state"));
+            bot.setUservar(userId, "met", "true");
+
+            return "REGISTERED USER";
+        }
+        else{
+            return "NEW USER";
+        }
+    }
+
+    public void debugMessage(String userId, Vector<String> replyMessages, boolean debug){
+        if(debug == true) {
+            replyMessages.add("Current state is " + bot.getUservar(userId, "state"));
+            replyMessages.add("Current topic is " + bot.getUservar(userId, "topic"));
+        }
     }
 
     /**
@@ -69,53 +87,50 @@ public class StateManager {
      * @return A String data type
      */
     public Vector<String> chat(String userId, String text, boolean debug) throws Exception {
-    	Vector<String> replyText = new Vector<String>(0);
-        SQLDatabaseEngine sql = new SQLDatabaseEngine();
+    	Vector<String> replyMessages = new Vector<String>(0);
         String currentState = null;        
-        String currentTopic = null;
-        boolean isRegisteredUser = true;
-        isRegisteredUser = sql.searchUser(userId, "userinfo");
+        String userStatus = syncRiveScriptWithSQL(userId);
 
-        if (!isRegisteredUser) {
-            currentState = "collect_user_info";
+        if (userStatus.equals("NEW USER")) {
             bot.setUservar(userId, "state", "collect_user_info");
+            replyMessages.add(states.get("collect_user_info").reply(userId, text, bot));
         }
-        else{
-            updateBot(userId);
+        else if (userStatus.equals("REGISTERED USER")){
             currentState = bot.getUservar(userId, "state");
-            currentTopic = bot.getUservar(userId, "topic");
-            bot.setUservar(userId, "met", "true");
+            replyMessages.add(states.get(currentState).reply(userId, text, bot));
+
+            currentState = bot.getUservar(userId, "state");
+
+            if (currentState.equals("recommend")) {              
+                String[] splitString = (replyMessages.lastElement()).split("AAAAAAAAAA");                                       
+                replyMessages.add(0, splitString[0]);                       
+                replyMessages.remove(replyMessages.size() - 1);
+            
+                String temp = states.get(currentState).reply(userId, splitString[1], bot);              
+                replyMessages.add(temp);
+            }
         }
 
-        if(currentState.equals("standby") 
-            && (((AdminState) states.get("admin")).matchTrigger(text) == 1)
-            && userId.equals(ADMIN_USER_ID)){
-            adminAccessing = true;
-            replyText.add(states.get("admin").reply(userId, text, bot));
+        if(replyMessages.size() > 0) {
+            debugMessage(userId, replyMessages, debug);
+            return replyMessages;
         }
         else{
-            replyText.add(states.get(currentState).reply(userId, text, bot));
+            throw new Exception("NOT FOUND");
         }
+        // if(currentState.equals("standby") 
+        //     && (((AdminState) states.get("admin")).matchTrigger(text) == 1)
+        //     && userId.equals(ADMIN_USER_ID)){
 
-        currentState = bot.getUservar(userId, "state");
+        //     System.out.println("chatText: Point 2a");
 
-        if(currentState.equals("recommend")) {            	
-        	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	          	
-        	replyText.add(0, splitString[0]);         	          	
-        	replyText.remove(replyText.size() - 1);
-        
-        	String temp = states.get(currentState).reply(userId, splitString[1], bot);           	
-        	replyText.add(temp);
-        }
+        //     adminAccessing = true;
+        //     replyMessages.add(states.get("admin").reply(userId, text, bot));
+        // }
+        // else{
 
-        if(replyText.size() > 0) {
-        	if(debug == true) {
-        		replyText.add("Current state is " + bot.getUservar(userId, "state"));
-                replyText.add("Current topic is " + bot.getUservar(userId, "topic"));
-        	}
-        	return replyText;
-        }
-        throw new Exception("NOT FOUND");
+            // replyMessages.add(states.get(currentState).reply(userId, text, bot));
+        // }  
     }
 
     /**
@@ -124,57 +139,51 @@ public class StateManager {
      * @return A String data type
      */
     public Vector<String> chat(String userId, DownloadedContent jpg, boolean debug) throws Exception {
-    	Vector<String> replyText = new Vector<String>(0);
-        SQLDatabaseEngine sql = new SQLDatabaseEngine();
-    	String currentState = null;        
-        String currentTopic = null;
-        boolean isRegisteredUser = true;
-        isRegisteredUser = sql.searchUser(userId, "userinfo");
-
-        if (!isRegisteredUser) {
-            replyText.add("Please finish giving us your personal information before sharing photos!");
-            return replyText;
+    	Vector<String> replyMessages = new Vector<String>(0);
+    	String currentState = null;
+        String userStatus = syncRiveScriptWithSQL(userId);        
+        
+        if (userStatus.equals("NEW USER")) {
+            replyMessages.add("Please finish giving us your personal information before sharing photos!");
         }
-        else{
-        	updateBot(userId);
+        else if (userStatus.equals("REGISTERED USER")) {
             currentState = bot.getUservar(userId, "state");
-            currentTopic = bot.getUservar(userId, "topic");
-            
-            if (currentState.equals("update_user_info")){
-                replyText.add("Please finish updating your personal information before sharing photos!");
-                return replyText;
-            }
-        }
 
-        if (currentState.equals("input_menu") || currentState.equals("standby")){
-            if (adminAccessing == false) {
-                replyText.add(((InputMenuState) states.get("input_menu")).replyImage(userId, jpg, bot));
-            }
-            else{
-                replyText.add(((AdminState) states.get("admin")).replyImage(userId, jpg, bot));
+            if (adminAccessing == true && currentState.equals("standby")){
+                replyMessages.add(((AdminState) states.get("admin")).replyImage(userId, jpg, bot));
                 adminAccessing = false;
             }
+            else if (adminAccessing == false && (currentState.equals("input_menu") || currentState.equals("standby"))){
+                replyMessages.add(((InputMenuState) states.get("input_menu")).replyImage(userId, jpg, bot));
+                currentState = bot.getUservar(userId, "state");
+
+                if(currentState.equals("recommend")) {               
+                    String[] splitString = (replyMessages.lastElement()).split("AAAAAAAAAA");                                       
+                    replyMessages.add(0, splitString[0]);                       
+                    replyMessages.remove(replyMessages.size() - 1);
+                
+                    String temp = states.get(currentState).reply(userId, splitString[1], bot);              
+                    replyMessages.add(temp);
+                }
+            }
+            else if (currentState.equals("update_user_info")){
+                replyMessages.add("Please finish updating your personal information before sharing me photos!");
+            }
+            else if (currentState.equals("post_eating")){
+                replyMessages.add("Please let me finish recording your food intake before sharing me photos!");
+            }
+            else{
+                replyMessages.add("Sorry, I am lost and I don't know how to respond");
+            }
         }
 
-        currentState = bot.getUservar(userId, "state");
-        
-        if(currentState.equals("recommend")) {               
-            String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");                                       
-            replyText.add(0, splitString[0]);                       
-            replyText.remove(replyText.size() - 1);
-        
-            String temp = states.get(currentState).reply(userId, splitString[1], bot);              
-            replyText.add(temp);
+        if(replyMessages.size() > 0) {
+            debugMessage(userId, replyMessages, debug);
+            return replyMessages;
         }
-
-        if(replyText.size() > 0) {
-        	if(debug == true) {
-        		replyText.add("Current state is " +  bot.getUservar(userId, "state"));
-                replyText.add("Current topic is " +  bot.getUservar(userId, "topic"));
-        	}
-        	return replyText;
+        else{
+            throw new Exception("NOT FOUND");
         }
-        throw new Exception("NOT FOUND");
     }
     
 
@@ -184,17 +193,13 @@ public class StateManager {
         // assume the order of parameter is: variable name, value1, ... , userID
         public String call(RiveScript rs, String[] args) {
 
-            SQLDatabaseEngine sql = new SQLDatabaseEngine();
-
             if ( args[0].equals("weight") || args[0].equals("height") ) {
-
                 // double
                 if ( args.length == 3 ) {
                     sql.setUserInfo(args[2], args[0], Double.parseDouble(args[1]));
                 }
 
             } else if ( args[0].equals("age") ) {
-
                 // integer
                 if ( args.length == 3 ) {
                     sql.setUserInfo(args[2], args[0], Integer.parseInt(args[1]));
