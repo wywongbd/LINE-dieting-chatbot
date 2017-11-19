@@ -9,13 +9,20 @@ import com.rivescript.RiveScript;
 //import java.io.IOException;
 
 abstract class State {
+
+    protected static SQLDatabaseEngine sql;
+
+    static
+    {
+        sql = new SQLDatabaseEngine();
+    };
+
     /**
      * Reply a message for input text
      * @param text A String data type
      * @return A String data type
      */
     public void syncSQLWithRiveScript(String userId, RiveScript bot){
-		SQLDatabaseEngine sql = new SQLDatabaseEngine();
 		sql.setUserInfo(userId, "state", bot.getUservar(userId, "state"));
 		sql.setUserInfo(userId, "topic", bot.getUservar(userId, "topic"));
     }

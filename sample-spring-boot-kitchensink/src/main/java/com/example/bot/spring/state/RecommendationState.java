@@ -56,7 +56,6 @@ public class RecommendationState extends State {
      * @return A String data type
      */
 	public String recommendFood(String userId, ArrayList<String> foodList) {
-		SQLDatabaseEngine sql = new SQLDatabaseEngine();
 		HashMap<String, Double> foodWeightage = null;
 		String recommendation = null;
 
