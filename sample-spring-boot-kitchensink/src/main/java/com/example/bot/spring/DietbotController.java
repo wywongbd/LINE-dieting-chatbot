@@ -134,7 +134,7 @@ public class DietbotController {
         String date = event.getPostbackContent().getParams().toString();
         List<Message> replyList = null;
         date = date.replace("{date=", "").replace("}", "");
-        
+
         if (date.length() > 0) {
         	String[] temp = date.split("-");
         	LocalDate inputDate = LocalDate.of(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), Integer.parseInt(temp[2]));
@@ -146,7 +146,7 @@ public class DietbotController {
         try {
 
 			replyList = stateManager.chat(userId, data, true);
-	        this.reply(replyToken, new TextMessage(data + date));
+	        this.reply(replyToken, new TextMessage(replyList));
 
     	} catch (Exception e) {
     		this.replyText(replyToken, defaultString);
