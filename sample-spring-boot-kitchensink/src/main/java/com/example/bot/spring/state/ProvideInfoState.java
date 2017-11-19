@@ -79,7 +79,7 @@ public class ProvideInfoState extends State {
 
 
     public Message getButton() {
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now().plusDays(1);
         String date = today.toString();
 
         List<Message> ReplyMessage = new ArrayList<Message>(0);

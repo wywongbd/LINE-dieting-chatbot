@@ -108,6 +108,7 @@ public class StateManager {
         bot.loadDirectory(resourcesDirectory.getAbsolutePath());
         bot.sortReplies();
         bot.setSubroutine("setVariableToDB", new setVariableToDB());
+        bot.setSubroutine("getNutritionOfFood", new setVariableToDB());
     }
 
     public String syncRiveScriptWithSQL(String userId){
@@ -322,7 +323,7 @@ public class StateManager {
 				resultString = args[0] + " contains "
 								+ "\n energy: " + Double.toString(result.get(0)) + " kcal"
 								+ "\n sodium: " + Double.toString(result.get(0)) + " mg"
-								+ "\n fat: " 	+ Double.toString(result.get(0)) + " g"
+								+ "\n fat: " 	+ Double.toString(result.get(0)) + " g";
 				return resultString;
         	}
 

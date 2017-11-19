@@ -63,6 +63,10 @@ import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
 import lombok.NonNull;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -130,6 +134,13 @@ public class DietbotController {
         String date = event.getPostbackContent().getParams().toString();
         List<Message> replyList = null;
         date = date.replace("{date=").replace("}", "");
+        if (date.length > 0) {
+        	String[] temp = date.split("-");
+        	LocalDate inputDate = LocalDate.of(temp[0],temp[1],temp[2]);
+        	LocalDate today = LocalDate.now().plus(1);
+        	long daysBetween = DAYS.between(inputDate, today);
+        	data = data + Long.toString(daysBetween);
+        }
 
         try {
 
