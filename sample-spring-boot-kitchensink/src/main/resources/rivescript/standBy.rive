@@ -84,7 +84,8 @@
         ^ - weight
         ^ - height
         ^ - allergy
-        ^ Type "cancel" if you want to cancel the update
+        ^ - health goal
+        ^ Type "cancel" if you want to cancel this update activity
 
     + cancel
     - You have cancelled the update of information.<set state=standby>{topic=standby}
