@@ -59,9 +59,19 @@ public class StateManager {
         bot.setSubroutine("setVariableToDB", new setVariableToDB());
     }
 
-    public void syncRiveScriptWithSQL(String userId){
-        bot.setUservar(userId, "topic", sql.getUserInfo(userId, "topic"));
-        bot.setUservar(userId, "state", sql.getUserInfo(userId, "state"));
+    public String syncRiveScriptWithSQL(String userId){
+        boolean isRegisteredUser = sql.searchUser(userId, "userinfo");
+        
+        if(isRegisteredUser){
+            bot.setUservar(userId, "topic", sql.getUserInfo(userId, "topic"));
+            bot.setUservar(userId, "state", sql.getUserInfo(userId, "state"));
+            bot.setUservar(userId, "met", "true");
+
+            return "REGISTERED USER";
+        }
+        else{
+            return "NEW USER";
+        }
     }
 
     public void debugMessage(String userId, Vector<String> replyMessages, boolean debug){
@@ -79,27 +89,35 @@ public class StateManager {
     public Vector<String> chat(String userId, String text, boolean debug) throws Exception {
     	Vector<String> replyMessages = new Vector<String>(0);
         String currentState = null;        
-        boolean isRegisteredUser = true;
-        isRegisteredUser = sql.searchUser(userId, "userinfo");
+        String userStatus = syncRiveScriptWithSQL(userId);
 
-        System.out.println("chatText: Point 1");
-
-        if (!isRegisteredUser) {
-            System.out.println("chatText: Point 1a");
-
-            currentState = "collect_user_info";
+        if (userStatus.equals("NEW USER")) {
             bot.setUservar(userId, "state", "collect_user_info");
+            replyMessages.add(states.get("collect_user_info").reply(userId, text, bot));
+        }
+        else if (userStatus.equals("REGISTERED USER")){
+            currentState = bot.getUservar(userId, "state");
+            replyMessages.add(states.get(currentState).reply(userId, text, bot));
+
+            currentState = bot.getUservar(userId, "state");
+
+            if (currentState.equals("recommend")) {              
+                String[] splitString = (replyMessages.lastElement()).split("AAAAAAAAAA");                                       
+                replyMessages.add(0, splitString[0]);                       
+                replyMessages.remove(replyMessages.size() - 1);
+            
+                String temp = states.get(currentState).reply(userId, splitString[1], bot);              
+                replyMessages.add(temp);
+            }
+        }
+
+        if(replyMessages.size() > 0) {
+            debugMessage(userId, replyMessages, debug);
+            return replyMessages;
         }
         else{
-            System.out.println("chatText: Point 1b");
-
-            syncRiveScriptWithSQL(userId);
-            currentState = bot.getUservar(userId, "state");
-            bot.setUservar(userId, "met", "true");
+            throw new Exception("NOT FOUND");
         }
-
-        System.out.println("chatText: Point 2");
-
         // if(currentState.equals("standby") 
         //     && (((AdminState) states.get("admin")).matchTrigger(text) == 1)
         //     && userId.equals(ADMIN_USER_ID)){
@@ -110,31 +128,9 @@ public class StateManager {
         //     replyMessages.add(states.get("admin").reply(userId, text, bot));
         // }
         // else{
-            System.out.println("chatText: Point 2b");
 
-            replyMessages.add(states.get(currentState).reply(userId, text, bot));
-        // }
-
-        currentState = bot.getUservar(userId, "state");
-
-        if(currentState.equals("recommend")) {            	
-        	String[] splitString = (replyMessages.lastElement()).split("AAAAAAAAAA");       	            	          	
-        	replyMessages.add(0, splitString[0]);         	          	
-        	replyMessages.remove(replyMessages.size() - 1);
-        
-        	String temp = states.get(currentState).reply(userId, splitString[1], bot);           	
-        	replyMessages.add(temp);
-        }
-        
-        System.out.println("chatText: Point 3");
-
-        if(replyMessages.size() > 0) {
-            debugMessage(userId, replyMessages, debug);
-        	return replyMessages;
-        }
-        else{
-            throw new Exception("NOT FOUND");
-        }
+            // replyMessages.add(states.get(currentState).reply(userId, text, bot));
+        // }  
     }
 
     /**
@@ -144,43 +140,41 @@ public class StateManager {
      */
     public Vector<String> chat(String userId, DownloadedContent jpg, boolean debug) throws Exception {
     	Vector<String> replyMessages = new Vector<String>(0);
-    	String currentState = null;        
-        boolean isRegisteredUser = true;
-        isRegisteredUser = sql.searchUser(userId, "userinfo");
-
-        if (!isRegisteredUser) {
+    	String currentState = null;
+        String userStatus = syncRiveScriptWithSQL(userId);        
+        
+        if (userStatus.equals("NEW USER")) {
             replyMessages.add("Please finish giving us your personal information before sharing photos!");
-            return replyMessages;
         }
-        else{
-        	syncRiveScriptWithSQL(userId);
+        else if (userStatus.equals("REGISTERED USER")) {
             currentState = bot.getUservar(userId, "state");
-            
-            if (currentState.equals("update_user_info")){
-                replyMessages.add("Please finish updating your personal information before sharing photos!");
-                return replyMessages;
-            }
-        }
 
-        if (currentState.equals("input_menu") || currentState.equals("standby")){
-            if (adminAccessing == false) {
-                replyMessages.add(((InputMenuState) states.get("input_menu")).replyImage(userId, jpg, bot));
-            }
-            else{
+            if (adminAccessing == true && currentState.equals("standby")){
                 replyMessages.add(((AdminState) states.get("admin")).replyImage(userId, jpg, bot));
                 adminAccessing = false;
             }
-        }
+            else if (adminAccessing == false && (currentState.equals("input_menu") || currentState.equals("standby"))){
+                replyMessages.add(((InputMenuState) states.get("input_menu")).replyImage(userId, jpg, bot));
+                currentState = bot.getUservar(userId, "state");
 
-        currentState = bot.getUservar(userId, "state");
-        
-        if(currentState.equals("recommend")) {               
-            String[] splitString = (replyMessages.lastElement()).split("AAAAAAAAAA");                                       
-            replyMessages.add(0, splitString[0]);                       
-            replyMessages.remove(replyMessages.size() - 1);
-        
-            String temp = states.get(currentState).reply(userId, splitString[1], bot);              
-            replyMessages.add(temp);
+                if(currentState.equals("recommend")) {               
+                    String[] splitString = (replyMessages.lastElement()).split("AAAAAAAAAA");                                       
+                    replyMessages.add(0, splitString[0]);                       
+                    replyMessages.remove(replyMessages.size() - 1);
+                
+                    String temp = states.get(currentState).reply(userId, splitString[1], bot);              
+                    replyMessages.add(temp);
+                }
+            }
+            else if (currentState.equals("update_user_info")){
+                replyMessages.add("Please finish updating your personal information before sharing me photos!");
+            }
+            else if (currentState.equals("post_eating")){
+                replyMessages.add("Please let me finish recording your food intake before sharing me photos!");
+            }
+            else{
+                replyMessages.add("Sorry, I am lost and I don't know how to respond");
+            }
         }
 
         if(replyMessages.size() > 0) {
