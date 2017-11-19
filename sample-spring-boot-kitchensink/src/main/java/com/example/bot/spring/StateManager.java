@@ -71,9 +71,9 @@ public class StateManager {
             return "REGISTERED USER";
         }
         else{
+            // rivescript still recognize this uesr, but DB doesn't -> set rivescript to default topic & state
             if (bot.getUservar(userId, "state") != null){
                 if (!bot.getUservar(userId, "state").equals("collect_user_info")){
-                    // rivescript still recognize this uesr, but DB doesn't -> set rivescript to default topic & state
                     bot.setUservar(userId, "state", "collect_user_info");
                     bot.setUservar(userId, "topic", "new_user");
                 }
