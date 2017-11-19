@@ -67,7 +67,7 @@ public class InputMenuState extends State {
 
                     replyText = replyText + "AAAAAAAAAA" + bot.getUservar(userId, "text_menu");
 
-                    bot.getUservar(userId, "text_menu_received", "false");
+                    bot.setUservar(userId, "text_menu_received", "false");
                 }
             }
 
