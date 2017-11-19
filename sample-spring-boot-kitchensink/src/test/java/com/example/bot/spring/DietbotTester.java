@@ -95,7 +95,7 @@ public class DietbotTester {
 		allergies.add("seafood");
 
 		databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, allergies, "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, new ArrayList<String>(), "testTopic", "testState");
 		databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, "testTopic", "testState");
 		databaseEngine.addMenu("testUser", menu);
 		databaseEngine.addRecommendations("testUser");
@@ -170,7 +170,6 @@ public class DietbotTester {
 		assertThat(this.databaseEngine.getUserAllergies("testUser")).isEqualTo(allergies);
 
 		allergies.remove("nut");
-		allergies.add("seafood");
 
 		this.databaseEngine.setUserAllergies("testUser", allergies);
 		assertThat(this.databaseEngine.getUserAllergies("testUser")).isEqualTo(allergies);
@@ -305,15 +304,28 @@ public class DietbotTester {
 	public void generateAndStoreCode() {
 		ArrayList<String> result = new ArrayList<String>();
 
-		this.databaseEngine.addCampaignUser("testUserCode");
 		this.databaseEngine.generateAndStoreCode("testUserCode");
 		result = this.databaseEngine.getCodeInfo(100000);
-		assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(true);
 		assertThat(result.get(0)).isEqualTo("testUserCode");
 		assertThat(result.get(1)).isEqualTo(null);
-		this.databaseEngine.reset("testUserCode", "campaign_user");
-		this.databaseEngine.reset("testUserCode", "coupon_code");
+		this.databaseEngine.resetCoupon("testUserCode");
 		assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(false);
+	}
+
+
+	@Test
+	public void claimCode() {
+		ArrayList<String> result = new ArrayList<String>();
+
+		this.databaseEngine.addCampaignUser("testUserClaim");
+		this.databaseEngine.generateAndStoreCode("testUserCode");
+		this.databaseEngine.claimCode("testUserClaim", 100000);
+		assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(false);
+		result = this.databaseEngine.getCodeInfo(100000);
+		assertThat(result.get(0)).isEqualTo("testUserCode");
+		assertThat(result.get(1)).isEqualTo("testUserClaim");
+		this.databaseEngine.reset("testUserClaim", "campaign_user");
+		this.databaseEngine.resetCoupon("testUserCode");
 	}
 
 
@@ -323,6 +335,19 @@ public class DietbotTester {
 
 		this.databaseEngine.setCouponUrl(url);
 		assertThat(this.databaseEngine.getCouponUrl()).isEqualTo(url);
+	}
+
+
+	@Test
+	public void addUserEatingHistory() {
+		String meals1 = "chicken soup, spaghetti bolognese";
+		String meals2 = "apples, chocolate cake";
+		this.databaseEngine.addUserEatingHistory("testUserEating", meals1);
+		this.databaseEngine.addUserEatingHistory("testUserEating", meals2);
+		assertThat(this.databaseEngine.searchUser("testUserEating", "eating_history")).isEqualTo(true);
+		assertThat(this.databaseEngine.getUserEatingHistory("testUserEating", 1).get(0)).isEqualTo(meals1);
+		assertThat(this.databaseEngine.getUserEatingHistory("testUserEating", 1).get(1)).isEqualTo(meals2);
+		this.databaseEngine.reset("testUserEating", "eating_history");
 	}
 
 
