@@ -54,19 +54,15 @@ public class RecommendFriendState extends State {
 
     public Vector<String> actionForCodeCommand(String userId, String code) {
         Vector<String> vec = new Vector<String>(0);
-        System.out.println("actionForCodeCommand: Beginning");
 
         if(!sql.searchUser(userId, "campaign_user")){
-            System.out.println("actionForCodeCommand: if 1");
             // The user cannot claim
             vec.add("Sorry, you cannot claim coupon!");
         }
         else{
-            System.out.println("actionForCodeCommand: if 2");
             ArrayList<String> ls = sql.getCodeInfo(Integer.valueOf(code));
             // ls is either size 0 or size 2
             if(ls.size() == 0){
-                System.out.println("actionForCodeCommand: if 3");
                 // This code does not exist
                 vec.add("Sorry, this code does not exist!");
             }
@@ -74,22 +70,20 @@ public class RecommendFriendState extends State {
                 String requestUser = ls.get(0);
                 String claimUser = ls.get(1);
                 if(claimUser != null){
-                    System.out.println("actionForCodeCommand: if 4");
                     // Someone claimed this coupon ady
                     vec.add("Sorry, this code had been claimed!");
                 }
                 else if(requestUser.equals(userId)) {
-                    System.out.println("actionForCodeCommand: if 5");
                     vec.add("Sorry, You cannot claim your own code!");
                 }
                 else{
-                    System.out.println("actionForCodeCommand: if 6");
+                    // Can claim code!!
+                    claimCode(userId, code);
                     vec.add(requestUser);
                     vec.add(" ");    // To indicate that it's successful
                 }
             }
         }
-        System.out.println("actionForCodeCommand: before return");
         return vec;
     }
 
