@@ -164,11 +164,13 @@ public class StateManager {
                 replyMessages.add(((RecommendFriendState) states.get("recommend_friend")).replyForFriendCommand(userId));
             }
             else{
-
+                System.out.println("1");
                 // normally will enter here
                 replyMessages.add(states.get(currentState).reply(userId, text, bot));
                 currentState = bot.getUservar(userId, "state");
                 currentTopic = bot.getUservar(userId, "topic");
+
+                System.out.println("2");
 
                 if (currentState.equals("recommend")) {
                     String[] splitString = (replyMessages.lastElement()).split("AAAAAAAAAA");                                       
@@ -179,9 +181,12 @@ public class StateManager {
                     replyMessages.add(recommendation);
                 }
 
+                System.out.println("3");
+
                 // reply button message for this specific case
                 if ( currentTopic.equals("provide_info_choose_history_or_nutrient") ) {
                     
+                System.out.println("4");
                     ButtonsTemplate buttonsTemplate = new ButtonsTemplate(
                             null, // image url
                             null, // title
@@ -194,10 +199,15 @@ public class StateManager {
                                     new PostbackAction("Leave",
                                                        "leave")
                             ));
+
+                System.out.println("5");
                     TemplateMessage templateMessage = new TemplateMessage("Button alt text", buttonsTemplate);
+
+                System.out.println("6");
                     replyList.add(templateMessage);
                     return replyList;
                 }
+                System.out.println("7");
 
 
             }
