@@ -206,7 +206,7 @@ public class StateManager {
                     ButtonsTemplate buttonsTemplate1 = new ButtonsTemplate(
                             null, // image url
                             null, // title
-                            replyMessages.get(0), // reply from rivescript
+                            replyMessages.get(0)+debugMessage.get(1), // reply from rivescript
                             Arrays.asList(
                                     new PostbackAction("Check",
                                                        "check_food_nutrient")
