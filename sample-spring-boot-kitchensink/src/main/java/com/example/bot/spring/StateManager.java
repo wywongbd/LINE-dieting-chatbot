@@ -195,7 +195,11 @@ public class StateManager {
                                                        "leave")
                             ));
                     TemplateMessage templateMessage = new TemplateMessage("Button alt text", buttonsTemplate);
+                    replyList.add(templateMessage);
+                    return replyList;
                 }
+
+
             }
         }
 
