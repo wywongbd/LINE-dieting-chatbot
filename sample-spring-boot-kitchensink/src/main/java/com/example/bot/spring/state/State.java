@@ -10,7 +10,7 @@ import com.rivescript.RiveScript;
 
 abstract class State {
 
-    private static SQLDatabaseEngine sql;
+    protected static SQLDatabaseEngine sql;
 
     static
     {
