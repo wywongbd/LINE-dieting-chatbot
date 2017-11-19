@@ -23,7 +23,7 @@
     // trigger to input_menu state (possibly go to recommend state later)
     + [*] (input|eating|restaurant|help me|look|check out|menu|recommend|recommendation|suggest|suggestion|decide|should|what to eat) [*]
     - Please let me have a look at your menu first. You can take a photo, or share the menu url with me.
-        ^ If you want to input menu in text, pls input food only and separate them by a comma.{topic=input_menu}<set state=input_menu>
+        ^ If you want to input menu using text, pls input food only and separate them by a comma.{topic=input_menu}<set state=input_menu>
 
     // trigger to record what the user ate
     + [*] (ate|have eaten|has eaten|had eaten|record|last meal|finished|finish|@meals) [*]
@@ -84,7 +84,8 @@
         ^ - weight
         ^ - height
         ^ - allergy
-        ^ Type "cancel" if you want to cancel the update
+        ^ - health goal
+        ^ Type "cancel" if you want to cancel this update activity
 
     + cancel
     - You have cancelled the update of information.<set state=standby>{topic=standby}
