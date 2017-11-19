@@ -127,13 +127,14 @@ public class DietbotController {
         String replyToken = event.getReplyToken();
         String userId = event.getSource().getUserId();
         String data = event.getPostbackContent().getData();
+        String date = event.getPostbackContent().getParams().toString();
         List<Message> replyList = null;
-
+        date = date.replace("{date=").replace("}", "");
 
         try {
-        	
+
 			replyList = stateManager.chat(userId, data, true);
-	        this.reply(replyToken, new TextMessage(data + event.getPostbackContent().getParams().toString()));
+	        this.reply(replyToken, new TextMessage(data + date));
 
     	} catch (Exception e) {
     		this.replyText(replyToken, defaultString);

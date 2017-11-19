@@ -2,10 +2,10 @@
 
 > topic provide_info_choose_history_or_nutrient
     
-    + [*] nutrient history [*]
+    + [*] [nutrient] history [*]
     - Please click to enter the starting date of your query.{topic=provide_info_nutrient_history}
 
-    + [*] food nutrient [*]
+    + [*] food [nutrient] [*]
     - Please enter a food to proceed.{topic=provide_info_food_nutrient}
 
     + [*] leave [*]
@@ -32,7 +32,7 @@
 
     + *
     - call function here to get nutrient of that food{topic=standby}<set state=standby>
-    
+
     + [*] leave [*]
     - OK. Tell me when you need help~~~~{topic=standby}<set state=standby>
 
