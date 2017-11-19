@@ -148,10 +148,15 @@ public class StateManager {
         String currentTopic = null;
         String userStatus = syncRiveScriptWithSQL(userId);
         List<Message> replyList = new ArrayList<Message>(0);
+            System.out.println("-2");
 
         if (userStatus.equals("NEW USER")) {
+            
+            System.out.println("-1");
             bot.setUservar(userId, "state", "collect_user_info");
             replyMessages.add(states.get("collect_user_info").reply(userId, text, bot));
+
+            System.out.println("0");
         }
         else if (userStatus.equals("REGISTERED USER")){
             currentState = bot.getUservar(userId, "state");
