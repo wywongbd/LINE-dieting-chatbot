@@ -16,7 +16,7 @@ import java.util.Vector;
 public class RecommendFriendState extends State {
     // Constant values
     private static final String FRIEND_TRIGGER = "friend";
-    private static final String CODE_TRIGGER_REGEX = "^\\code\\b \\d+$";
+    private static final String DIGIT_REGEX = "[0-9]+";
 
     /**
      * Default constructor for RecommendFriendState
@@ -29,10 +29,17 @@ public class RecommendFriendState extends State {
 		if(text.equals(FRIEND_TRIGGER)) {
 			return "FRIEND";
 		}
-		if(text.matches(CODE_TRIGGER_REGEX)) {
-			return "CODE";
-		}
-		return null;
+        else{
+            String[] splitText = text.split(" ");
+            if(splitText.size == 2
+                && splitText[0].equals("code")
+                && splitText[1].matches(DIGIT_REGEX)){
+                return "CODE";
+            }
+            else{
+                return "nothing";
+            }
+        }
     }
 
     public String decodeCodeMessage(String text) {
