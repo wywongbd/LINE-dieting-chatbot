@@ -98,6 +98,8 @@ public class DietbotTester {
 		databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, new ArrayList<String>(), "normal", "testTopic", "testState");
 		databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, "normal", "testTopic", "testState");
 		databaseEngine.writeUserInfo("testUserHistory", 21, "male", 1.73, 65, allergies, "normal", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserGoalLittle", 22, "male", 1.69, 69, allergies, "little_diet", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserGoalSerious", 23, "male", 1.71, 68, allergies, "serious_diet", "testTopic", "testState");
 		databaseEngine.addMenu("testUser", menu);
 		databaseEngine.addRecommendations("testUser");
 	}
@@ -114,6 +116,10 @@ public class DietbotTester {
 		databaseEngine.reset("testUserAllergy", "userallergies");
 		databaseEngine.reset("testUserHistory", "userinfo");
 		databaseEngine.reset("testUserHistory", "userallergies");
+		databaseEngine.reset("testUserGoalLittle", "userinfo");
+		databaseEngine.reset("testUserGoalLittle", "userallergies");
+		databaseEngine.reset("testUserGoalSerious", "userinfo");
+		databaseEngine.reset("testUserGoalSerious", "userallergies");
 	}
 
 	
@@ -225,16 +231,17 @@ public class DietbotTester {
 	@Test
 	public void testReset() {
 		ArrayList<String> menu = new ArrayList<String>();
-		menu.add("frozen water");
-		menu.add("molten ice");
+		menu.add("fish and chips");
+		menu.add("sausages and chicken wings");
 
 		this.databaseEngine.addMenu("testUserAddReset", menu);
 		this.databaseEngine.addRecommendations("testUserAddReset");
 		this.databaseEngine.reset("testUserAddReset", "menu");
 		this.databaseEngine.reset("testUserAddReset", "recommendations");
-		assertThat(this.databaseEngine.getMenu("testUserAddReset", "frozen")).isEqualTo(null);
-		assertThat(this.databaseEngine.getMenu("testUserAddReset", "molten")).isEqualTo(null);
-		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "frozen")).isEqualTo(null);
+		assertThat(this.databaseEngine.getMenu("testUserAddReset", "fish")).isEqualTo(null);
+		assertThat(this.databaseEngine.getMenu("testUserAddReset", "sausage")).isEqualTo(null);
+		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "fish")).isEqualTo(null);
+		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "sausage")).isEqualTo(null);
 	}
 
 
@@ -303,9 +310,41 @@ public class DietbotTester {
 		assertThat(this.databaseEngine.getWeightage("testUserHistory", "apple")).isEqualTo(0.5);
 		assertThat(this.databaseEngine.getWeightage("testUserHistory", "banana")).isEqualTo(1);
 		assertThat(this.databaseEngine.getWeightage("testUserHistory", "orange")).isEqualTo(2);
+
 		this.databaseEngine.reset("testUserHistory", "menu");
 		this.databaseEngine.reset("testUserHistory", "recommendations");
 		this.databaseEngine.reset("testUserHistory", "eating_history");
+	}
+
+
+	@Test
+	public void processRecommendationsByGoal() {
+		ArrayList<String> menu = new ArrayList<String>();
+		menu.add("apple");
+		menu.add("broccoli");
+		menu.add("cereal");
+		menu.add("chicken");
+
+		this.databaseEngine.addMenu("testUserGoalLittle", menu);
+		this.databaseEngine.addRecommendations("testUserGoalLittle");
+		this.databaseEngine.addMenu("testUserGoalSerious", menu);
+		this.databaseEngine.addRecommendations("testUserGoalSerious");
+		this.databaseEngine.processRecommendationsByGoal("testUserGoalLittle");
+		this.databaseEngine.processRecommendationsByGoal("testUserGoalSerious");
+
+		assertThat(this.databaseEngine.getWeightage("testUserGoalLittle", "apple")).isEqualTo(1);
+		assertThat(this.databaseEngine.getWeightage("testUserGoalLittle", "broccoli")).isEqualTo(1);
+		assertThat(this.databaseEngine.getWeightage("testUserGoalLittle", "cereal")).isEqualTo(0.7);
+		assertThat(this.databaseEngine.getWeightage("testUserGoalLittle", "chicken")).isEqualTo(0.8);
+		assertThat(this.databaseEngine.getWeightage("testUserGoalSerious", "apple")).isEqualTo(1.2);
+		assertThat(this.databaseEngine.getWeightage("testUserGoalSerious", "broccoli")).isEqualTo(1.2);
+		assertThat(this.databaseEngine.getWeightage("testUserGoalSerious", "cereal")).isEqualTo(0.5);
+		assertThat(this.databaseEngine.getWeightage("testUserGoalSerious", "chicken")).isEqualTo(0.6);
+
+		this.databaseEngine.reset("testUserGoalLittle", "menu");
+		this.databaseEngine.reset("testUserGoalLittle", "recommendations");
+		this.databaseEngine.reset("testUserGoalSerious", "menu");
+		this.databaseEngine.reset("testUserGoalSerious", "recommendations");
 	}
 
 
@@ -512,49 +551,49 @@ public class DietbotTester {
 	// }
 
 
-	@Test
-	public void testOCR() throws Exception{
+	// @Test
+	// public void testOCR() throws Exception{
 
-		boolean thrown = false;
-		String ans1 = null;
-		String ans2 = null;
-		String output1 = null;
-		String output2 = null;
-		final String path1 = "final-sample-menu-1.jpg";
-		final String path2 = "final-sample-menu-2.jpg";
-		final String realOutput1 = "splcy bean curd wllh mlnced pork served wllh rice\n" + 
-				"sweet sour fork sewed thn rce\n" + 
-				"chlh chlcken che\n" + 
-				"fried instance needle luncheon meat";
-		final String realOutput2 = "shortbread\n" + 
-				"puddle cookie\n" + 
-				"cookie\n" + 
-				"macaroon\n" + 
-				"biscotti\n" + 
-				"ginger choc teabread\n" + 
-				"organic bliss cookie\n" + 
-				"loralyn bar\n" + 
-				"muffin\n" + 
-				"croissant\n" + 
-				"organic bliss teabread\n" + 
-				"glutenfree teabread\n" + 
-				"cinnamon roll\n" + 
-				"scone\n" + 
-				"bear claw\n" + 
-				"boulder cookiett\n" + 
-				"brownie\n" + 
-				"almond chocolate croissant\n" + 
-				"ham cheese croissant";
-		try{
-			InputMenuState obj = new InputMenuState();
-			ans1 = obj.ocrImagePath(path1);
-			ans2 = obj.ocrImagePath(path2);
-		} catch (Exception e) {
-			thrown = true;
-		}
-		assertThat(ans1.contains(realOutput1));
-		assertThat(ans2.contains(realOutput2));
-	}
+	// 	boolean thrown = false;
+	// 	String ans1 = null;
+	// 	String ans2 = null;
+	// 	String output1 = null;
+	// 	String output2 = null;
+	// 	final String path1 = "final-sample-menu-1.jpg";
+	// 	final String path2 = "final-sample-menu-2.jpg";
+	// 	final String realOutput1 = "splcy bean curd wllh mlnced pork served wllh rice\n" + 
+	// 			"sweet sour fork sewed thn rce\n" + 
+	// 			"chlh chlcken che\n" + 
+	// 			"fried instance needle luncheon meat";
+	// 	final String realOutput2 = "shortbread\n" + 
+	// 			"puddle cookie\n" + 
+	// 			"cookie\n" + 
+	// 			"macaroon\n" + 
+	// 			"biscotti\n" + 
+	// 			"ginger choc teabread\n" + 
+	// 			"organic bliss cookie\n" + 
+	// 			"loralyn bar\n" + 
+	// 			"muffin\n" + 
+	// 			"croissant\n" + 
+	// 			"organic bliss teabread\n" + 
+	// 			"glutenfree teabread\n" + 
+	// 			"cinnamon roll\n" + 
+	// 			"scone\n" + 
+	// 			"bear claw\n" + 
+	// 			"boulder cookiett\n" + 
+	// 			"brownie\n" + 
+	// 			"almond chocolate croissant\n" + 
+	// 			"ham cheese croissant";
+	// 	try{
+	// 		InputMenuState obj = new InputMenuState();
+	// 		ans1 = obj.ocrImagePath(path1);
+	// 		ans2 = obj.ocrImagePath(path2);
+	// 	} catch (Exception e) {
+	// 		thrown = true;
+	// 	}
+	// 	assertThat(ans1.contains(realOutput1));
+	// 	assertThat(ans2.contains(realOutput2));
+	// }
 
 
 	// @Test

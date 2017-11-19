@@ -398,6 +398,7 @@ public class SQLDatabaseEngine {
 					"userid, " +
 					"menu.meal_name, " +
 					"food_type.food, " +
+					"food_type.type, " +
 					"similarity(menu.meal_name, food_type.food) AS sim, " +
 					"? AS weightage " +
 				"FROM menu " +
@@ -485,17 +486,16 @@ public class SQLDatabaseEngine {
 				"WITH daily_intake AS ( " + 
 					"SELECT userinfo.userid, description, daily_serve " + 
 					"FROM ( " + 
-						"SELECT userid, description " + 
+						"SELECT userid, description, food_type " + 
 						"FROM recommendations " + 
 						"WHERE userid = ? " + 
 					") AS R " + 
-					"JOIN food_type ON description LIKE CONCAT('%', food, '%') " + 
 					"JOIN userinfo ON R.userid = userinfo.userid " + 
 					"JOIN recommended_intake RI " + 
 						"ON userinfo.age >= RI.age_min " + 
 						"AND userinfo.age <= RI.age_max " + 
 						"AND userinfo.gender = RI.gender " + 
-						"AND food_type.type = RI.type " + 
+						"AND R.food_type = RI.type " + 
 				") " + 
 				"UPDATE recommendations " + 
 				"SET weightage = daily_intake.daily_serve " + 
@@ -525,7 +525,7 @@ public class SQLDatabaseEngine {
 		PreparedStatement stmtQuery = null;
 		PreparedStatement stmtUpdate = null;
 		ResultSet rs = null;
-		
+
 		try {
 			connection = this.getConnection();
 			
@@ -570,6 +570,58 @@ public class SQLDatabaseEngine {
 			}
 		}
 	}
+
+
+	// Adjusts the weightages of meals corresponding to the user in the recommendations table based on their dieting goals
+	public void processRecommendationsByGoal(String userId) {
+		Connection connection = null;
+		String diet = null;
+		PreparedStatement stmtQuery = null;
+		PreparedStatement stmtUpdate = null;
+		ResultSet rs = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Retrieves the user's dieting goals
+			stmtQuery = connection.prepareStatement(
+				"SELECT diet " +
+				"FROM userinfo " +
+				"WHERE userid = ?"
+			);
+			stmtQuery.setString(1, userId);
+			rs = stmtQuery.executeQuery();
+			while (rs.next()) {
+				diet = rs.getString(1);
+			}
+
+			// Adjusts the weightages of meals of the user in the recommendations table based on the user's dieting goals, if their diet is not "normal"
+			if (!diet.equals("normal")) {
+				stmtUpdate = connection.prepareStatement(
+					"UPDATE recommendations R " + 
+					"SET weightage = R.weightage * FDW.weightage " + 
+					"FROM food_diet_weightage FDW " +
+					"WHERE FDW.diet = ? " +
+						"AND R.userid = ? " +
+						"AND R.food_type = FDW.food"
+				);
+				stmtUpdate.setString(1, diet);
+				stmtUpdate.setString(2, userId);
+				stmtUpdate.executeUpdate();
+			}
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (Exception e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+	}	
 	
 	
 	// Returns a HashMap of meal recommendations corresponding to the user
