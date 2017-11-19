@@ -44,7 +44,7 @@ public class StateManager {
         states.put("post_eating", new PostEatingState());
         states.put("update_user_info", new UpdateUserInfoState());
         states.put("admin", new AdminState());
-        states.put("recommend_friend", new RecommendFriendState();)
+        states.put("recommend_friend", new RecommendFriendState());
 
         adminAccessing = false;
     };
