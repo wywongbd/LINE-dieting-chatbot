@@ -32,6 +32,9 @@
 
     + *
     - call function here to get nutrient of that food{topic=standby}<set state=standby>
+    
+    + [*] leave [*]
+    - OK. Tell me when you need help~~~~{topic=standby}<set state=standby>
 
 < topic
 
