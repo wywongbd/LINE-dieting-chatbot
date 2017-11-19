@@ -47,7 +47,7 @@ public class CollectUserInfoState extends State {
 				}
 			}
 			
-			sql.writeUserInfo(userId, age, gender, height, weight, allergies, topic, state);
+			sql.writeUserInfo(userId, age, gender, height, weight, allergies, "normal", topic, state);
 		}
                
 		syncSQLWithRiveScript(userId, bot);

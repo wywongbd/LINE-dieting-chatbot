@@ -40,7 +40,7 @@ public class SQLDatabaseEngine {
 	 * Unit for height: m
 	 * Unit for weight: kg
 	 */
-	public void writeUserInfo(String userId, int age, String gender, double height, double weight, ArrayList<String> allergies, String topic, String state) {
+	public void writeUserInfo(String userId, int age, String gender, double height, double weight, ArrayList<String> allergies, String diet, String topic, String state) {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
 		
@@ -66,15 +66,16 @@ public class SQLDatabaseEngine {
 			// Insert user info into the database
 			stmtUpdate = connection.prepareStatement(
 				"INSERT INTO userinfo " +
-				"VALUES (?, ?, ?, ?, ?, ?, ?)"
+				"VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 			);
 			stmtUpdate.setString(1, userId);
 			stmtUpdate.setInt(2, age);
 			stmtUpdate.setString(3, gender);
 			stmtUpdate.setDouble(4, height);
 			stmtUpdate.setDouble(5, weight);
-			stmtUpdate.setString(6, topic);
-			stmtUpdate.setString(7, state);
+			stmtUpdate.setString(6, diet);
+			stmtUpdate.setString(7, topic);
+			stmtUpdate.setString(8, state);
 			stmtUpdate.executeUpdate();
 
 			// Insert user allergies into the database if they have any
@@ -1035,6 +1036,73 @@ public class SQLDatabaseEngine {
 			rs = stmtQuery.executeQuery(); 
 			while(rs.next()) {
 				result.add(rs.getString(1));
+			}
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
+			} catch (Exception ex) {
+				log.info("Exception while closing connection of database: {}", ex.toString());
+			}
+		}
+		return result;
+	}
+
+
+	// Sets the isopen value of is_campaign_open
+	public void setCampaign(int state) {
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		String statement = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Delete url if it already exists
+			stmtUpdate = connection.prepareStatement(
+				"DELETE FROM is_campaign_open"
+			);
+			stmtUpdate.executeUpdate();
+
+			// Insert campaign state into database
+			stmtUpdate = connection.prepareStatement(
+				"INSERT INTO is_campaign_open " +
+				"VALUES (?)"
+			);
+			stmtUpdate.setInt(1, state);
+			stmtUpdate.executeUpdate();
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (Exception e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+	}
+
+
+	// Returns true if campaign is open, returns false otherwise
+	public int isCampaignOpen() {
+		Connection connection = null;
+		PreparedStatement stmtQuery = null;
+		ResultSet rs = null;
+		int result = 0;
+		try {
+			connection = this.getConnection();
+
+			stmtQuery = connection.prepareStatement(
+				"SELECT isopen " +
+				"FROM is_campaign_open"
+			);
+			rs = stmtQuery.executeQuery(); 
+			while(rs.next()) {
+				result = rs.getInt(1);
 			}
 		} catch (Exception e) {
 			log.info("Exception while connecting to database: {}", e.toString());

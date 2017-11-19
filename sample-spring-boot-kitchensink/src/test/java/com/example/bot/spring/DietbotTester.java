@@ -94,10 +94,10 @@ public class DietbotTester {
 		ArrayList<String> allergies = new ArrayList<String>();
 		allergies.add("seafood");
 
-		databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, new ArrayList<String>(), "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserHistory", 21, "male", 1.73, 65, allergies, "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "normal", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, new ArrayList<String>(), "normal", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, "normal", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserHistory", 21, "male", 1.73, 65, allergies, "normal", "testTopic", "testState");
 		databaseEngine.addMenu("testUser", menu);
 		databaseEngine.addRecommendations("testUser");
 	}
@@ -121,7 +121,7 @@ public class DietbotTester {
 	public void writeUserInfoExisting() {
 		ArrayList<String> allergies = null;
 
-		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "testTopic", "testState");
+		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "normal", "testTopic", "testState");
 		assertThat(this.databaseEngine.searchUser("testUser", "userinfo")).isEqualTo(true);
 	}
 	
@@ -131,7 +131,7 @@ public class DietbotTester {
 		ArrayList<String> allergies = new ArrayList<String>();
 		allergies.add("milk");
 
-		this.databaseEngine.writeUserInfo("testUserNonExisting", 21, "female", 1.64, 55, allergies, "testTopic", "testState");
+		this.databaseEngine.writeUserInfo("testUserNonExisting", 21, "female", 1.64, 55, allergies, "normal", "testTopic", "testState");
 		assertThat(this.databaseEngine.searchUser("testUserNonExisting", "userinfo")).isEqualTo(true);
 		this.databaseEngine.deleteUserInfo("testUserNonExisting");
 	}
@@ -382,6 +382,15 @@ public class DietbotTester {
 
 
 	@Test
+	public void setCampaign() {
+		this.databaseEngine.setCampaign(1);
+		assertThat(this.databaseEngine.isCampaignOpen()).isEqualTo(1);
+		this.databaseEngine.setCampaign(0);
+		assertThat(this.databaseEngine.isCampaignOpen()).isEqualTo(0);
+	}
+
+
+	@Test
 	public void testNewRivescript() throws Exception {
 		bot = new RiveScript();
 		File resourcesDirectory = new File("src/test/resources/rivescript");
@@ -395,6 +404,7 @@ public class DietbotTester {
 		String reply = bot.reply("user2", "can you tell me my id");
 		assertThat(reply).isEqualTo("user2");
 	}
+
 
 	// to test how to use RiveScript with different users and get user variables
 	// that have been set before or not.
@@ -440,6 +450,7 @@ public class DietbotTester {
 		assertThat(weight).isEqualTo("200");
 	}
 
+
 	public class MyTestingSubroutine implements Subroutine {
 		
  		public String call(RiveScript rs, String[] args) {
@@ -449,6 +460,7 @@ public class DietbotTester {
  		}
  	}
  
+
  	// to test how to use RiveScript Subroutine
  	@Test
  	public void testRivescriptSubroutine() throws Exception {
@@ -464,6 +476,7 @@ public class DietbotTester {
  		assertThat(reply1).isEqualTo("yes");
  	}
   	
+
 	@Test
 	public void convertHTMLTabletoJson() throws Exception{
 		
@@ -481,21 +494,23 @@ public class DietbotTester {
 		assertThat(output).isEqualTo(realOutput);
 	}
 	
-//	@Test
-//	public void testURLtoJSON() throws Exception{
-//		
-//		boolean thrown = false;
-//		String output = null;
-//		final String realOutput = "[apps snacks salads burgers sandwiches pairings desserts drinks, spinach queso dip, panseared pot stickers, chicken quesadilla, grilled salmon, flat iron steak, grilled salmon, flat iron steak, salads, soups, burger greenstyle, burgers sandwiches fries salad sweet potato fries instead, steaks ribs, pastas, chicken seafood, slushes, smoothies, freshly brewed teas, juices, handcrafted alcoholfree beverages made fruit pures natural flavors, refills freshly brewed teas slushes, fruit teas, slushes, drink options, casamigos strawberry rita, boba long island tea, sangria rita, peach sangria, crown apple cooler, tropical berry mojito shaker, tap drafts, happy tell what other local craft beers, bottles cans, red, white, bubbles, bottle selections, glutensensitive, tgi fridays franchisor llc drink responsibly locations see]";
-//		try{
-//			final String urlString = "https://tgifridays.com/menu/dine-in/";
-//			HTMLStringPreprocessing h = new HTMLStringPreprocessing();
-//			output =Arrays.toString(h.processURLRawContent((h.readFromUrl(urlString))).toArray());
-//		} catch (Exception e) {
-//			thrown = true;
-//		}
-//		assertThat(output).isEqualTo(realOutput);
-//	}
+
+	// @Test
+	// public void testURLtoJSON() throws Exception{
+		
+	// 	boolean thrown = false;
+	// 	String output = null;
+	// 	final String realOutput = "[apps snacks salads burgers sandwiches pairings desserts drinks, spinach queso dip, panseared pot stickers, chicken quesadilla, grilled salmon, flat iron steak, grilled salmon, flat iron steak, salads, soups, burger greenstyle, burgers sandwiches fries salad sweet potato fries instead, steaks ribs, pastas, chicken seafood, slushes, smoothies, freshly brewed teas, juices, handcrafted alcoholfree beverages made fruit pures natural flavors, refills freshly brewed teas slushes, fruit teas, slushes, drink options, casamigos strawberry rita, boba long island tea, sangria rita, peach sangria, crown apple cooler, tropical berry mojito shaker, tap drafts, happy tell what other local craft beers, bottles cans, red, white, bubbles, bottle selections, glutensensitive, tgi fridays franchisor llc drink responsibly locations see]";
+	// 	try{
+	// 		final String urlString = "https://tgifridays.com/menu/dine-in/";
+	// 		HTMLStringPreprocessing h = new HTMLStringPreprocessing();
+	// 		output =Arrays.toString(h.processURLRawContent((h.readFromUrl(urlString))).toArray());
+	// 	} catch (Exception e) {
+	// 		thrown = true;
+	// 	}
+	// 	assertThat(output).isEqualTo(realOutput);
+	// }
+
 
 	@Test
 	public void testOCR() throws Exception{
