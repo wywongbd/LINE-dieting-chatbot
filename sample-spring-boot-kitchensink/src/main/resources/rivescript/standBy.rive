@@ -50,7 +50,8 @@
         ^ - gender
         ^ - weight
         ^ - height
-        ^ - allergy{topic=update_user_info_select_variable}
+        ^ - allergy
+        ^ - health goal{topic=update_user_info_select_variable}
 
     + @no [*]
     - OK. Tell me when you need help~~~~{topic=standby}<set state=standby>
@@ -62,13 +63,17 @@
 // still in standby state
 > topic update_user_info_select_variable
 
-    + [*] (name|age|gender|weight|height|allergy) [*]
+    + [*] (name|age|gender|weight|height|allergy|health goal) [*]
     * <star> == name    => What is your name?{topic=update_user_name}
     * <star> == age     => What is your age?{topic=update_user_age}
     * <star> == gender  => What is your gender?{topic=update_user_gender}
     * <star> == weight  => What is your weight?{topic=update_user_weight}
     * <star> == height  => What is your height?{topic=update_user_height}
     * <star> == allergy => Are you allergic to milk? (Yes/No){topic=update_user_allergy_milk}
+    * <star> == health goal => From a scale of 1 to 3, how urgent are you in cutting down your weight? Please input 1, 2 or 3. 
+                                ^ - 1. I am ok with my current weight, but slimming down just a little would be perfect.
+                                ^ - 2. I am not satisfied with my current weight, I hope to lose weight significantly to be more healthy.
+                                ^ - 3. I am in an emergency and I need to lose weight immediately, the sooner the better!{topic=update_user_goal}
     - This is a bug.
 
     + *
