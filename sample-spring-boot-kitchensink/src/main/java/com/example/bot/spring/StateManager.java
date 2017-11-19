@@ -59,15 +59,15 @@ public class StateManager {
         bot.setSubroutine("setVariableToDB", new setVariableToDB());
     }
 
-    public void updateBot(String userId){
+    public void syncRiveScriptWithSQL(String userId){
         bot.setUservar(userId, "topic", sql.getUserInfo(userId, "topic"));
         bot.setUservar(userId, "state", sql.getUserInfo(userId, "state"));
     }
 
-    public void debugMessage(String userId, Vector<String> replyText, boolean debug){
+    public void debugMessage(String userId, Vector<String> replyMessages, boolean debug){
         if(debug == true) {
-            replyText.add("Current state is " + bot.getUservar(userId, "state"));
-            replyText.add("Current topic is " + bot.getUservar(userId, "topic"));
+            replyMessages.add("Current state is " + bot.getUservar(userId, "state"));
+            replyMessages.add("Current topic is " + bot.getUservar(userId, "topic"));
         }
     }
 
@@ -77,9 +77,8 @@ public class StateManager {
      * @return A String data type
      */
     public Vector<String> chat(String userId, String text, boolean debug) throws Exception {
-    	Vector<String> replyText = new Vector<String>(0);
+    	Vector<String> replyMessages = new Vector<String>(0);
         String currentState = null;        
-        String currentTopic = null;
         boolean isRegisteredUser = true;
         isRegisteredUser = sql.searchUser(userId, "userinfo");
 
@@ -94,9 +93,8 @@ public class StateManager {
         else{
             System.out.println("chatText: Point 1b");
 
-            updateBot(userId);
+            syncRiveScriptWithSQL(userId);
             currentState = bot.getUservar(userId, "state");
-            currentTopic = bot.getUservar(userId, "topic");
             bot.setUservar(userId, "met", "true");
         }
 
@@ -109,30 +107,30 @@ public class StateManager {
             System.out.println("chatText: Point 2a");
 
             adminAccessing = true;
-            replyText.add(states.get("admin").reply(userId, text, bot));
+            replyMessages.add(states.get("admin").reply(userId, text, bot));
         }
         else{
             System.out.println("chatText: Point 2b");
 
-            replyText.add(states.get(currentState).reply(userId, text, bot));
+            replyMessages.add(states.get(currentState).reply(userId, text, bot));
         }
 
         currentState = bot.getUservar(userId, "state");
 
         if(currentState.equals("recommend")) {            	
-        	String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");       	            	          	
-        	replyText.add(0, splitString[0]);         	          	
-        	replyText.remove(replyText.size() - 1);
+        	String[] splitString = (replyMessages.lastElement()).split("AAAAAAAAAA");       	            	          	
+        	replyMessages.add(0, splitString[0]);         	          	
+        	replyMessages.remove(replyMessages.size() - 1);
         
         	String temp = states.get(currentState).reply(userId, splitString[1], bot);           	
-        	replyText.add(temp);
+        	replyMessages.add(temp);
         }
         
         System.out.println("chatText: Point 3");
 
-        if(replyText.size() > 0) {
-            debugMessage(userId, replyText, debug)
-        	return replyText;
+        if(replyMessages.size() > 0) {
+            debugMessage(userId, replyMessages, debug)
+        	return replyMessages;
         }
         else{
             throw new Exception("NOT FOUND");
@@ -145,33 +143,31 @@ public class StateManager {
      * @return A String data type
      */
     public Vector<String> chat(String userId, DownloadedContent jpg, boolean debug) throws Exception {
-    	Vector<String> replyText = new Vector<String>(0);
+    	Vector<String> replyMessages = new Vector<String>(0);
     	String currentState = null;        
-        String currentTopic = null;
         boolean isRegisteredUser = true;
         isRegisteredUser = sql.searchUser(userId, "userinfo");
 
         if (!isRegisteredUser) {
-            replyText.add("Please finish giving us your personal information before sharing photos!");
-            return replyText;
+            replyMessages.add("Please finish giving us your personal information before sharing photos!");
+            return replyMessages;
         }
         else{
-        	updateBot(userId);
+        	syncRiveScriptWithSQL(userId);
             currentState = bot.getUservar(userId, "state");
-            currentTopic = bot.getUservar(userId, "topic");
             
             if (currentState.equals("update_user_info")){
-                replyText.add("Please finish updating your personal information before sharing photos!");
-                return replyText;
+                replyMessages.add("Please finish updating your personal information before sharing photos!");
+                return replyMessages;
             }
         }
 
         if (currentState.equals("input_menu") || currentState.equals("standby")){
             if (adminAccessing == false) {
-                replyText.add(((InputMenuState) states.get("input_menu")).replyImage(userId, jpg, bot));
+                replyMessages.add(((InputMenuState) states.get("input_menu")).replyImage(userId, jpg, bot));
             }
             else{
-                replyText.add(((AdminState) states.get("admin")).replyImage(userId, jpg, bot));
+                replyMessages.add(((AdminState) states.get("admin")).replyImage(userId, jpg, bot));
                 adminAccessing = false;
             }
         }
@@ -179,17 +175,17 @@ public class StateManager {
         currentState = bot.getUservar(userId, "state");
         
         if(currentState.equals("recommend")) {               
-            String[] splitString = (replyText.lastElement()).split("AAAAAAAAAA");                                       
-            replyText.add(0, splitString[0]);                       
-            replyText.remove(replyText.size() - 1);
+            String[] splitString = (replyMessages.lastElement()).split("AAAAAAAAAA");                                       
+            replyMessages.add(0, splitString[0]);                       
+            replyMessages.remove(replyMessages.size() - 1);
         
             String temp = states.get(currentState).reply(userId, splitString[1], bot);              
-            replyText.add(temp);
+            replyMessages.add(temp);
         }
 
-        if(replyText.size() > 0) {
-            debugMessage(userId, replyText, debug)
-            return replyText;
+        if(replyMessages.size() > 0) {
+            debugMessage(userId, replyMessages, debug)
+            return replyMessages;
         }
         else{
             throw new Exception("NOT FOUND");
