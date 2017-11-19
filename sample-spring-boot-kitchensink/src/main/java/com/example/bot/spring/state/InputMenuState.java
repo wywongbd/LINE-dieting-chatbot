@@ -3,6 +3,7 @@ package com.example.bot.spring;
 import com.example.bot.spring.DietbotController.DownloadedContent;
 import com.example.bot.spring.OCRStringPreprocessing;
 import com.example.bot.spring.HTMLStringPreprocessing;
+import com.example.bot.spring.JSONPreprocessing;
 import com.rivescript.RiveScript;
 import com.asprise.ocr.Ocr;
 import java.io.File;
@@ -68,23 +69,35 @@ public class InputMenuState extends State {
      * @return A String data type
      */
     public String replyUrl(String text) throws Exception {
+    	// this is HTML content
 //    		try{
-  			HTMLStringPreprocessing h = new HTMLStringPreprocessing();
-  			ArrayList<String> URLRawContent = h.readFromUrl(text);
-  			ArrayList<String> processedUrlContent = h.processURLRawContent(URLRawContent);
-
-  			// Convert to string to be replied as message for testing
-  			return Arrays.toString(processedUrlContent.toArray());
+//  			HTMLStringPreprocessing h = new HTMLStringPreprocessing();
+//  			ArrayList<String> URLRawContent = h.readFromUrl(text);
+//  			ArrayList<String> processedUrlContent = h.processURLRawContent(URLRawContent); 
+//  			
+//  			// Convert to string to be replied as message for testing
+//  			return Arrays.toString(processedUrlContent.toArray()); // this follows from proceddesURLRawContent
+//  			
 //  		  } catch(Exception e){ 
-  			  //TODO: handle user input invalid url
+//  			  //TODO: handle user input invalid url
 //  			  return "Your text has been well received! This URL is not reachable :(";
 //  		  }
-    }
+    	JSONPreprocessing j = new JSONPreprocessing();
+    	String response = "";
+    	try {
+    		response += j.getNameFromJSON(text);  
+    	}
+    	catch (Exception e){ 
+    		return "Not a JSON Website! :(";
+    	}
+    	 
+    	return response;
+    } 
     
     /**
      * Reply a message for input image
      * Overload the function inherited from abstract base class
-     * @param jpg A DownloadedContent data type
+     * @param jpg A DownloadedContent data type 
      * @return A String data type
      */
     public String replyImage(String userId, DownloadedContent jpg, RiveScript bot) {
