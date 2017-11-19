@@ -179,6 +179,23 @@
 
 < topic
 
+> topic update_user_goal
 
+    + 1
+    - <set diet=little_diet>Alright, I'll note that down.<set state=standby>{topic=standby}<call>setVariableToDB diet little_diet <id> </call>
+    
+    + 2
+    - <set diet=normal>Alright, thanks for updating me.<set state=standby>{topic=standby}<call>setVariableToDB diet normal <id> </call>
+
+    + 3
+    - <set diet=serious_diet>Great, thanks for updating.<set state=standby>{topic=standby}<call>setVariableToDB diet serious_diet <id> </call>
+
+    + *
+    - Sorry, I do not understand, could you try again? From a scale of 1 to 3, how urgent are you in cutting down your weight? Please input 1, 2 or 3. 
+        ^ - 1. I am ok with my current weight, but slimming down just a little would be perfect.
+        ^ - 2. I am not satisfied with my current weight, I hope to lose weight significantly to be more healthy.
+        ^ - 3. I am in an emergency and I need to lose weight immediately, the sooner the better!
+
+< topic
 
 ///////////////////////////////////////update_user_info
