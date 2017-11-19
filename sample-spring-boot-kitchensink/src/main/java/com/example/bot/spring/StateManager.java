@@ -71,10 +71,12 @@ public class StateManager {
             return "REGISTERED USER";
         }
         else{
-            if (!bot.getUservar(userId, "state").equals("collect_user_info") && bot.getUservar(userId, "state") != null){
-                // rivescript still recognize this uesr, but DB doesn't -> set rivescript to default topic & state
-                bot.setUservar(userId, "state", "collect_user_info");
-                bot.setUservar(userId, "topic", "new_user");
+            if (bot.getUservar(userId, "state") != null){
+                if (!bot.getUservar(userId, "state").equals("collect_user_info")){
+                    // rivescript still recognize this uesr, but DB doesn't -> set rivescript to default topic & state
+                    bot.setUservar(userId, "state", "collect_user_info");
+                    bot.setUservar(userId, "topic", "new_user");
+                }
             }
             return "NEW USER";
         }
