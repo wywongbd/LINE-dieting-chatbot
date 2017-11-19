@@ -59,20 +59,10 @@ public class InputMenuState extends State {
 			bot.setUservar(userId, "url_received", "false");
             // bot.setUservar(userId, "text_menu_received", "true");
 			replyText = bot.reply(userId, text);
-
-            if(bot.getUservar(userId, "text_menu_received") != null){
-                if(bot.getUservar(userId, "text_menu_received").equals("true")){
-                    bot.setUservar(userId, "state", "recommend");
-                    bot.setUservar(userId, "topic", "recommend");
-
-                    replyText = replyText + "AAAAAAAAAA" + bot.getUservar(userId, "text_menu");
-
-                    bot.setUservar(userId, "text_menu_received", "false");
-                }
-            }
-
+            bot.setUservar(userId, "topic", "recommend");
+            bot.setUservar(userId, "state", "recommend");
             syncSQLWithRiveScript(userId, bot);
-			return replyText;
+			return replyText +  "AAAAAAAAAA" + text;
 		}
 	}
 
