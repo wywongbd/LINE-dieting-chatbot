@@ -322,8 +322,8 @@ public class StateManager {
         		result = sql.getNutritionInfo(args[0]);
 				resultString = args[0] + "(per 100g) contains "
 								+ "\n*energy: " + Double.toString(result.get(0)) + "kcal"
-								+ "\n*sodium: " + Double.toString(result.get(0)) + "mg"
-								+ "\n*fat: " 	+ Double.toString(result.get(0)) + "g";
+								+ "\n*sodium: " + Double.toString(result.get(1)) + "mg"
+								+ "\n*fat: " 	+ Double.toString(result.get(2)) + "g";
 				return resultString;
         	}
 
