@@ -78,7 +78,7 @@ public class RecommendFriendState extends State {
                 }
                 else{
                     System.out.println("actionForCodeCommand: last if");
-                    // Can claim code!!
+                    // Can claim code
                     sql.claimCode(userId, Integer.valueOf(code));
                     System.out.println("actionForCodeCommand: last if 2");
                     vec.add(requestUser);
