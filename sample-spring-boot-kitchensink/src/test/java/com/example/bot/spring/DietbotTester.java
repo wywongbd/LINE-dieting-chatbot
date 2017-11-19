@@ -423,9 +423,9 @@ public class DietbotTester {
 	@Test
 	public void setCampaign() {
 		this.databaseEngine.setCampaign(1);
-		assertThat(this.databaseEngine.isCampaignOpen()).isEqualTo(1);
+		assertThat(this.databaseEngine.isCampaignOpen()).isEqualTo(true);
 		this.databaseEngine.setCampaign(0);
-		assertThat(this.databaseEngine.isCampaignOpen()).isEqualTo(0);
+		assertThat(this.databaseEngine.isCampaignOpen()).isEqualTo(false);
 	}
 
 
@@ -437,6 +437,24 @@ public class DietbotTester {
 		assertThat(result.get(0)).isEqualTo(71);
 		assertThat(result.get(1)).isEqualTo(354);
 		assertThat(result.get(2)).isEqualTo(0.79);
+	}
+
+
+	@Test
+	public void claimCheatDay() {
+		this.databaseEngine.addUserEatingHistory("testUserCheatDay", "cheat day");
+		assertThat(this.databaseEngine.searchUser("testUserCheatDay", "eating_history")).isEqualTo(true);
+		assertThat(this.databaseEngine.getUserEatingHistory("testUserCheatDay", 1).get(0)).isEqualTo("cheat day");
+		this.databaseEngine.reset("testUserCheatDay", "eating_history");
+	}
+
+
+	@Test
+	public void canClaimCheatDay() {
+		assertThat(this.databaseEngine.canClaimCheatDay("testUserCanClaimCheatDay")).isEqualTo(true);
+		this.databaseEngine.addUserEatingHistory("testUserCanClaimCheatDay", "cheat day");
+		assertThat(this.databaseEngine.canClaimCheatDay("testUserCanClaimCheatDay")).isEqualTo(false);
+		this.databaseEngine.reset("testUserCanClaimCheatDay", "eating_history");
 	}
 
 
