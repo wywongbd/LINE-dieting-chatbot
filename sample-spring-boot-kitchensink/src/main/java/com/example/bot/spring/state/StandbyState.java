@@ -21,7 +21,8 @@ public class StandbyState extends State {
 		String currentState = bot.getUservar(userId, "state"); 
 		String output = bot.reply(userId, text);
 		String afterState = bot.getUservar(userId, "state");
-		
+
+		bot.setUservar(userId, "img_received", "false");
 		updateDatabase(userId, bot);
 		return output;
 	}

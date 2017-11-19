@@ -28,10 +28,12 @@ public class StateManager {
     public static final Map<String, State> states; 
     private static RiveScript bot;    
     private static boolean adminAccessing;
+    private static SQLDatabaseEngine sql;
 
     static
     {
         bot = new RiveScript();
+        sql = new SQLDatabaseEngine();
         
         states = new HashMap<String, State>();
         states.put("standby", new StandbyState());
@@ -58,9 +60,15 @@ public class StateManager {
     }
 
     public void updateBot(String userId){
-        SQLDatabaseEngine sql = new SQLDatabaseEngine();
         bot.setUservar(userId, "topic", sql.getUserInfo(userId, "topic"));
         bot.setUservar(userId, "state", sql.getUserInfo(userId, "state"));
+    }
+
+    public void debugMessage(String userId, Vector<String> replyText, boolean debug){
+        if(debug == true) {
+            replyText.add("Current state is " + bot.getUservar(userId, "state"));
+            replyText.add("Current topic is " + bot.getUservar(userId, "topic"));
+        }
     }
 
     /**
@@ -70,7 +78,6 @@ public class StateManager {
      */
     public Vector<String> chat(String userId, String text, boolean debug) throws Exception {
     	Vector<String> replyText = new Vector<String>(0);
-        SQLDatabaseEngine sql = new SQLDatabaseEngine();
         String currentState = null;        
         String currentTopic = null;
         boolean isRegisteredUser = true;
@@ -109,13 +116,12 @@ public class StateManager {
         }
 
         if(replyText.size() > 0) {
-        	if(debug == true) {
-        		replyText.add("Current state is " + bot.getUservar(userId, "state"));
-                replyText.add("Current topic is " + bot.getUservar(userId, "topic"));
-        	}
+            debugMessage(userId, replyText, debug)
         	return replyText;
         }
-        throw new Exception("NOT FOUND");
+        else{
+            throw new Exception("NOT FOUND");
+        }
     }
 
     /**
@@ -125,7 +131,6 @@ public class StateManager {
      */
     public Vector<String> chat(String userId, DownloadedContent jpg, boolean debug) throws Exception {
     	Vector<String> replyText = new Vector<String>(0);
-        SQLDatabaseEngine sql = new SQLDatabaseEngine();
     	String currentState = null;        
         String currentTopic = null;
         boolean isRegisteredUser = true;
@@ -168,13 +173,12 @@ public class StateManager {
         }
 
         if(replyText.size() > 0) {
-        	if(debug == true) {
-        		replyText.add("Current state is " +  bot.getUservar(userId, "state"));
-                replyText.add("Current topic is " +  bot.getUservar(userId, "topic"));
-        	}
-        	return replyText;
+            debugMessage(userId, replyText, debug)
+            return replyText;
         }
-        throw new Exception("NOT FOUND");
+        else{
+            throw new Exception("NOT FOUND");
+        }
     }
     
 
@@ -184,17 +188,13 @@ public class StateManager {
         // assume the order of parameter is: variable name, value1, ... , userID
         public String call(RiveScript rs, String[] args) {
 
-            SQLDatabaseEngine sql = new SQLDatabaseEngine();
-
             if ( args[0].equals("weight") || args[0].equals("height") ) {
-
                 // double
                 if ( args.length == 3 ) {
                     sql.setUserInfo(args[2], args[0], Double.parseDouble(args[1]));
                 }
 
             } else if ( args[0].equals("age") ) {
-
                 // integer
                 if ( args.length == 3 ) {
                     sql.setUserInfo(args[2], args[0], Integer.parseInt(args[1]));
