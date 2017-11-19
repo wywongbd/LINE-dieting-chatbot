@@ -201,6 +201,7 @@ public class DietbotController {
 				String code = recommendFriendState.decodeCodeMessage(text);
 				reply = recommendFriendState.actionForCodeCommand(userId, code);
 				if(reply.size() == 2) {
+					System.out.println("HandleTextContent: IF ");
 					String url = sql.getCouponUrl();
 					String requestUser = reply.get(0);
             		// String temp = reply.get(1);			
