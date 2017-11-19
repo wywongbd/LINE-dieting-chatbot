@@ -85,7 +85,7 @@ public class RecommendFriendState extends State {
                 else{
                     System.out.println("actionForCodeCommand: if 6");
                     vec.add(requestUser);
-                    vec.add(" ");    // To indicate that it is successful
+                    vec.add(" ");    // To indicate that it's successful
                 }
             }
         }
