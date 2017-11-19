@@ -423,9 +423,38 @@ public class DietbotTester {
 	@Test
 	public void setCampaign() {
 		this.databaseEngine.setCampaign(1);
-		assertThat(this.databaseEngine.isCampaignOpen()).isEqualTo(1);
+		assertThat(this.databaseEngine.isCampaignOpen()).isEqualTo(true);
 		this.databaseEngine.setCampaign(0);
-		assertThat(this.databaseEngine.isCampaignOpen()).isEqualTo(0);
+		assertThat(this.databaseEngine.isCampaignOpen()).isEqualTo(false);
+	}
+
+
+	@Test
+	public void getNutritionInfo() {
+		ArrayList<Double> result = new ArrayList<Double>();
+
+		result = this.databaseEngine.getNutritionInfo("fried chicken");
+		assertThat(result.get(0)).isEqualTo(71);
+		assertThat(result.get(1)).isEqualTo(354);
+		assertThat(result.get(2)).isEqualTo(0.79);
+	}
+
+
+	@Test
+	public void claimCheatDay() {
+		this.databaseEngine.addUserEatingHistory("testUserCheatDay", "cheat day");
+		assertThat(this.databaseEngine.searchUser("testUserCheatDay", "eating_history")).isEqualTo(true);
+		assertThat(this.databaseEngine.getUserEatingHistory("testUserCheatDay", 1).get(0)).isEqualTo("cheat day");
+		this.databaseEngine.reset("testUserCheatDay", "eating_history");
+	}
+
+
+	@Test
+	public void canClaimCheatDay() {
+		assertThat(this.databaseEngine.canClaimCheatDay("testUserCanClaimCheatDay")).isEqualTo(true);
+		this.databaseEngine.addUserEatingHistory("testUserCanClaimCheatDay", "cheat day");
+		assertThat(this.databaseEngine.canClaimCheatDay("testUserCanClaimCheatDay")).isEqualTo(false);
+		this.databaseEngine.reset("testUserCanClaimCheatDay", "eating_history");
 	}
 
 
@@ -551,49 +580,49 @@ public class DietbotTester {
 	// }
 
 
-	// @Test
-	// public void testOCR() throws Exception{
+	@Test
+	public void testOCR() throws Exception{
 
-	// 	boolean thrown = false;
-	// 	String ans1 = null;
-	// 	String ans2 = null;
-	// 	String output1 = null;
-	// 	String output2 = null;
-	// 	final String path1 = "final-sample-menu-1.jpg";
-	// 	final String path2 = "final-sample-menu-2.jpg";
-	// 	final String realOutput1 = "splcy bean curd wllh mlnced pork served wllh rice\n" + 
-	// 			"sweet sour fork sewed thn rce\n" + 
-	// 			"chlh chlcken che\n" + 
-	// 			"fried instance needle luncheon meat";
-	// 	final String realOutput2 = "shortbread\n" + 
-	// 			"puddle cookie\n" + 
-	// 			"cookie\n" + 
-	// 			"macaroon\n" + 
-	// 			"biscotti\n" + 
-	// 			"ginger choc teabread\n" + 
-	// 			"organic bliss cookie\n" + 
-	// 			"loralyn bar\n" + 
-	// 			"muffin\n" + 
-	// 			"croissant\n" + 
-	// 			"organic bliss teabread\n" + 
-	// 			"glutenfree teabread\n" + 
-	// 			"cinnamon roll\n" + 
-	// 			"scone\n" + 
-	// 			"bear claw\n" + 
-	// 			"boulder cookiett\n" + 
-	// 			"brownie\n" + 
-	// 			"almond chocolate croissant\n" + 
-	// 			"ham cheese croissant";
-	// 	try{
-	// 		InputMenuState obj = new InputMenuState();
-	// 		ans1 = obj.ocrImagePath(path1);
-	// 		ans2 = obj.ocrImagePath(path2);
-	// 	} catch (Exception e) {
-	// 		thrown = true;
-	// 	}
-	// 	assertThat(ans1.contains(realOutput1));
-	// 	assertThat(ans2.contains(realOutput2));
-	// }
+		boolean thrown = false;
+		String ans1 = null;
+		String ans2 = null;
+		String output1 = null;
+		String output2 = null;
+		final String path1 = "final-sample-menu-1.jpg";
+		final String path2 = "final-sample-menu-2.jpg";
+		final String realOutput1 = "splcy bean curd wllh mlnced pork served wllh rice\n" + 
+				"sweet sour fork sewed thn rce\n" + 
+				"chlh chlcken che\n" + 
+				"fried instance needle luncheon meat";
+		final String realOutput2 = "shortbread\n" + 
+				"puddle cookie\n" + 
+				"cookie\n" + 
+				"macaroon\n" + 
+				"biscotti\n" + 
+				"ginger choc teabread\n" + 
+				"organic bliss cookie\n" + 
+				"loralyn bar\n" + 
+				"muffin\n" + 
+				"croissant\n" + 
+				"organic bliss teabread\n" + 
+				"glutenfree teabread\n" + 
+				"cinnamon roll\n" + 
+				"scone\n" + 
+				"bear claw\n" + 
+				"boulder cookiett\n" + 
+				"brownie\n" + 
+				"almond chocolate croissant\n" + 
+				"ham cheese croissant";
+		try{
+			InputMenuState obj = new InputMenuState();
+			ans1 = obj.ocrImagePath(path1);
+			ans2 = obj.ocrImagePath(path2);
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(ans1.contains(realOutput1));
+		assertThat(ans2.contains(realOutput2));
+	}
 
 
 	// @Test
