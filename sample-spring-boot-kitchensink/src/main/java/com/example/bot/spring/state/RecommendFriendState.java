@@ -77,7 +77,7 @@ public class RecommendFriendState extends State {
                     vec.add("Sorry, You cannot claim your own code!");
                 }
                 else{
-                    // Can claim code!!
+                    // Can claim code
                     sql.claimCode(userId, Integer.valueOf(code));
                     vec.add(requestUser);
                     vec.add(" ");    // To indicate that it's successful
