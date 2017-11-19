@@ -45,7 +45,6 @@ public class RecommendFriendState extends State {
     }
  
     public Vector<String> replyForFriendCommand(String userId) {
-        SQLDatabaseEngine sql = new SQLDatabaseEngine();
         int newCode = sql.generateAndStoreCode(userId);
         String newCodeString = "Thank you, your code is " + Integer.toString(newCode);
         Vector<String> vec = new Vector<String>(0);
@@ -54,7 +53,6 @@ public class RecommendFriendState extends State {
     }
 
     public Vector<String> actionForCodeCommand(String userId, String code) {
-        SQLDatabaseEngine sql = new SQLDatabaseEngine();
         Vector<String> vec = new Vector<String>(0);
 
         if(!sql.searchUser(userId, "campaign_user")){
