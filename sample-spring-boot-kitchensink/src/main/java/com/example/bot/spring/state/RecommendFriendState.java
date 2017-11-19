@@ -64,26 +64,29 @@ public class RecommendFriendState extends State {
         else{
             System.out.println("actionForCodeCommand: if 2");
             ArrayList<String> ls = sql.getCodeInfo(Integer.valueOf(code));
-            String requestUser = ls.get(0);
-            String claimUser = ls.get(1);
-            if(requestUser == null){
+            // ls is either size 0 or size 2
+            if(ls.size() == 0){
                 System.out.println("actionForCodeCommand: if 3");
                 // This code does not exist
                 vec.add("Sorry, this code does not exist!");
             }
-            else if(claimUser != null){
-                System.out.println("actionForCodeCommand: if 4");
-                // Someone claimed this coupon ady
-                vec.add("Sorry, this code had been claimed!");
-            }
-            else if(requestUser.equals(userId)) {
-                System.out.println("actionForCodeCommand: if 5");
-                vec.add("Sorry, You cannot claim your own code!");
-            }
             else{
-                System.out.println("actionForCodeCommand: if 6");
-                vec.add(requestUser);
-                vec.add(" ");    // To indicate that it is successful
+                String requestUser = ls.get(0);
+                String claimUser = ls.get(1);
+                if(claimUser != null){
+                    System.out.println("actionForCodeCommand: if 4");
+                    // Someone claimed this coupon ady
+                    vec.add("Sorry, this code had been claimed!");
+                }
+                else if(requestUser.equals(userId)) {
+                    System.out.println("actionForCodeCommand: if 5");
+                    vec.add("Sorry, You cannot claim your own code!");
+                }
+                else{
+                    System.out.println("actionForCodeCommand: if 6");
+                    vec.add(requestUser);
+                    vec.add(" ");    // To indicate that it is successful
+                }
             }
         }
         System.out.println("actionForCodeCommand: before return");
