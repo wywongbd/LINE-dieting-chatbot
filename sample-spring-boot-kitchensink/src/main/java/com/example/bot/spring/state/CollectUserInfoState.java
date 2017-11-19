@@ -39,7 +39,7 @@ public class CollectUserInfoState extends State {
 			ArrayList<String> allergies = new ArrayList<String>();
 			String state = bot.getUservar(userId, "state");
 			String topic = bot.getUservar(userId, "topic");
-			String diet = bot.getUservar(userId, "diet")
+			String diet = bot.getUservar(userId, "diet");
 			
 			
 			for (String food: allergyFood) {
