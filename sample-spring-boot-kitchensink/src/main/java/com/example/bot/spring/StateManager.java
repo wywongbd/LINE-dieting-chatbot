@@ -150,12 +150,8 @@ public class StateManager {
         List<Message> replyList = new ArrayList<Message>(0);
 
         if (userStatus.equals("NEW USER")) {
-            
-            System.out.println("-1");
             bot.setUservar(userId, "state", "collect_user_info");
             replyMessages.add(states.get("collect_user_info").reply(userId, text, bot));
-
-            System.out.println("0");
         }
         else if (userStatus.equals("REGISTERED USER")){
             currentState = bot.getUservar(userId, "state");
@@ -168,13 +164,10 @@ public class StateManager {
                 replyMessages.add(((RecommendFriendState) states.get("recommend_friend")).replyForFriendCommand(userId));
             }
             else{
-                System.out.println("1");
                 // normally will enter here
                 replyMessages.add(states.get(currentState).reply(userId, text, bot));
                 currentState = bot.getUservar(userId, "state");
                 currentTopic = bot.getUservar(userId, "topic");
-
-                System.out.println("2");
 
                 if (currentState.equals("recommend")) {
                     String[] splitString = (replyMessages.lastElement()).split("AAAAAAAAAA");                                       
@@ -185,44 +178,17 @@ public class StateManager {
                     replyMessages.add(recommendation);
                 }
 
-                System.out.println("3");
+                // reply special message for special case
+                if ( currentTopic.equals("provide_info_nutrient_history") ) {
+                	// need to send the reply from Rivescript and create a datetime picker template
 
-                // reply button message for this specific case
-                if ( currentTopic.equals("provide_info_choose_history_or_nutrient") ) {
-                    
-                System.out.println("4");
-                    ButtonsTemplate buttonsTemplate = new ButtonsTemplate(
-                            null, // image url
-                            null, // title
-                            "abc", // reply from rivescript
-                            Arrays.asList(
-                                    new PostbackAction("Check",
-                                                       "check_nutrient_history")
-                            ));
+                	// reply text
+                	replyList.add(new TextMessage(replyMessages.get(0)));
 
-                System.out.println("5");
-                    TemplateMessage templateMessage = new TemplateMessage("Button alt text", buttonsTemplate);
-
-                    String temp = "";
-                    for (String s:replyMessages) {
-                    	temp += s;
-                    }
-                    ButtonsTemplate buttonsTemplate1 = new ButtonsTemplate(
-                            null, // image url
-                            null, // title
-                            temp, // reply from rivescript
-                            Arrays.asList(
-                                    new PostbackAction("Check",
-                                                       "check_food_nutrient")
-                            ));
-                    TemplateMessage templateMessage1 = new TemplateMessage("Button alt text", buttonsTemplate1);
-
-                System.out.println("6");
-                    replyList.add(templateMessage);
-                    replyList.add(templateMessage1);
+                	// reply datetime picker
+                	replyList.add(states.get("provide_info").getButton());
                     return replyList;
                 }
-                System.out.println("7");
 
 
             }

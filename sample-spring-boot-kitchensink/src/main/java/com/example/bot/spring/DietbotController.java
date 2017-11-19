@@ -126,11 +126,11 @@ public class DietbotController {
     public void handlePostbackEvent(PostbackEvent event) {
         String replyToken = event.getReplyToken();
         String userId = event.getSource().getUserId();
+        String data = event.getPostbackContent().getData();
         List<Message> replyList = null;
 
-		// replyList = stateManager.chat(userId, text, true);
-
-        this.reply(replyToken, new TextMessage(event.getPostbackContent().getData()));
+		replyList = stateManager.chat(userId, data, true);
+        this.reply(replyToken, new TextMessage(data + event.getPostbackContent().getParams().toString()));
 
         // this.replyText(replyToken, "Got postback data " + event.getPostbackContent().getData()
         // 	+ ", param " + event.getPostbackContent().getParams().toString());

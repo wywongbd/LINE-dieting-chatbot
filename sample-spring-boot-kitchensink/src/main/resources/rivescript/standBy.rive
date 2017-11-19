@@ -32,8 +32,8 @@
         ^ Type "leave" if you don't want to record any food.{topic=post_eating}<set state=post_eating>
 
     // trigger to query dieting history
-    + [*] (intake[s]|[food ]nutrient|[food ]nutrients|[dieting ]history|@nutrients) [*]
-    - Please select one to proceed~{topic=provide_info_choose_history_or_nutrient}<set state=provide_info>
+    + [*] (check|intake[s]|[food ]nutrient|[food ]nutrients|[dieting ]history|@nutrients) [*]
+    - Which one do you want to choose? Nutrient history or food nutrient? Btw you can type "leave" to exit.{topic=provide_info_choose_history_or_nutrient}<set state=provide_info>
 
     + [*] (talk later|see you|bye) [*]
     - Okay see you later.
