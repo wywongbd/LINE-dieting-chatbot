@@ -196,19 +196,26 @@ public class StateManager {
                             null, // title
                             replyMessages.get(0), // reply from rivescript
                             Arrays.asList(
-                                    new PostbackAction("Check your nutrient history",
-                                                       "check_nutrient_history"),
-                                    new PostbackAction("Check nutrient for a food",
-                                                       "check_food_nutrient"),
-                                    new PostbackAction("Leave",
-                                                       "leave")
+                                    new PostbackAction("Check",
+                                                       "check_nutrient_history")
                             ));
 
                 System.out.println("5");
                     TemplateMessage templateMessage = new TemplateMessage("Button alt text", buttonsTemplate);
 
+                    ButtonsTemplate buttonsTemplate1 = new ButtonsTemplate(
+                            null, // image url
+                            null, // title
+                            replyMessages.get(0), // reply from rivescript
+                            Arrays.asList(
+                                    new PostbackAction("Check",
+                                                       "check_food_nutrient")
+                            ));
+                    TemplateMessage templateMessage1 = new TemplateMessage("Button alt text", buttonsTemplate1);
+
                 System.out.println("6");
                     replyList.add(templateMessage);
+                    replyList.add(templateMessage1);
                     return replyList;
                 }
                 System.out.println("7");
