@@ -103,8 +103,8 @@ public class StateManager {
                 adminAccessing = true;
                 replyMessages.add(states.get("admin").reply(userId, text, bot));
             }
-            else if (currentState.equals("standby") && (((RecommendFriendState) states.get("recommend_friend")).equals("FRIEND"))){
-                replyMessages.add(recommendFriendState.replyForFriendCommand(userId));
+            else if (currentState.equals("standby") && (((RecommendFriendState) states.get("recommend_friend")).matchTrigger(text).equals("FRIEND"))){
+                replyMessages = ((RecommendFriendState) states.get("recommend_friend")).replyForFriendCommand(userId);
             }
             else{
                 replyMessages.add(states.get(currentState).reply(userId, text, bot));

@@ -61,23 +61,28 @@ public class RecommendFriendState extends State {
         }
         else{
             ArrayList<String> ls = sql.getCodeInfo(Integer.valueOf(code));
-            String requestUser = ls.get(0);
-            String claimUser = ls.get(1);
-            if(requestUser == null){
+            // ls is either size 0 or size 2
+            if(ls.size() == 0){
                 // This code does not exist
                 vec.add("Sorry, this code does not exist!");
             }
-            else if(claimUser != null){
-                // Someone claimed this coupon ady
-                vec.add("Sorry, this code had been claimed!");
-            }
-            else if(requestUser.equals(userId)) {
-                vec.add("Sorry, You cannot claim your own code!");
-            }
             else{
-                vec.add(requestUser);
-                vec.add(claimUser);
-            }  
+                String requestUser = ls.get(0);
+                String claimUser = ls.get(1);
+                if(claimUser != null){
+                    // Someone claimed this coupon ady
+                    vec.add("Sorry, this code had been claimed!");
+                }
+                else if(requestUser.equals(userId)) {
+                    vec.add("Sorry, You cannot claim your own code!");
+                }
+                else{
+                    // Can claim code!!
+                    claimCode(userId, code);
+                    vec.add(requestUser);
+                    vec.add(" ");    // To indicate that it's successful
+                }
+            }
         }
         return vec;
     }
