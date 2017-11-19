@@ -104,7 +104,7 @@ public class StateManager {
                 replyMessages.add(states.get("admin").reply(userId, text, bot));
             }
             else if (currentState.equals("standby") && (((RecommendFriendState) states.get("recommend_friend")).equals("FRIEND"))){
-                replyMessages.add(recommendFriendState.replyForFriendCommand(userId));
+                replyMessages.add(((RecommendFriendState) states.get("recommend_friend")).replyForFriendCommand(userId));
             }
             else{
                 replyMessages.add(states.get(currentState).reply(userId, text, bot));
