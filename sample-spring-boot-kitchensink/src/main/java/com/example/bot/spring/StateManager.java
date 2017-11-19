@@ -129,7 +129,7 @@ public class StateManager {
         System.out.println("chatText: Point 3");
 
         if(replyMessages.size() > 0) {
-            debugMessage(userId, replyMessages, debug)
+            debugMessage(userId, replyMessages, debug);
         	return replyMessages;
         }
         else{
@@ -184,7 +184,7 @@ public class StateManager {
         }
 
         if(replyMessages.size() > 0) {
-            debugMessage(userId, replyMessages, debug)
+            debugMessage(userId, replyMessages, debug);
             return replyMessages;
         }
         else{
