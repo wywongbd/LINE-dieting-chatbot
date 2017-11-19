@@ -308,4 +308,26 @@ public class StateManager {
             return "";
         }
     }
+
+
+    //use for query nutrient of a food
+    public class getNutritionOfFood implements Subroutine {
+
+        // assume the order of parameter is: food name
+        public String call(RiveScript rs, String[] args) {
+        	ArrayList<Double> result = null;
+        	String resultString = "";
+        	if (args.length > 0) {
+        		result = sql.getNutritionInfo(args[0]);
+				resultString = args[0] + " contains "
+								+ "\n energy: " + Double.toString(result.get(0)) + " kcal"
+								+ "\n sodium: " + Double.toString(result.get(0)) + " mg"
+								+ "\n fat: " 	+ Double.toString(result.get(0)) + " g"
+				return resultString;
+        	}
+
+            return "";
+        }
+    }
+
 }
