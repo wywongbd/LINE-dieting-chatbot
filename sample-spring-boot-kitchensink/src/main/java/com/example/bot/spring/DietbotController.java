@@ -192,12 +192,13 @@ public class DietbotController {
         try {
 			UserProfileResponse profile = lineMessagingClient.getProfile(event.getSource().getUserId()).get();
 
+			System.out.println("-------------------");
 			// text: "code 123456"
 			// Exception couponIsValid
 			if (recommendFriendState.matchTrigger(text).equals("FRIEND")){
+				System.out.println("HandleTextContent: FRIEND");
 				reply = recommendFriendState.replyForFriendCommand(userId);
 			}
-
 			else if (recommendFriendState.matchTrigger(text).equals("CODE")){
 				String code = recommendFriendState.decodeCodeMessage(text);
 				reply = recommendFriendState.actionForCodeCommand(userId, code);
@@ -209,19 +210,20 @@ public class DietbotController {
             		// Reply image to claimUser
             		this.replyImage(replyToken, url);
             		// Push image to requestUser
-            		pushImage(requestUser, url);
+            		this.pushImage(requestUser, url);
 					return;
 				}
 			}
 			else {
+				System.out.println("HandleTextContent: normal chatting");
 				reply = stateManager.chat(userId, text, true);
 			}
-    		} catch (Exception e) {
-    			this.replyText(replyToken,defaultString);
-    			return;
-    		}
+    	} catch (Exception e) {
+    		this.replyText(replyToken,defaultString);
+    		return;
+    	}
     	
-    		for (String replyMessage:reply) {
+    	for (String replyMessage:reply) {
          	log.info("Returns echo message {}: {}", replyToken, replyMessage);
          	replyList.add(new TextMessage(replyMessage));
         }

@@ -76,24 +76,37 @@ public class StateManager {
         boolean isRegisteredUser = true;
         isRegisteredUser = sql.searchUser(userId, "userinfo");
 
+        System.out.println("chatText: Point 1");
+
         if (!isRegisteredUser) {
+            System.out.println("chatText: Point 1a");
+
             currentState = "collect_user_info";
             bot.setUservar(userId, "state", "collect_user_info");
         }
         else{
+            System.out.println("chatText: Point 1b");
+
             updateBot(userId);
             currentState = bot.getUservar(userId, "state");
             currentTopic = bot.getUservar(userId, "topic");
             bot.setUservar(userId, "met", "true");
         }
 
+        System.out.println("chatText: Point 2");
+
         if(currentState.equals("standby") 
             && (((AdminState) states.get("admin")).matchTrigger(text) == 1)
             && userId.equals(ADMIN_USER_ID)){
+
+            System.out.println("chatText: Point 2a");
+
             adminAccessing = true;
             replyText.add(states.get("admin").reply(userId, text, bot));
         }
         else{
+            System.out.println("chatText: Point 2b");
+
             replyText.add(states.get(currentState).reply(userId, text, bot));
         }
 
@@ -107,6 +120,8 @@ public class StateManager {
         	String temp = states.get(currentState).reply(userId, splitString[1], bot);           	
         	replyText.add(temp);
         }
+        
+        System.out.println("chatText: Point 3");
 
         if(replyText.size() > 0) {
         	if(debug == true) {
