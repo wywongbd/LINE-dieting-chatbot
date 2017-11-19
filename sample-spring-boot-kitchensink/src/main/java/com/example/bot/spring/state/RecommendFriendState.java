@@ -73,6 +73,9 @@ public class RecommendFriendState extends State {
                 // Someone claimed this coupon ady
                 vec.add("Sorry, this code had been claimed!");
             }
+            else if(requestUser.equals(userId)) {
+                vec.add("Sorry, You cannot claim your own code!");
+            }
             else{
                 vec.add(requestUser);
                 vec.add(claimUser);
