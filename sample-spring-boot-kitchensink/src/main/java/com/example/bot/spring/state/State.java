@@ -9,6 +9,14 @@ import com.rivescript.RiveScript;
 //import java.io.IOException;
 
 abstract class State {
+
+    protected static SQLDatabaseEngine sql;
+
+    static
+    {
+        sql = new SQLDatabaseEngine();
+    };
+
     /**
      * Reply a message for input text
      * @param text A String data type
