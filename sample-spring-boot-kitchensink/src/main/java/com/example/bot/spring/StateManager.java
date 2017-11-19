@@ -204,6 +204,7 @@ public class StateManager {
                 if ( args.length == 3 ) {
                     sql.setUserInfo(args[2], args[0], Integer.parseInt(args[1]));
                 }
+                
                 // leave to be implemented later
                 ArrayList<String> temp = new ArrayList<String>();
                 if ( args[1].equals("true") ) {
