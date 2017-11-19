@@ -100,20 +100,20 @@ public class StateManager {
 
         System.out.println("chatText: Point 2");
 
-        if(currentState.equals("standby") 
-            && (((AdminState) states.get("admin")).matchTrigger(text) == 1)
-            && userId.equals(ADMIN_USER_ID)){
+        // if(currentState.equals("standby") 
+        //     && (((AdminState) states.get("admin")).matchTrigger(text) == 1)
+        //     && userId.equals(ADMIN_USER_ID)){
 
-            System.out.println("chatText: Point 2a");
+        //     System.out.println("chatText: Point 2a");
 
-            adminAccessing = true;
-            replyMessages.add(states.get("admin").reply(userId, text, bot));
-        }
-        else{
+        //     adminAccessing = true;
+        //     replyMessages.add(states.get("admin").reply(userId, text, bot));
+        // }
+        // else{
             System.out.println("chatText: Point 2b");
 
             replyMessages.add(states.get(currentState).reply(userId, text, bot));
-        }
+        // }
 
         currentState = bot.getUservar(userId, "state");
 
