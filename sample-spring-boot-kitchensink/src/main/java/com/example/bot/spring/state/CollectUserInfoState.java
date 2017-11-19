@@ -31,7 +31,6 @@ public class CollectUserInfoState extends State {
 				
 		if (!currentState.equals(afterState)) {
 			// write to DB
-			SQLDatabaseEngine sql = new SQLDatabaseEngine();
 			int age = Integer.parseInt(bot.getUservar(userId, "age"));
 			Double weight = Double.parseDouble(bot.getUservar(userId, "weight"));
 			Double height = Double.parseDouble(bot.getUservar(userId, "height"));
@@ -40,6 +39,7 @@ public class CollectUserInfoState extends State {
 			ArrayList<String> allergies = new ArrayList<String>();
 			String state = bot.getUservar(userId, "state");
 			String topic = bot.getUservar(userId, "topic");
+			String diet = bot.getUservar(userId, "diet");
 			
 			
 			for (String food: allergyFood) {
@@ -48,7 +48,7 @@ public class CollectUserInfoState extends State {
 				}
 			}
 			
-			sql.writeUserInfo(userId, age, gender, height, weight, allergies, topic, state);
+			sql.writeUserInfo(userId, age, gender, height, weight, allergies, diet, topic, state);
 		}
                
 		syncSQLWithRiveScript(userId, bot);

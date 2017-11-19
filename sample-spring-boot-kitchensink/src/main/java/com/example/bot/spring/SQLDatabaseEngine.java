@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.StringJoiner;
 import java.time.LocalDate;
 
 @Slf4j
@@ -39,7 +40,7 @@ public class SQLDatabaseEngine {
 	 * Unit for height: m
 	 * Unit for weight: kg
 	 */
-	public void writeUserInfo(String userId, int age, String gender, double height, double weight, ArrayList<String> allergies, String topic, String state) {
+	public void writeUserInfo(String userId, int age, String gender, double height, double weight, ArrayList<String> allergies, String diet, String topic, String state) {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
 		
@@ -65,15 +66,16 @@ public class SQLDatabaseEngine {
 			// Insert user info into the database
 			stmtUpdate = connection.prepareStatement(
 				"INSERT INTO userinfo " +
-				"VALUES (?, ?, ?, ?, ?, ?, ?)"
+				"VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 			);
 			stmtUpdate.setString(1, userId);
 			stmtUpdate.setInt(2, age);
 			stmtUpdate.setString(3, gender);
 			stmtUpdate.setDouble(4, height);
 			stmtUpdate.setDouble(5, weight);
-			stmtUpdate.setString(6, topic);
-			stmtUpdate.setString(7, state);
+			stmtUpdate.setString(6, diet);
+			stmtUpdate.setString(7, topic);
+			stmtUpdate.setString(8, state);
 			stmtUpdate.executeUpdate();
 
 			// Insert user allergies into the database if they have any
@@ -395,12 +397,12 @@ public class SQLDatabaseEngine {
 					"DISTINCT ON (menu.meal_name) " +
 					"userid, " +
 					"menu.meal_name, " +
-					"nutrient_table.description, " +
-					"similarity(menu.meal_name, nutrient_table.description) AS sim, " +
+					"food_type.food, " +
+					"similarity(menu.meal_name, food_type.food) AS sim, " +
 					"? AS weightage " +
 				"FROM menu " +
-				"JOIN nutrient_table " +
-					"ON menu.meal_name % nutrient_table.description " +
+				"JOIN food_type " +
+					"ON similarity(menu.meal_name, food_type.food) >= 0.2 " +
 					"AND userid = ? " +
 				"ORDER BY menu.meal_name, sim DESC"
 			);
@@ -507,6 +509,60 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (Exception e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+	}
+
+
+	// Adjusts the weightages of meals corresponding to the user in the recommendations table based on their eating history
+	public void processRecommendationsByEatingHistory(String userId) {
+		Connection connection = null;
+		ArrayList<String> foods = new ArrayList<String>();
+		PreparedStatement stmtQuery = null;
+		PreparedStatement stmtUpdate = null;
+		ResultSet rs = null;
+
+		try {
+			connection = this.getConnection();
+			
+			// Collects the foods that the user has eaten in the past 2 days
+			stmtQuery = connection.prepareStatement(
+				"SELECT description " +
+				"FROM eating_history " +
+				"WHERE userid = ? " +
+					"AND date >= CURRENT_DATE - 2"
+			);
+			stmtQuery.setString(1, userId);
+			rs = stmtQuery.executeQuery();
+			while (rs.next()) {
+				for (String food: rs.getString(1).split(",")) {
+					foods.add(food);
+				}
+			}
+
+			// Adjusts the weightages of meals of the user in the recommendations table based on the collected foods
+			stmtUpdate = connection.prepareStatement(
+				"UPDATE recommendations " + 
+				"SET weightage = weightage * 0.5 " + 
+				"WHERE recommendations.description = ? " +
+				"AND recommendations.userid = ?"
+			);
+			stmtUpdate.setString(2, userId);
+			for (String food: foods) {
+				stmtUpdate.setString(1, food);
+				stmtUpdate.addBatch();
+			}
+			stmtUpdate.executeBatch();
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
 				if (stmtUpdate != null) {stmtUpdate.close();}
 				if (connection != null) {connection.close();}
 			} catch (Exception e) {
@@ -909,23 +965,48 @@ public class SQLDatabaseEngine {
 
 	// Adds the input meals to the user's eating history
 	public void addUserEatingHistory(String userId, String meals) {
+		String[] mealList = meals.split(",");
+		StringJoiner joiner = new StringJoiner(",");
 		Connection connection = null;
+		PreparedStatement stmtQuery = null;
 		PreparedStatement stmtUpdate = null;
+		ResultSet rs = null;
 		
 		try {
 			connection = this.getConnection();
 
+			stmtQuery = connection.prepareStatement(
+				"SELECT " +
+					"DISTINCT ON (meal_name) " +
+					"food, " +
+					"? AS meal_name, " +
+					"similarity(?, food_type.food) AS sim " +
+				"FROM food_type " +
+				"ORDER BY meal_name, sim DESC"
+			);
+			for (String meal: mealList) {
+				stmtQuery.setString(1, meal);
+				stmtQuery.setString(2, meal);
+				rs = stmtQuery.executeQuery();
+				while(rs.next()) {
+					joiner.add(rs.getString(1));
+				}
+			}
+
 			stmtUpdate = connection.prepareStatement(
 				"INSERT INTO eating_history " +
-				"VALUES (?, ?, CURRENT_DATE)"
+				"VALUES (?, ?, ?, CURRENT_DATE)"
 			);
 			stmtUpdate.setString(1, userId);
 			stmtUpdate.setString(2, meals);
+			stmtUpdate.setString(3, joiner.toString());
 			stmtUpdate.executeUpdate();
 		} catch (Exception e) {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
 				if (stmtUpdate != null) {stmtUpdate.close();}
 				if (connection != null) {connection.close();}
 			} catch (Exception e) {
@@ -955,6 +1036,73 @@ public class SQLDatabaseEngine {
 			rs = stmtQuery.executeQuery(); 
 			while(rs.next()) {
 				result.add(rs.getString(1));
+			}
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
+			} catch (Exception ex) {
+				log.info("Exception while closing connection of database: {}", ex.toString());
+			}
+		}
+		return result;
+	}
+
+
+	// Sets the isopen value of is_campaign_open
+	public void setCampaign(int state) {
+		Connection connection = null;
+		PreparedStatement stmtUpdate = null;
+		String statement = null;
+		
+		try {
+			connection = this.getConnection();
+			
+			// Delete url if it already exists
+			stmtUpdate = connection.prepareStatement(
+				"DELETE FROM is_campaign_open"
+			);
+			stmtUpdate.executeUpdate();
+
+			// Insert campaign state into database
+			stmtUpdate = connection.prepareStatement(
+				"INSERT INTO is_campaign_open " +
+				"VALUES (?)"
+			);
+			stmtUpdate.setInt(1, state);
+			stmtUpdate.executeUpdate();
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
+			} catch (Exception e) {
+				log.info("Exception while closing connection to database: {}", e.toString());
+			}
+		}
+	}
+
+
+	// Returns true if campaign is open, returns false otherwise
+	public int isCampaignOpen() {
+		Connection connection = null;
+		PreparedStatement stmtQuery = null;
+		ResultSet rs = null;
+		int result = 0;
+		try {
+			connection = this.getConnection();
+
+			stmtQuery = connection.prepareStatement(
+				"SELECT isopen " +
+				"FROM is_campaign_open"
+			);
+			rs = stmtQuery.executeQuery(); 
+			while(rs.next()) {
+				result = rs.getInt(1);
 			}
 		} catch (Exception e) {
 			log.info("Exception while connecting to database: {}", e.toString());

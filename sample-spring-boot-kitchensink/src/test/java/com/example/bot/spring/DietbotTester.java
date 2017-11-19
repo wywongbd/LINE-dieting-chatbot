@@ -94,9 +94,10 @@ public class DietbotTester {
 		ArrayList<String> allergies = new ArrayList<String>();
 		allergies.add("seafood");
 
-		databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, new ArrayList<String>(), "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "normal", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, new ArrayList<String>(), "normal", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, "normal", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserHistory", 21, "male", 1.73, 65, allergies, "normal", "testTopic", "testState");
 		databaseEngine.addMenu("testUser", menu);
 		databaseEngine.addRecommendations("testUser");
 	}
@@ -111,6 +112,8 @@ public class DietbotTester {
 		databaseEngine.reset("testUserIntake", "userallergies");
 		databaseEngine.reset("testUserAllergy", "userinfo");
 		databaseEngine.reset("testUserAllergy", "userallergies");
+		databaseEngine.reset("testUserHistory", "userinfo");
+		databaseEngine.reset("testUserHistory", "userallergies");
 	}
 
 	
@@ -118,7 +121,7 @@ public class DietbotTester {
 	public void writeUserInfoExisting() {
 		ArrayList<String> allergies = null;
 
-		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "testTopic", "testState");
+		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "normal", "testTopic", "testState");
 		assertThat(this.databaseEngine.searchUser("testUser", "userinfo")).isEqualTo(true);
 	}
 	
@@ -128,7 +131,7 @@ public class DietbotTester {
 		ArrayList<String> allergies = new ArrayList<String>();
 		allergies.add("milk");
 
-		this.databaseEngine.writeUserInfo("testUserNonExisting", 21, "female", 1.64, 55, allergies, "testTopic", "testState");
+		this.databaseEngine.writeUserInfo("testUserNonExisting", 21, "female", 1.64, 55, allergies, "normal", "testTopic", "testState");
 		assertThat(this.databaseEngine.searchUser("testUserNonExisting", "userinfo")).isEqualTo(true);
 		this.databaseEngine.deleteUserInfo("testUserNonExisting");
 	}
@@ -203,16 +206,17 @@ public class DietbotTester {
 	@Test
 	public void testAdd() {
 		ArrayList<String> menu = new ArrayList<String>();
-		menu.add("frozen water");
-		menu.add("molten ice");
+		menu.add("fish and chips");
+		menu.add("sausages and chicken wings");
 
 		this.databaseEngine.reset("testUserAddReset", "menu");
 		this.databaseEngine.reset("testUserAddReset", "recommendations");
 		this.databaseEngine.addMenu("testUserAddReset", menu);
 		this.databaseEngine.addRecommendations("testUserAddReset");
-		assertThat(this.databaseEngine.getMenu("testUserAddReset", "frozen")).isEqualTo("frozen water");
-		assertThat(this.databaseEngine.getMenu("testUserAddReset", "molten")).isEqualTo("molten ice");
-		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "frozen")).isEqualTo("frozen water");
+		assertThat(this.databaseEngine.getMenu("testUserAddReset", "fish")).isEqualTo("fish and chips");
+		assertThat(this.databaseEngine.getMenu("testUserAddReset", "sausage")).isEqualTo("sausages and chicken wings");
+		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "fish")).isEqualTo("fish and chips");
+		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "sausage")).isEqualTo("sausages and chicken wings");
 		this.databaseEngine.reset("testUserAddReset", "menu");
 		this.databaseEngine.reset("testUserAddReset", "recommendations");
 	}
@@ -232,10 +236,23 @@ public class DietbotTester {
 		assertThat(this.databaseEngine.getMenu("testUserAddReset", "molten")).isEqualTo(null);
 		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "frozen")).isEqualTo(null);
 	}
+
+
+	@Test
+	public void addUserEatingHistory() {
+		String meals1 = "chicken soup, spaghetti bolognese";
+		String meals2 = "apples, chocolate cake";
+		this.databaseEngine.addUserEatingHistory("testUserEating", meals1);
+		this.databaseEngine.addUserEatingHistory("testUserEating", meals2);
+		assertThat(this.databaseEngine.searchUser("testUserEating", "eating_history")).isEqualTo(true);
+		assertThat(this.databaseEngine.getUserEatingHistory("testUserEating", 1).get(0)).isEqualTo(meals1);
+		assertThat(this.databaseEngine.getUserEatingHistory("testUserEating", 1).get(1)).isEqualTo(meals2);
+		this.databaseEngine.reset("testUserEating", "eating_history");
+	}
 	
 
 	@Test
-	public void testRemoveAllergies() {
+	public void processRecommendationsByAllergies() {
 		ArrayList<String> menu = new ArrayList<String>();
 		menu.add("chicken potato soup");
 		menu.add("grilled salmon");
@@ -251,7 +268,7 @@ public class DietbotTester {
 	
 
 	@Test
-	public void testUpdateRecommendationsByIntake() {
+	public void processRecommendationsByIntake() {
 		ArrayList<String> menu = new ArrayList<String>();
 		menu.add("chicken potato soup");
 		menu.add("caramel apples");
@@ -265,6 +282,32 @@ public class DietbotTester {
 		this.databaseEngine.reset("testUserIntake", "recommendations");
 	}
 	
+
+	@Test
+	public void processRecommendationsByEatingHistory() {
+		ArrayList<String> menu = new ArrayList<String>();
+		menu.add("apple");
+		menu.add("banana");
+		menu.add("orange");
+		String meals1 = "apples";
+		String meals2 = "bananas";
+
+		this.databaseEngine.addMenu("testUserHistory", menu);
+		this.databaseEngine.addRecommendations("testUserHistory");
+		this.databaseEngine.addUserEatingHistory("testUserHistory", meals1);
+		this.databaseEngine.addUserEatingHistory("testUserHistory", meals1);
+		this.databaseEngine.addUserEatingHistory("testUserHistory", meals2);
+		this.databaseEngine.processRecommendationsByIntake("testUserHistory");
+		this.databaseEngine.processRecommendationsByEatingHistory("testUserHistory");
+
+		assertThat(this.databaseEngine.getWeightage("testUserHistory", "apple")).isEqualTo(0.5);
+		assertThat(this.databaseEngine.getWeightage("testUserHistory", "banana")).isEqualTo(1);
+		assertThat(this.databaseEngine.getWeightage("testUserHistory", "orange")).isEqualTo(2);
+		this.databaseEngine.reset("testUserHistory", "menu");
+		this.databaseEngine.reset("testUserHistory", "recommendations");
+		this.databaseEngine.reset("testUserHistory", "eating_history");
+	}
+
 
 	@Test
 	public void getRecommendationList() {
@@ -339,15 +382,11 @@ public class DietbotTester {
 
 
 	@Test
-	public void addUserEatingHistory() {
-		String meals1 = "chicken soup, spaghetti bolognese";
-		String meals2 = "apples, chocolate cake";
-		this.databaseEngine.addUserEatingHistory("testUserEating", meals1);
-		this.databaseEngine.addUserEatingHistory("testUserEating", meals2);
-		assertThat(this.databaseEngine.searchUser("testUserEating", "eating_history")).isEqualTo(true);
-		assertThat(this.databaseEngine.getUserEatingHistory("testUserEating", 1).get(0)).isEqualTo(meals1);
-		assertThat(this.databaseEngine.getUserEatingHistory("testUserEating", 1).get(1)).isEqualTo(meals2);
-		this.databaseEngine.reset("testUserEating", "eating_history");
+	public void setCampaign() {
+		this.databaseEngine.setCampaign(1);
+		assertThat(this.databaseEngine.isCampaignOpen()).isEqualTo(1);
+		this.databaseEngine.setCampaign(0);
+		assertThat(this.databaseEngine.isCampaignOpen()).isEqualTo(0);
 	}
 
 
@@ -365,6 +404,7 @@ public class DietbotTester {
 		String reply = bot.reply("user2", "can you tell me my id");
 		assertThat(reply).isEqualTo("user2");
 	}
+
 
 	// to test how to use RiveScript with different users and get user variables
 	// that have been set before or not.
@@ -410,6 +450,7 @@ public class DietbotTester {
 		assertThat(weight).isEqualTo("200");
 	}
 
+
 	public class MyTestingSubroutine implements Subroutine {
 		
  		public String call(RiveScript rs, String[] args) {
@@ -419,6 +460,7 @@ public class DietbotTester {
  		}
  	}
  
+
  	// to test how to use RiveScript Subroutine
  	@Test
  	public void testRivescriptSubroutine() throws Exception {
@@ -434,6 +476,7 @@ public class DietbotTester {
  		assertThat(reply1).isEqualTo("yes");
  	}
   	
+
 	@Test
 	public void convertHTMLTabletoJson() throws Exception{
 		
@@ -451,21 +494,23 @@ public class DietbotTester {
 		assertThat(output).isEqualTo(realOutput);
 	}
 	
-//	@Test
-//	public void testURLtoJSON() throws Exception{
-//		
-//		boolean thrown = false;
-//		String output = null;
-//		final String realOutput = "[apps snacks salads burgers sandwiches pairings desserts drinks, spinach queso dip, panseared pot stickers, chicken quesadilla, grilled salmon, flat iron steak, grilled salmon, flat iron steak, salads, soups, burger greenstyle, burgers sandwiches fries salad sweet potato fries instead, steaks ribs, pastas, chicken seafood, slushes, smoothies, freshly brewed teas, juices, handcrafted alcoholfree beverages made fruit pures natural flavors, refills freshly brewed teas slushes, fruit teas, slushes, drink options, casamigos strawberry rita, boba long island tea, sangria rita, peach sangria, crown apple cooler, tropical berry mojito shaker, tap drafts, happy tell what other local craft beers, bottles cans, red, white, bubbles, bottle selections, glutensensitive, tgi fridays franchisor llc drink responsibly locations see]";
-//		try{
-//			final String urlString = "https://tgifridays.com/menu/dine-in/";
-//			HTMLStringPreprocessing h = new HTMLStringPreprocessing();
-//			output =Arrays.toString(h.processURLRawContent((h.readFromUrl(urlString))).toArray());
-//		} catch (Exception e) {
-//			thrown = true;
-//		}
-//		assertThat(output).isEqualTo(realOutput);
-//	}
+
+	// @Test
+	// public void testURLtoJSON() throws Exception{
+		
+	// 	boolean thrown = false;
+	// 	String output = null;
+	// 	final String realOutput = "[apps snacks salads burgers sandwiches pairings desserts drinks, spinach queso dip, panseared pot stickers, chicken quesadilla, grilled salmon, flat iron steak, grilled salmon, flat iron steak, salads, soups, burger greenstyle, burgers sandwiches fries salad sweet potato fries instead, steaks ribs, pastas, chicken seafood, slushes, smoothies, freshly brewed teas, juices, handcrafted alcoholfree beverages made fruit pures natural flavors, refills freshly brewed teas slushes, fruit teas, slushes, drink options, casamigos strawberry rita, boba long island tea, sangria rita, peach sangria, crown apple cooler, tropical berry mojito shaker, tap drafts, happy tell what other local craft beers, bottles cans, red, white, bubbles, bottle selections, glutensensitive, tgi fridays franchisor llc drink responsibly locations see]";
+	// 	try{
+	// 		final String urlString = "https://tgifridays.com/menu/dine-in/";
+	// 		HTMLStringPreprocessing h = new HTMLStringPreprocessing();
+	// 		output =Arrays.toString(h.processURLRawContent((h.readFromUrl(urlString))).toArray());
+	// 	} catch (Exception e) {
+	// 		thrown = true;
+	// 	}
+	// 	assertThat(output).isEqualTo(realOutput);
+	// }
+
 
 	@Test
 	public void testOCR() throws Exception{

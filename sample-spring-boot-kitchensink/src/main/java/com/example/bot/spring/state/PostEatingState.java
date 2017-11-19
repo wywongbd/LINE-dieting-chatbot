@@ -29,12 +29,13 @@ public class PostEatingState extends State {
         // when user is not typing leave
         if ( !output.equals("Okay. Tell me when you need help~~~") ) {
 
-            // simple reprocessing by trimming new line character
-            text = text.replace("\r", " ").replace("\n", " ");
+            // simple preprocessing by trimming new line character
+            text = text.replace("\r", " ").replace("\n", " ").replace("  ", " ");
 
             // save the result in DB if the text is not empty
             if (text.length() > 1) {
                 // save the date, userId, food in DB
+                sql.addUserEatingHistory(userId, text);
             }
         }
 

@@ -56,7 +56,6 @@ public class RecommendationState extends State {
      * @return A String data type
      */
 	public String recommendFood(String userId, ArrayList<String> foodList) {
-		SQLDatabaseEngine sql = new SQLDatabaseEngine();
 		HashMap<String, Double> foodWeightage = null;
 		String recommendation = null;
 
@@ -65,8 +64,9 @@ public class RecommendationState extends State {
 			sql.addRecommendations(userId);
 			sql.processRecommendationsByAllergies(userId);
 			sql.processRecommendationsByIntake(userId);
+			sql.processRecommendationsByEatingHistory(userId);
 			foodWeightage = sql.getRecommendationList(userId);
-			
+
 			// Might remove these in the future for multiple recommendations
 			sql.reset(userId, "menu");
 			sql.reset(userId, "recommendations");
@@ -78,7 +78,6 @@ public class RecommendationState extends State {
 			}
 
 			// Now choose a random item
-			int randomIndex = -1;
 			double random = Math.random() * totalWeight;
 			for (Map.Entry<String, Double> entry : foodWeightage.entrySet()) {
 			    String food = entry.getKey();

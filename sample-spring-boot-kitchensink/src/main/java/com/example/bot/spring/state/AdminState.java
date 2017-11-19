@@ -36,13 +36,12 @@ public class AdminState extends State {
     }
 
     public String replyImage(String userId, DownloadedContent jpg, RiveScript bot) {
-		// To do: modify url in DB
-        couponImageUrl = jpg.getUrl();
-		return "Your image has been well received!";
+        sql.setCouponUrl(jpg.getUrl());
+		return "Hi Admin, your image has been well received!";
     }
 
     public static String getImageUrl() {
-		return couponImageUrl;
+		return sql.getCouponUrl();
     }
 
     /**

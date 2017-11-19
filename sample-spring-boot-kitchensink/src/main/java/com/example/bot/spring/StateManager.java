@@ -17,7 +17,7 @@ public class StateManager {
     private final int STANDBY_STATE = 0;
     private final int INPUT_MENU_STATE = 3;
     private final int RECOMMEND_STATE = 4;
-    private final String ADMIN_USER_ID = "Ub6f064e9c47d12622346a14556305165";
+    private final String ADMIN_USER_ID = "Udfd2991f287cc5c75f6c1d2c30c58a3a";
     // Must first go through InputMenuState before going to RecommendationState,
     // so 4 is not included
 //    private final int[] FROM_STANDBY_STATE = {1, 2, 3, 5};
@@ -44,6 +44,7 @@ public class StateManager {
         states.put("post_eating", new PostEatingState());
         states.put("update_user_info", new UpdateUserInfoState());
         states.put("admin", new AdminState());
+        states.put("recommend_friend", new RecommendFriendState());
 
         adminAccessing = false;
     };
@@ -70,6 +71,13 @@ public class StateManager {
             return "REGISTERED USER";
         }
         else{
+            // rivescript still recognize this uesr, but DB doesn't -> set rivescript to default topic & state
+            if (bot.getUservar(userId, "state") != null){
+                if (!bot.getUservar(userId, "state").equals("collect_user_info")){
+                    bot.setUservar(userId, "state", "collect_user_info");
+                    bot.setUservar(userId, "topic", "new_user");
+                }
+            }
             return "NEW USER";
         }
     }
@@ -97,17 +105,26 @@ public class StateManager {
         }
         else if (userStatus.equals("REGISTERED USER")){
             currentState = bot.getUservar(userId, "state");
-            replyMessages.add(states.get(currentState).reply(userId, text, bot));
 
-            currentState = bot.getUservar(userId, "state");
+            if (currentState.equals("standby") && (((AdminState) states.get("admin")).matchTrigger(text) == 1)  && userId.equals(ADMIN_USER_ID)){
+                adminAccessing = true;
+                replyMessages.add(states.get("admin").reply(userId, text, bot));
+            }
+            else if (currentState.equals("standby") && (((RecommendFriendState) states.get("recommend_friend")).matchTrigger(text).equals("FRIEND"))){
+                replyMessages.add(((RecommendFriendState) states.get("recommend_friend")).replyForFriendCommand(userId));
+            }
+            else{
+                replyMessages.add(states.get(currentState).reply(userId, text, bot));
+                currentState = bot.getUservar(userId, "state");
 
-            if (currentState.equals("recommend")) {              
-                String[] splitString = (replyMessages.lastElement()).split("AAAAAAAAAA");                                       
-                replyMessages.add(0, splitString[0]);                       
-                replyMessages.remove(replyMessages.size() - 1);
-            
-                String temp = states.get(currentState).reply(userId, splitString[1], bot);              
-                replyMessages.add(temp);
+                if (currentState.equals("recommend")) {              
+                    String[] splitString = (replyMessages.lastElement()).split("AAAAAAAAAA");                                       
+                    replyMessages.add(0, splitString[0]);                       
+                    replyMessages.remove(replyMessages.size() - 1);
+                
+                    String recommendation = states.get(currentState).reply(userId, splitString[1], bot);              
+                    replyMessages.add(recommendation);
+                }
             }
         }
 
@@ -118,19 +135,6 @@ public class StateManager {
         else{
             throw new Exception("NOT FOUND");
         }
-        // if(currentState.equals("standby") 
-        //     && (((AdminState) states.get("admin")).matchTrigger(text) == 1)
-        //     && userId.equals(ADMIN_USER_ID)){
-
-        //     System.out.println("chatText: Point 2a");
-
-        //     adminAccessing = true;
-        //     replyMessages.add(states.get("admin").reply(userId, text, bot));
-        // }
-        // else{
-
-            // replyMessages.add(states.get(currentState).reply(userId, text, bot));
-        // }  
     }
 
     /**
@@ -173,7 +177,7 @@ public class StateManager {
                 replyMessages.add("Please let me finish recording your food intake before sharing me photos!");
             }
             else{
-                replyMessages.add("Sorry, I am lost and I don't know how to respond");
+                replyMessages.add("Sorry, I am lost and I don't know how to respond. Please continue with your previous activity first.");
             }
         }
 
@@ -204,6 +208,7 @@ public class StateManager {
                 if ( args.length == 3 ) {
                     sql.setUserInfo(args[2], args[0], Integer.parseInt(args[1]));
                 }
+                
                 // leave to be implemented later
                 ArrayList<String> temp = new ArrayList<String>();
                 if ( args[1].equals("true") ) {
