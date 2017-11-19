@@ -16,13 +16,6 @@
 
 
 apply plugin: 'org.springframework.boot'
-apply plugin: 'java'
-
-task getJavadoc(type: Javadoc) { 
-    source = sourceSets.main.allJava
-    classpath = configurations.compile
-   	destinationDir = file("C:/Users/BrendanGuangYao/Desktop/milestone3/hkust_cs3111h/javadoc")
-}
 
 dependencies {
     compile project(':line-bot-spring-boot')
@@ -31,8 +24,8 @@ dependencies {
     compile group: "com.asprise.ocr", name: "java-ocr-api", version: "15.3.0.3"
     compile group: 'org.json', name: 'json', version: '20090211'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.3.1'
-    compile files('libs/jsoup-1.10.3.jar')
-}
+    compile files('libs/jsoup-1.10.3.jar') 
+} 
 
 
 test {

@@ -81,7 +81,7 @@ public class InputMenuState extends State {
 //  		  } catch(Exception e){ 
 //  			  //TODO: handle user input invalid url
 //  			  return "Your text has been well received! This URL is not reachable :(";
-//  		  }
+//  		  } 
     	JSONPreprocessing j = new JSONPreprocessing();
     	String response = "";
     	try {
