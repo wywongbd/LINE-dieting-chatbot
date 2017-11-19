@@ -50,13 +50,13 @@ public class InputMenuState extends State {
 				replyText = "Your text has been well received! But this URL is not reachable. :(";
 			}
 
-            updateDatabase(userId, bot);
+            syncSQLWithRiveScript(userId, bot);
             return replyText + "AAAAAAAAAA" + urlContent;
 		}
 		else {
 			bot.setUservar(userId, "url_received", "false");
 			replyText = bot.reply(userId, "InputUrl");
-            updateDatabase(userId, bot);
+            syncSQLWithRiveScript(userId, bot);
 			return replyText;
 		}
 	}
@@ -101,12 +101,12 @@ public class InputMenuState extends State {
 	        bot.setUservar(userId, "topic", "recommend");
 	        bot.setUservar(userId, "state", "recommend");
 	        	
-	        updateDatabase(userId, bot);
+	        syncSQLWithRiveScript(userId, bot);
 	        return replyText + "AAAAAAAAAA" + Arrays.toString(processedOcrImage.toArray());
         }
         else {
-        		bot.setUservar(userId, "img_received", "false");
-            updateDatabase(userId, bot);
+        	bot.setUservar(userId, "img_received", "false");
+            syncSQLWithRiveScript(userId, bot);
             return "There is no useful information in your image!";
         }
     }

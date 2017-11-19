@@ -45,7 +45,7 @@ public class RecommendationState extends State {
 		bot.setUservar(userId, "topic", "standby");
         bot.setUservar(userId, "state", "standby");
 		
-		updateDatabase(userId, bot);
+		syncSQLWithRiveScript(userId, bot);
 		return recommended;
 	}
 	

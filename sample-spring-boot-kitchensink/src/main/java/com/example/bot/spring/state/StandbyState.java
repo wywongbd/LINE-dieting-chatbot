@@ -23,7 +23,7 @@ public class StandbyState extends State {
 		String afterState = bot.getUservar(userId, "state");
 
 		bot.setUservar(userId, "img_received", "false");
-		updateDatabase(userId, bot);
+		syncSQLWithRiveScript(userId, bot);
 		return output;
 	}
 }
