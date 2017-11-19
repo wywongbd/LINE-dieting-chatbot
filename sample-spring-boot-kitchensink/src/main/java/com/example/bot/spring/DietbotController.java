@@ -133,7 +133,7 @@ public class DietbotController {
         String data = event.getPostbackContent().getData();
         String date = event.getPostbackContent().getParams().toString();
         List<Message> replyList = null;
-        date = date.replace("{date=").replace("}", "");
+        date = date.replace("{date=", "").replace("}", "");
         if (date.length > 0) {
         	String[] temp = date.split("-");
         	LocalDate inputDate = LocalDate.of(temp[0],temp[1],temp[2]);
