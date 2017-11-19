@@ -71,6 +71,11 @@ public class StateManager {
             return "REGISTERED USER";
         }
         else{
+            if (bot.getUservar(userId, "state") != "collect_user_info" && bot.getUservar(userId, "state") != null){
+                // rivescript still recognize this uesr, but DB doesn't -> set rivescript to default topic & state
+                bot.setUservar(userId, "state", "collect_user_info");
+                bot.setUservar(userId, "topic", "new_user");
+            }
             return "NEW USER";
         }
     }
@@ -103,8 +108,8 @@ public class StateManager {
                 adminAccessing = true;
                 replyMessages.add(states.get("admin").reply(userId, text, bot));
             }
-            else if (currentState.equals("standby") && (((RecommendFriendState) states.get("recommend_friend")).equals("FRIEND")){
-                replyMessages.add(recommendFriendState.replyForFriendCommand(userId));
+            else if (currentState.equals("standby") && (((RecommendFriendState) states.get("recommend_friend")).equals("FRIEND"))) {
+                replyMessages.add(((RecommendFriendState) states.get("recommend_friend")).replyForFriendCommand(userId));
             }
             else{
                 replyMessages.add(states.get(currentState).reply(userId, text, bot));
