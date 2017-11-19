@@ -21,7 +21,8 @@ dependencies {
     compile group: 'postgresql', name: 'postgresql', version: '9.0-801.jdbc4'
     compile "com.rivescript:rivescript-core:0.10.0"
     compile group: "com.asprise.ocr", name: "java-ocr-api", version: "15.3.0.3"
-    compile("org.json:json:20141113")
+    compile group: 'org.json', name: 'json', version: '20090211'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.3.1'
     compile files('libs/jsoup-1.10.3.jar')
 }
 

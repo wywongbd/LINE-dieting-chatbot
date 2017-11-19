@@ -22,7 +22,8 @@
 
     // trigger to input_menu state (possibly go to recommend state later)
     + [*] (input|eating|restaurant|help me|look|check out|menu|recommend|recommendation|suggest|suggestion|decide|should|what to eat) [*]
-    - Please let me have a look at your menu first. You can either take a photo, or share the menu url with me.{topic=input_menu}<set state=input_menu>
+    - Please let me have a look at your menu first. You can take a photo, or share the menu url with me.
+        ^ If you want to input menu in text, pls input food only and separate them by a comma.{topic=input_menu}<set state=input_menu>
 
     // trigger to record what the user ate
     + [*] (ate|have eaten|has eaten|had eaten|record|last meal|finished|finish|@meals) [*]

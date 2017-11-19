@@ -75,7 +75,7 @@ public class DietbotController {
 	private LineMessagingClient lineMessagingClient;
 	
 	private StateManager stateManager;
-	private final String defaultString = "I don't understand"; 
+	private final String defaultString = "Controller: I don't understand"; 
 	private RecommendFriendState recommendFriendState = new RecommendFriendState();
 	
 	protected DietbotController() {
@@ -189,35 +189,30 @@ public class DietbotController {
         Vector<String> reply = null;
         List<Message> replyList = new ArrayList<Message>(0);
         String userId = event.getSource().getUserId();
+        SQLDatabaseEngine sql = new SQLDatabaseEngine();
+
         try {
 			UserProfileResponse profile = lineMessagingClient.getProfile(event.getSource().getUserId()).get();
 
-			System.out.println("-------------------");
 			// text: "code 123456"
 			// Exception couponIsValid
-			// if (recommendFriendState.matchTrigger(text).equals("FRIEND")){
-			// 	System.out.println("HandleTextContent: FRIEND");
-			// 	reply = recommendFriendState.replyForFriendCommand(userId);
-			// }
-			// else if (recommendFriendState.matchTrigger(text).equals("CODE")){
-			// 	String code = recommendFriendState.decodeCodeMessage(text);
-			// 	reply = recommendFriendState.actionForCodeCommand(userId, code);
-			// 	if(reply.size() == 2) {
-			// 		SQLDatabaseEngine sql = new SQLDatabaseEngine();
-			// 		String url = sql.getCouponUrl();
-			// 		String requestUser = reply.get(0);
-   //          		String claimUser = reply.get(1);				
-   //          		// Reply image to claimUser
-   //          		this.replyImage(replyToken, url);
-   //          		// Push image to requestUser
-   //          		this.pushImage(requestUser, url);
-			// 		return;
-			// 	}
-			// }
-			// else {
-				System.out.println("HandleTextContent: normal chatting");
+			if (recommendFriendState.matchTrigger(text).equals("CODE") && sql.searchUser(userId, "userinfo")){
+				String code = recommendFriendState.decodeCodeMessage(text);
+				reply = recommendFriendState.actionForCodeCommand(userId, code);
+				if(reply.size() == 2) {
+					String url = sql.getCouponUrl();
+					String requestUser = reply.get(0);
+            		// String temp = reply.get(1);			
+            		// Reply image to claimUser
+            		this.replyImage(replyToken, url);
+            		// Push image to requestUser
+            		this.pushImage(requestUser, url);
+					return;
+				}
+			}
+			else {
 				reply = stateManager.chat(userId, text, true);
-			// }
+			}
     	} catch (Exception e) {
     		this.replyText(replyToken,defaultString);
     		return;

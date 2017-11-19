@@ -481,21 +481,21 @@ public class DietbotTester {
 		assertThat(output).isEqualTo(realOutput);
 	}
 	
-	@Test
-	public void testURLtoJSON() throws Exception{
-		
-		boolean thrown = false;
-		String output = null;
-		final String realOutput = "[apps snacks salads burgers sandwiches pairings desserts drinks, spinach queso dip, panseared pot stickers, chicken quesadilla, grilled salmon, flat iron steak, grilled salmon, flat iron steak, salads, soups, burger greenstyle, burgers sandwiches fries salad sweet potato fries instead, steaks ribs, pastas, chicken seafood, slushes, smoothies, freshly brewed teas, juices, handcrafted alcoholfree beverages made fruit pures natural flavors, refills freshly brewed teas slushes, fruit teas, slushes, drink options, casamigos strawberry rita, boba long island tea, sangria rita, peach sangria, crown apple cooler, tropical berry mojito shaker, tap drafts, happy tell what other local craft beers, bottles cans, red, white, bubbles, bottle selections, glutensensitive, tgi fridays franchisor llc drink responsibly locations see]";
-		try{
-			final String urlString = "https://tgifridays.com/menu/dine-in/";
-			HTMLStringPreprocessing h = new HTMLStringPreprocessing();
-			output =Arrays.toString(h.processURLRawContent((h.readFromUrl(urlString))).toArray());
-		} catch (Exception e) {
-			thrown = true;
-		}
-		assertThat(output).isEqualTo(realOutput);
-	}
+//	@Test
+//	public void testURLtoJSON() throws Exception{
+//		
+//		boolean thrown = false;
+//		String output = null;
+//		final String realOutput = "[apps snacks salads burgers sandwiches pairings desserts drinks, spinach queso dip, panseared pot stickers, chicken quesadilla, grilled salmon, flat iron steak, grilled salmon, flat iron steak, salads, soups, burger greenstyle, burgers sandwiches fries salad sweet potato fries instead, steaks ribs, pastas, chicken seafood, slushes, smoothies, freshly brewed teas, juices, handcrafted alcoholfree beverages made fruit pures natural flavors, refills freshly brewed teas slushes, fruit teas, slushes, drink options, casamigos strawberry rita, boba long island tea, sangria rita, peach sangria, crown apple cooler, tropical berry mojito shaker, tap drafts, happy tell what other local craft beers, bottles cans, red, white, bubbles, bottle selections, glutensensitive, tgi fridays franchisor llc drink responsibly locations see]";
+//		try{
+//			final String urlString = "https://tgifridays.com/menu/dine-in/";
+//			HTMLStringPreprocessing h = new HTMLStringPreprocessing();
+//			output =Arrays.toString(h.processURLRawContent((h.readFromUrl(urlString))).toArray());
+//		} catch (Exception e) {
+//			thrown = true;
+//		}
+//		assertThat(output).isEqualTo(realOutput);
+//	}
 
 	@Test
 	public void testOCR() throws Exception{

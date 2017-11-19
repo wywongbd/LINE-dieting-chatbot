@@ -31,17 +31,20 @@ public class HTMLStringPreprocessing extends StringPreprocessing{
 		String arrayName = table.select("th").first().text();
 		JSONObject jsonObj = new JSONObject();
 		JSONArray jsonArr = new JSONArray();
-		Elements ttls = table.getElementsByClass("ttl");
-		Elements nfos = table.getElementsByClass("nfo");
-		JSONObject jo = new JSONObject();
-		for (int i = 0, l = ttls.size(); i < l; i++) {
-		    String key = ttls.get(i).text();
-		    String value = nfos.get(i).text();
-		    jo.put(key, value);
+		try {
+			Elements ttls = table.getElementsByClass("ttl");
+			Elements nfos = table.getElementsByClass("nfo");
+			JSONObject jo = new JSONObject();
+			for (int i = 0, l = ttls.size(); i < l; i++) {
+			    String key = ttls.get(i).text();
+			    String value = nfos.get(i).text();
+			    jo.put(key, value);
+			}
+			jsonArr.put(jo);
+			jsonObj.put(arrayName, jsonArr);
+		} catch(Exception e ) {
+			// TODO: what to do here??
 		}
-		jsonArr.put(jo);
-		jsonObj.put(arrayName, jsonArr);
-		
 		return jsonObj;
 	}
 	
@@ -100,7 +103,7 @@ public class HTMLStringPreprocessing extends StringPreprocessing{
      * which should be passed to getValidContent method
      * before passing into database for query to recommend food 
      */
-	  public ArrayList<String> readFromUrl(String url) throws IOException {
+	  public ArrayList<String> readFromHTML(String url) throws IOException {
 		  	ArrayList<String> foodContent = new ArrayList<String>();
 		    InputStream is = new URL(url).openStream();
 
