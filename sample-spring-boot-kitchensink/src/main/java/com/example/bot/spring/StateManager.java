@@ -148,7 +148,6 @@ public class StateManager {
         String currentTopic = null;
         String userStatus = syncRiveScriptWithSQL(userId);
         List<Message> replyList = new ArrayList<Message>(0);
-            System.out.println("-2");
 
         if (userStatus.equals("NEW USER")) {
             
