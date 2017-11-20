@@ -21,10 +21,11 @@ public class RecommendationState extends State {
 	}
 
     /**
-     * Reply a message for input text
-     * Inherited from abstract base class
-     * @param text A String data type
-     * @return A String data type
+     * Reply a message for input text in this state
+     * @param userId String data type
+     * @param text String data type
+     * @param bot RiveScript data type 
+     * @return String data type as the reply
      */
 	public String reply(String userId, String text, RiveScript bot) {
 
@@ -51,9 +52,9 @@ public class RecommendationState extends State {
 	
 	/**
      * Recommended a food after inputting a list of food
-     * @param FoodList A ArrayList<String> data type
-     * @param userID A int data type
-     * @return A String data type
+     * @param userId int data type
+     * @param FoodList ArrayList<String> data type as a list of food
+     * @return String data type as the food to be recommended
      */
 	public String recommendFood(String userId, ArrayList<String> foodList) {
 		HashMap<String, Double> foodWeightage = null;

@@ -74,7 +74,7 @@ import java.nio.file.Paths;
 	
 @RunWith(SpringRunner.class)
 //@SpringBootTest(classes = { DietbotTester.class, DatabaseEngine.class })
-@SpringBootTest(classes = { DietbotTester.class, SQLDatabaseEngine.class, DietbotController.class })
+@SpringBootTest(classes = { DietbotTester.class, SQLDatabaseEngine.class })
 public class DietbotTester {
 	@Autowired
 	private static SQLDatabaseEngine databaseEngine;
@@ -109,6 +109,7 @@ public class DietbotTester {
 		 databaseEngine.writeUserInfo("testUserChatImageInputMenu2", 15, "male", 1.72, 82, allergies, "normal", "input_menu", "input_menu");
 		 databaseEngine.writeUserInfo("testUserChatImageUpdateUserInfo", 17, "male", 1.73, 83, allergies, "normal", "update_user_info", "update_user_info");
 		 databaseEngine.writeUserInfo("testUserChatImagePostEating", 18, "male", 1.74, 84, allergies, "normal", "post_eating", "post_eating");
+		 databaseEngine.writeUserInfo("testRequestCoupon", 18, "male", 1.74, 84, allergies, "normal", "standby", "standby");
 		 databaseEngine.addMenu("testUser", menu);
 		 databaseEngine.addRecommendations("testUser");
 	}
@@ -133,14 +134,26 @@ public class DietbotTester {
 		databaseEngine.reset("testUserCalories", "userallergies");
 		databaseEngine.reset("testUserInputImage", "userinfo");
 		databaseEngine.reset("testRecommendFriendState", "campaign_user");
+
+		databaseEngine.reset("testRequestCoupon", "userinfo");
 		databaseEngine.reset("testUserChatImageInputMenu1", "userinfo");
 		databaseEngine.reset("testUserChatImageInputMenu2", "userinfo");
 		databaseEngine.reset("testUserChatImageUpdateUserInfo", "userinfo");
 		databaseEngine.reset("testUserChatImagePostEating", "userinfo");
 	}
 
-
+  
 	@Test
+	public void writeUserInfoExisting() {
+		ArrayList<String> allergies = null;
+
+		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "normal", "testTopic", "testState");
+		assertThat(this.databaseEngine.searchUser("testUser", "userinfo")).isEqualTo(true);
+	}
+	
+	
+	@Test
+<<<<<<< HEAD
 	public void writeUserInfoExisting() {
 		ArrayList<String> allergies = null;
 
@@ -177,6 +190,35 @@ public class DietbotTester {
 		assertThat(this.databaseEngine.getUserInfo("testUser", "age")).isEqualTo("20");
 	}
 
+=======
+	public void writeUserInfoNonExisting() {
+		ArrayList<String> allergies = new ArrayList<String>();
+		allergies.add("milk");
+
+		this.databaseEngine.writeUserInfo("testUserNonExisting", 21, "female", 1.64, 55, allergies, "normal", "testTopic", "testState");
+		assertThat(this.databaseEngine.searchUser("testUserNonExisting", "userinfo")).isEqualTo(true);
+		this.databaseEngine.deleteUserInfo("testUserNonExisting");
+	}
+	
+
+	@Test
+	public void setUserInfoString() {
+		this.databaseEngine.setUserInfo("testUser", "gender", "female");
+		assertThat(this.databaseEngine.getUserInfo("testUser", "gender")).isEqualTo("female");
+		this.databaseEngine.setUserInfo("testUser", "gender", "male");
+		assertThat(this.databaseEngine.getUserInfo("testUser", "gender")).isEqualTo("male");
+	}
+
+
+	@Test
+	public void setUserInfoInt() {
+		this.databaseEngine.setUserInfo("testUser", "age", 55);
+		assertThat(this.databaseEngine.getUserInfo("testUser", "age")).isEqualTo("55");
+		this.databaseEngine.setUserInfo("testUser", "age", 20);
+		assertThat(this.databaseEngine.getUserInfo("testUser", "age")).isEqualTo("20");
+	}
+
+>>>>>>> 54ea74084b331130fc0256f810737f7be2592687
 
 	@Test
 	public void setUserInfoDouble() {
@@ -1230,6 +1272,7 @@ public class DietbotTester {
 		assertThat(thrown).isEqualTo(false);
 		
 	}
+
 
 	@Test
 	public void testRecommendFriendState() throws Exception{

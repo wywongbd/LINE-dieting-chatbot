@@ -18,15 +18,22 @@ abstract class State {
     };
 
     /**
-     * Reply a message for input text
-     * @param text A String data type
-     * @return A String data type
+     * Synchronize between SQL and Rivescript
+     * @param userId String data type
+     * @param bot RiveScript data type 
      */
-    
     public void syncSQLWithRiveScript(String userId, RiveScript bot){
 		sql.setUserInfo(userId, "state", bot.getUservar(userId, "state"));
 		sql.setUserInfo(userId, "topic", bot.getUservar(userId, "topic"));
     }
 
+    /**
+     * Reply a message for input text in this state
+     * Abstract class function
+     * @param userId String data type
+     * @param text String data type
+     * @param bot RiveScript data type 
+     * @return String data type as the reply
+     */
     public abstract String reply(String userId, String text, RiveScript bot);
 }

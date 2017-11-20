@@ -81,20 +81,31 @@ public class DietbotController {
 	
 	private StateManager stateManager;
     // To do: delete 'controller: '
-	private final String defaultString = "Controller: I don't understand"; 
+	private final String defaultString = "I don't understand"; 
     private final String appreciateUsingCoupon = "Thanks, this is your coupon!";
 	private RecommendFriendState recommendFriendState = new RecommendFriendState();
 	
+	/**
+     * Default constructor of DiebotController
+     */
 	protected DietbotController() {
 		stateManager = new StateManager("sample-spring-boot-kitchensink/src/main/resources/rivescript");
 	}
-	
+
+	/**
+	 * Handle text message event from user
+	 * @param event TextMessageContent data type
+     */
 	@EventMapping
 	public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
 		TextMessageContent message = event.getMessage();
 		handleTextContent(event.getReplyToken(), event, message);
 	}
 
+	/**
+	 * Handle image message event from user
+	 * @param event ImageMessageContent data type
+     */
 	@EventMapping
 	public void handleImageMessageEvent(MessageEvent<ImageMessageContent> event) throws IOException {
 		final MessageContentResponse response;
@@ -113,6 +124,10 @@ public class DietbotController {
 
 	}
     
+    /**
+	 * This function is triggered when a new user friends/unblock the chatbot
+	 * @param event FollowEvent data type
+     */
     @EventMapping
     public static void handleFollowEvent(FollowEvent event) {
         // String replyToken = event.getReplyToken();
@@ -125,6 +140,10 @@ public class DietbotController {
 		}
     }
 
+     /**
+	 * This function is used to generate a PostBackEvent
+	 * @param event FollowEvent data type
+     */
     @EventMapping
     public void handlePostbackEvent(PostbackEvent event) {
         String replyToken = event.getReplyToken();
@@ -155,7 +174,11 @@ public class DietbotController {
         // 	+ ", param " + event.getPostbackContent().getParams().toString());
     }
 
-	
+	/**
+	 * Push text message to user
+	 * @param replyToken String data type representing the reply token
+	 * @param message String representing message to be replied to user
+     */	
 	private void replyText(@NonNull String replyToken, @NonNull String message) {
 		if (replyToken.isEmpty()) {
 			throw new IllegalArgumentException("replyToken must not be empty");
@@ -166,6 +189,11 @@ public class DietbotController {
 		this.reply(replyToken, new TextMessage(message));
 	}
 
+	/**
+	 * Push image to user
+	 * @param replyToken String data type representing the reply token
+	 * @param message String representing url of image to be replied to user
+     */	
 	private void replyImage(@NonNull String replyToken, @NonNull String url) {
 		if (replyToken.isEmpty()) {
 			throw new IllegalArgumentException("replyToken must not be empty");
@@ -173,10 +201,20 @@ public class DietbotController {
 		this.reply(replyToken, new ImageMessage(url, url));
 	}
 	
+	/**
+	 * Push message to user
+	 * @param replyToken String data type representing the reply token
+	 * @param message String representing message to be replied to user
+     */	
 	private void reply(@NonNull String replyToken, @NonNull Message message) {
 		reply(replyToken, Collections.singletonList(message));
 	}
 
+	/**
+	 * Push message to user
+	 * @param replyToken String data type representing the reply token
+	 * @param message List of Message objects to be replied to user
+     */	
 	private void reply(@NonNull String replyToken, @NonNull List<Message> messages) {
 		try {
 			BotApiResponse apiResponse = lineMessagingClient.replyMessage(new ReplyMessage(replyToken, messages)).get();
@@ -186,6 +224,11 @@ public class DietbotController {
 		}
 	}
 
+	/**
+	 * Push message to user
+	 * @param to String data type
+	 * @param message List of Message objects to be replied to user
+     */	
 	private void pushText(@NonNull String to, @NonNull String message) {
 		if (to.isEmpty()) {
 			throw new IllegalArgumentException("user id must not be empty");
@@ -196,6 +239,11 @@ public class DietbotController {
 		this.push(to, new TextMessage(message));
 	}
 
+	/**
+     * Push message to user
+	 * @param to String data type
+	 * @param url String representing url of image to be replied to user
+     */	
 	private void pushImage(@NonNull String to, @NonNull String url) {
 		if (to.isEmpty()) {
 			throw new IllegalArgumentException("user id must not be empty");
@@ -203,10 +251,20 @@ public class DietbotController {
 		this.push(to, new ImageMessage(url, url));
 	}
 
+	/**
+	 * Push message to user
+	 * @param to String data type
+	 * @param message Message data type
+     */	
 	private void push(@NonNull String to, @NonNull Message message) {
 		push(to, Collections.singletonList(message));
 	}
 
+	/**
+	 * Push message to user
+	 * @param to String data type
+	 * @param message List of Message objects to be replied to user
+     */
 	private void push(@NonNull String to, @NonNull List<Message> messages) {
 		try {
 			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(to, messages)).get();
@@ -216,6 +274,12 @@ public class DietbotController {
 		}
 	}
 
+	/**
+	 * This function handles text content from user, and uses stateManager object to generate appropriate replies to user
+	 * @param replyToken String representing reply token
+	 * @param event Event data type
+	 * @param content TextMessageContent object from user
+     */
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content) {
         String text = content.getText();
         log.info("Got text message from {}: {}", replyToken, text);
@@ -273,6 +337,12 @@ public class DietbotController {
      
     }
 
+    /**
+	 * This function handles image content from user, and uses stateManager object to generate appropriate replies to user
+	 * @param replyToken String representing reply token
+	 * @param event Event data type
+	 * @param jpg DownloadedContent object representing image from user
+     */
 	private void handleImageContent(String replyToken, Event event, DownloadedContent jpg) {
 		Vector<String> reply = null;
 		List<Message> replyList = new ArrayList<Message>(0);
@@ -290,6 +360,11 @@ public class DietbotController {
 	    this.reply(replyToken,replyList);
     }
 	
+	/**
+	 * Helper function 
+	 * @param ext String representing extension 
+	 * @param responseBody MessageContentResponse data type
+     */
 	public static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
 		log.info("Got content-type: {}", responseBody);
 
@@ -303,6 +378,10 @@ public class DietbotController {
 		}
 	}
 	
+	/**
+	 * Helper function 
+	 * @param ext String representing extension
+     */
 	public static DownloadedContent createTempFile(String ext) {
 		String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID().toString() + '.' + ext;
 		Path tempFile = DietbotApplication.downloadedContentDir.resolve(fileName);

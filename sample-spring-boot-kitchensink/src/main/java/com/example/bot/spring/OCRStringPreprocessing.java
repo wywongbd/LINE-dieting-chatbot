@@ -5,11 +5,8 @@ import java.util.ArrayList;
 public class OCRStringPreprocessing extends StringPreprocessing{
     /**
      * Process the raw string returned by Ocr API
-     * @param ocrRawString A String data type
-     * @param minLineLength A int data type
-     * @param minWordLength A int data type
-     * @param stopWordsSet A Set<String> data type
-     * @return A Set<String> data type
+     * @param ocrRawString String data type
+     * @return ArrayList<String> data type
      */
 	public ArrayList<String> processOcrRawString(String ocrRawString){
 		ArrayList<String> result = new ArrayList<String>();

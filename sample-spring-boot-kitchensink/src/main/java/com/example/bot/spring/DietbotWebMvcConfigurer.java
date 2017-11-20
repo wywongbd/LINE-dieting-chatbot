@@ -25,6 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @Slf4j
 public class DietbotWebMvcConfigurer extends WebMvcConfigurerAdapter {
+    /**
+     * Configure the MVC
+     * @param registry A ResourceHandlerRegistry data type of all configurations
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 

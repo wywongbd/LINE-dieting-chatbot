@@ -14,10 +14,11 @@ public class StandbyState extends State {
 	}
 
     /**
-     * Reply a message for input text
-     * Inherited from abstract base class
-     * @param text A String data type
-     * @return A String data type
+     * Reply a message for input text in this state
+     * @param userId String data type
+     * @param text String data type
+     * @param bot RiveScript data type 
+     * @return String data type as the reply
      */
 	public String reply(String userId, String text, RiveScript bot) {
 
@@ -41,6 +42,12 @@ public class StandbyState extends State {
 		return output;
 	}
 
+    /**
+     * Match trigger for cheat day
+     * @param userId String data type
+     * @param text String data type
+     * @return boolean data type
+     */
 	private boolean matchCheatDayTrigger(String userId, String text){
 		text = text.toLowerCase();
 		if(text.contains("cheat day") || text.contains("cheatday")){
