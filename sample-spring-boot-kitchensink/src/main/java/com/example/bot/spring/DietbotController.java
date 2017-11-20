@@ -275,7 +275,7 @@ public class DietbotController {
         this.reply(replyToken, replyList);
      
     }
-	
+
 	private void handleImageContent(String replyToken, Event event, DownloadedContent jpg) {
 		Vector<String> reply = null;
 		List<Message> replyList = new ArrayList<Message>(0);
