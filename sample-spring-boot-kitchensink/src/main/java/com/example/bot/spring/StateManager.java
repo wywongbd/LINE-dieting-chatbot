@@ -100,7 +100,8 @@ public class StateManager {
     };
     
     /**
-     * Default constructor for StateManager
+     * Prints two messages indicating current state and topic of RiveScript bot for debugging purposes
+     * @param path A string indicating the path of RiveScript resources 
      */
     public StateManager(String path) {
         // Load rive files for Rivescript object
@@ -111,6 +112,11 @@ public class StateManager {
         bot.setSubroutine("getNutritionOfFood", new getNutritionOfFood());
     }
 
+    /**
+     * Prints two messages indicating current state and topic of RiveScript bot for debugging purposes
+     * @param userId A String data type
+     * @return a String indicating whether the userId is a recognized by Database or not
+     */
     public String syncRiveScriptWithSQL(String userId){
         boolean isRegisteredUser = sql.searchUser(userId, "userinfo");
         
@@ -139,6 +145,7 @@ public class StateManager {
 //            replyMessages.add("Current topic is " + bot.getUservar(userId, "topic"));
 //        }
 //    }
+
 
     /**
      * Get output message after inputting text
@@ -248,10 +255,14 @@ public class StateManager {
     }
     
 
-    //use for save user info to database inside Rivescript
     public class setVariableToDB implements Subroutine {
 
-        // assume the order of parameter is: variable name, value1, ... , userID
+        /**
+        * Subroutine to be used within RiveScript to update user info 
+        * @param rs A RiveScript object
+        * @param args A String array
+        * @return a String 
+        */
         public String call(RiveScript rs, String[] args) {
 
             if ( args[0].equals("weight") || args[0].equals("height") ) {
