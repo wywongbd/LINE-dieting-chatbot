@@ -90,6 +90,17 @@
     - You have cancelled the update of information.<set state=standby>{topic=standby}
 < topic
 
+> topic input_menu 
+    + [*] (talk [to you] later|leave) [*]
+    - Okay see you later.{topic=standby}<set state=standby>
+    
+    + *
+    * <get img_received> == true => Thanks, I'm looking at your photo now! I'll try to give you some recommendations.
+    * <get url_received> == true => Thanks, I'm looking at your url now! I'll try to give you some recommendations.
+    * <get url_received> == false => Thanks, I'm looking at your text menu now! I'll try to give you some recommendations.
+
+< topic
+
 
 
 ///////////////////////////////////////standby
