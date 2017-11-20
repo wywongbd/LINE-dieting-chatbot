@@ -148,9 +148,11 @@ public class StateManager {
 
 
     /**
-     * Get output message after inputting text
-     * @param text A String data type
-     * @return A String data type
+     * Get a list of message objects 
+     * @param userId A String userId
+     * @param text A String representing content of message from user
+     * @param debug A boolean
+     * @return a list of message objects
      */
     public List<Message> chat(String userId, String text, boolean debug) throws Exception {
     	Vector<String> replyMessages = new Vector<String>(0);
@@ -211,9 +213,11 @@ public class StateManager {
     }
 
     /**
-     * Get output message after inputting image
-     * @param jpg A DownloadedContent data type
-     * @return A String data type
+     * Get a list of message objects 
+     * @param userId A String userId
+     * @param jpg A String representing image from user
+     * @param debug A boolean
+     * @return a list of message objects
      */
     public Vector<String> chat(String userId, DownloadedContent jpg, boolean debug) throws Exception {
     	Vector<String> replyMessages = new Vector<String>(0);
