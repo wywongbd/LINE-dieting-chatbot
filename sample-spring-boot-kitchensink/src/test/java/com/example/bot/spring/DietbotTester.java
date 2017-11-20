@@ -71,7 +71,7 @@ import java.util.Arrays;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-
+	
 @RunWith(SpringRunner.class)
 //@SpringBootTest(classes = { DietbotTester.class, DatabaseEngine.class })
 @SpringBootTest(classes = { DietbotTester.class, SQLDatabaseEngine.class })
@@ -132,6 +132,7 @@ public class DietbotTester {
 		databaseEngine.reset("testUserCalories", "userinfo");
 		databaseEngine.reset("testUserCalories", "userallergies");
 		databaseEngine.reset("testUserInputImage", "userinfo");
+		databaseEngine.reset("testRecommendFriendState", "campaign_user");
 	}
 
 	@Test
@@ -1196,9 +1197,9 @@ public class DietbotTester {
 		String adminUserId = "Udfd2991f287cc5c75f6c1d2c30c58a3a";
 		ArrayList<String> allergies = new ArrayList<String>();
 		allergies.add("seafood");
-
 		databaseEngine.reset(adminUserId, "userinfo");
 		databaseEngine.reset(adminUserId, "userallergies");
+
 		databaseEngine.writeUserInfo(adminUserId, 20, "male", 1.75, 60, allergies, "normal", "standby", "standby");
 
 		try{
@@ -1208,10 +1209,54 @@ public class DietbotTester {
     		chatBotReponse = ((TextMessage)stateManager.chat(adminUserId, input, true).get(0)).getText();
     		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
+    		String url = "https://dieting-chatbot.herokuapp.com/downloaded/2017-11-20T07:33:48.762-49f1625f-82f7-4c67-91cf-bb87586273b9.jpg";
+			DownloadedContent temp = new DownloadedContent(null, url);
+
+    		expectedResponse = "Hi Admin, your image has been well received!";
+    		chatBotReponse = stateManager.chat(adminUserId, temp, true).get(0);
+    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+
 		} catch (Exception e) {
 			thrown = true;
 		}
 		assertThat(thrown).isEqualTo(false);
 		
 	}
+
+	@Test
+	public void testRecommendFriendState() throws Exception{
+		boolean thrown = false;
+		try{
+			RecommendFriendState recommend = new RecommendFriendState();
+			String out = recommend.matchTrigger("friend:generate");
+
+			assertThat(out.equals("FRIEND")).isEqualTo(true);
+			out = recommend.matchTrigger("code:100000");
+			assertThat(out.equals("CODE")).isEqualTo(true);
+			out = recommend.matchTrigger("fdsjauewjknhfdsak");
+			assertThat(out.equals("nothing")).isEqualTo(true);
+
+			String userId = "ndjaydjg";
+			out = recommend.actionForCodeCommand("ndjaydjg", "1567").get(0);
+			assertThat(out).isEqualTo("Sorry, you cannot claim coupon!");
+
+			databaseEngine.addCampaignUser("testRecommendFriendState");
+			out = recommend.actionForCodeCommand("testRecommendFriendState", "52").get(0);
+			assertThat(out).isEqualTo("Sorry, this code does not exist!");
+
+			int code = databaseEngine.generateAndStoreCode("testRecommendFriendState");
+			out = recommend.actionForCodeCommand("testRecommendFriendState", Integer.toString(code)).get(0);
+			assertThat(out).isEqualTo("Sorry, You cannot claim your own code!");
+			this.databaseEngine.resetCoupon("testRecommendFriendState");
+
+			out = recommend.replyForFriendCommand("testRecommendFriendState");
+			assertThat(out != null).isEqualTo(true);
+			this.databaseEngine.resetCoupon("testRecommendFriendState");
+			
+		} catch (Exception e){
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+	}
+
  }

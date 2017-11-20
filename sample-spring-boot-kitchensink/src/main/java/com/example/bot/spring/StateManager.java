@@ -223,7 +223,7 @@ public class StateManager {
         if (userStatus.equals("NEW USER")) {
             replyMessages.add("Please finish giving us your personal information before sharing photos!");
         }
-        else if (userStatus.equals("REGISTERED USER")) {
+        else {
             currentState = bot.getUservar(userId, "state");
 
             if (adminAccessing == true && currentState.equals("standby") && userId.equals(ADMIN_USER_ID)){
