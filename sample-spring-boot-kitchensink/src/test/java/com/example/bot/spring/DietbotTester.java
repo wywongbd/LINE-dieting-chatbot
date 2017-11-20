@@ -141,7 +141,8 @@ public class DietbotTester {
 		databaseEngine.reset("testUserChatImageUpdateUserInfo", "userinfo");
 		databaseEngine.reset("testUserChatImagePostEating", "userinfo");
 	}
-	
+
+  
 	@Test
 	public void writeUserInfoExisting() {
 		ArrayList<String> allergies = null;
@@ -1045,12 +1046,12 @@ public class DietbotTester {
 		assertThat(thrown).isEqualTo(false);
 
 		// Reset database
-		databaseEngine.reset(userId, "userinfo");
-		databaseEngine.reset(userId, "userallergies");
-		databaseEngine.reset(userId, "menu");
-		databaseEngine.reset(userId, "recommendations");
-		databaseEngine.reset(userId, "eating_history");
-		databaseEngine.resetCoupon(userId);
+		databaseEngine.reset("testCollectUserInformation", "userinfo");
+		databaseEngine.reset("testCollectUserInformation", "userallergies");
+		databaseEngine.reset("testCollectUserInformation", "menu");
+		databaseEngine.reset("testCollectUserInformation", "recommendations");
+		databaseEngine.reset("testCollectUserInformation", "eating_history");
+		databaseEngine.resetCoupon("testCollectUserInformation");
 	}
 
 	@Test

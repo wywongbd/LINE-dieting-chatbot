@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - Class com.linecorp.bot.client.LineMessagingClientImplWiremockTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>Class com.linecorp.bot.client.LineMessagingClientImplWiremockTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.linecorp.bot.client.html">com.linecorp.bot.client</a> &gt; LineMessagingClientImplWiremockTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">5</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.061s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">status400BadRequestTest</td>
+<td>0.009s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">status401UnauthorizedTest</td>
+<td>0.008s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">status403ForbiddenTest</td>
+<td>0.010s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">status429TooManyRequestsTest</td>
+<td>0.014s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">status500InternalServerErrorTest</td>
+<td>0.020s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>22:45:01.605 [OkHttp http://localhost:55725/...] INFO com.linecorp.bot.client.wire - --&gt; GET http://localhost:55725/v2/bot/message/TOKEN/content http/1.1
+22:45:01.605 [OkHttp http://localhost:55725/...] INFO com.linecorp.bot.client.wire - Authorization: Bearer token
+22:45:01.605 [OkHttp http://localhost:55725/...] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
+22:45:01.605 [OkHttp http://localhost:55725/...] INFO com.linecorp.bot.client.wire - --&gt; END GET
+22:45:01.608 [OkHttp http://localhost:55725/...] INFO com.linecorp.bot.client.wire - &lt;-- 500 Server Error http://localhost:55725/v2/bot/message/TOKEN/content (3ms)
+22:45:01.608 [OkHttp http://localhost:55725/...] INFO com.linecorp.bot.client.wire - Content-Length: 55
+22:45:01.608 [OkHttp http://localhost:55725/...] INFO com.linecorp.bot.client.wire - 
+22:45:01.609 [OkHttp http://localhost:55725/...] INFO com.linecorp.bot.client.wire - {&quot;message&quot;:&quot;Error on the internal server&quot;,&quot;details&quot;:[]}
+22:45:01.609 [OkHttp http://localhost:55725/...] INFO com.linecorp.bot.client.wire - &lt;-- END HTTP (55-byte body)
+22:45:01.619 [OkHttp http://localhost:55727/...] INFO com.linecorp.bot.client.wire - --&gt; GET http://localhost:55727/v2/bot/message/TOKEN/content http/1.1
+22:45:01.620 [OkHttp http://localhost:55727/...] INFO com.linecorp.bot.client.wire - Authorization: Bearer token
+22:45:01.620 [OkHttp http://localhost:55727/...] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
+22:45:01.620 [OkHttp http://localhost:55727/...] INFO com.linecorp.bot.client.wire - --&gt; END GET
+22:45:01.622 [OkHttp http://localhost:55727/...] INFO com.linecorp.bot.client.wire - &lt;-- 403 Client Error http://localhost:55727/v2/bot/message/TOKEN/content (1ms)
+22:45:01.622 [OkHttp http://localhost:55727/...] INFO com.linecorp.bot.client.wire - Content-Length: 57
+22:45:01.623 [OkHttp http://localhost:55727/...] INFO com.linecorp.bot.client.wire - 
+22:45:01.623 [OkHttp http://localhost:55727/...] INFO com.linecorp.bot.client.wire - {&quot;message&quot;:&quot;Not authorized to use the API.&quot;,&quot;details&quot;:[]}
+22:45:01.623 [OkHttp http://localhost:55727/...] INFO com.linecorp.bot.client.wire - &lt;-- END HTTP (57-byte body)
+22:45:01.628 [OkHttp http://localhost:55729/...] INFO com.linecorp.bot.client.wire - --&gt; GET http://localhost:55729/v2/bot/message/TOKEN/content http/1.1
+22:45:01.628 [OkHttp http://localhost:55729/...] INFO com.linecorp.bot.client.wire - Authorization: Bearer token
+22:45:01.628 [OkHttp http://localhost:55729/...] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
+22:45:01.628 [OkHttp http://localhost:55729/...] INFO com.linecorp.bot.client.wire - --&gt; END GET
+22:45:01.631 [OkHttp http://localhost:55729/...] INFO com.linecorp.bot.client.wire - &lt;-- 401 Client Error http://localhost:55729/v2/bot/message/TOKEN/content (2ms)
+22:45:01.631 [OkHttp http://localhost:55729/...] INFO com.linecorp.bot.client.wire - Content-Length: 70
+22:45:01.631 [OkHttp http://localhost:55729/...] INFO com.linecorp.bot.client.wire - 
+22:45:01.631 [OkHttp http://localhost:55729/...] INFO com.linecorp.bot.client.wire - {&quot;message&quot;:&quot;Valid Channel access token is not specified&quot;,&quot;details&quot;:[]}
+22:45:01.631 [OkHttp http://localhost:55729/...] INFO com.linecorp.bot.client.wire - &lt;-- END HTTP (70-byte body)
+22:45:01.637 [OkHttp http://localhost:55731/...] INFO com.linecorp.bot.client.wire - --&gt; GET http://localhost:55731/v2/bot/message/TOKEN/content http/1.1
+22:45:01.638 [OkHttp http://localhost:55731/...] INFO com.linecorp.bot.client.wire - Authorization: Bearer token
+22:45:01.638 [OkHttp http://localhost:55731/...] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
+22:45:01.638 [OkHttp http://localhost:55731/...] INFO com.linecorp.bot.client.wire - --&gt; END GET
+22:45:01.640 [OkHttp http://localhost:55731/...] INFO com.linecorp.bot.client.wire - &lt;-- 400 Client Error http://localhost:55731/v2/bot/message/TOKEN/content (1ms)
+22:45:01.640 [OkHttp http://localhost:55731/...] INFO com.linecorp.bot.client.wire - Content-Length: 51
+22:45:01.640 [OkHttp http://localhost:55731/...] INFO com.linecorp.bot.client.wire - 
+22:45:01.640 [OkHttp http://localhost:55731/...] INFO com.linecorp.bot.client.wire - {&quot;message&quot;:&quot;Problem with the request&quot;,&quot;details&quot;:[]}
+22:45:01.640 [OkHttp http://localhost:55731/...] INFO com.linecorp.bot.client.wire - &lt;-- END HTTP (51-byte body)
+22:45:01.650 [OkHttp http://localhost:55733/...] INFO com.linecorp.bot.client.wire - --&gt; GET http://localhost:55733/v2/bot/message/TOKEN/content http/1.1
+22:45:01.650 [OkHttp http://localhost:55733/...] INFO com.linecorp.bot.client.wire - Authorization: Bearer token
+22:45:01.650 [OkHttp http://localhost:55733/...] INFO com.linecorp.bot.client.wire - User-Agent: line-botsdk-java/null
+22:45:01.650 [OkHttp http://localhost:55733/...] INFO com.linecorp.bot.client.wire - --&gt; END GET
+22:45:01.653 [OkHttp http://localhost:55733/...] INFO com.linecorp.bot.client.wire - &lt;-- 429 Client Error http://localhost:55733/v2/bot/message/TOKEN/content (2ms)
+22:45:01.653 [OkHttp http://localhost:55733/...] INFO com.linecorp.bot.client.wire - Content-Length: 64
+22:45:01.654 [OkHttp http://localhost:55733/...] INFO com.linecorp.bot.client.wire - 
+22:45:01.654 [OkHttp http://localhost:55733/...] INFO com.linecorp.bot.client.wire - {&quot;message&quot;:&quot;Exceeded the rate limit for API calls&quot;,&quot;details&quot;:[]}
+22:45:01.654 [OkHttp http://localhost:55733/...] INFO com.linecorp.bot.client.wire - &lt;-- END HTTP (64-byte body)
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 3.5</a> at Nov 20, 2017 10:45:02 PM</p>
+</div>
+</div>
+</body>
+</html>
