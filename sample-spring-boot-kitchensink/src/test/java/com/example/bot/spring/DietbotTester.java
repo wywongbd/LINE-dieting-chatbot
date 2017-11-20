@@ -120,8 +120,10 @@ public class DietbotTester {
 		databaseEngine.reset("testUserCalories", "userinfo");
 		databaseEngine.reset("testUserCalories", "userallergies");
 		databaseEngine.reset("testUserInputImage", "userinfo");
-		// for testCollectAndUpdateUserInformation function below
-		databaseEngine.reset("testCollectAndUpdateUserInformation", "userinfo");
+
+		// for testCollectUserInformation function below
+		databaseEngine.reset("testCollectUserInformation", "userinfo");
+		databaseEngine.reset("testCollectUserInformation", "userallergies");
 	}
 
 
@@ -953,10 +955,52 @@ public class DietbotTester {
 
 		try{
     		assertThat(db.getUserInfo(userId, "age")).isEqualTo("30");
+
 		} catch (Exception e) {
 			thrown = true;
 		}
 		assertThat(thrown).isEqualTo(false);
+
+		try{
+
+    		//test inputMenuState
+    		input = "input";
+    		expectedResponse = "Please let me have a look at your menu first. You can take a photo, or share the menu url with me."
+    							+ "\nIf you want to input menu using text, pls input food only and separate them by a comma.";
+    		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
+    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+
+    		
+    		//confirm
+    		input = "orange";
+    		expectedResponse = "Alright!";
+    		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
+    		
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+
+		try{
+    		//test inputMenuState
+    		input = "input";
+    		expectedResponse = "Please let me have a look at your menu first. You can take a photo, or share the menu url with me."
+    							+ "\nIf you want to input menu using text, pls input food only and separate them by a comma.";
+    		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
+    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+
+    		
+    		//confirm
+    		input = "http://fake_url";
+    		expectedResponse = "Thanks, I'm looking at your url now! I'll try to give you some recommendations.";
+    		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
+    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+    		
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+
 	}
 
 	@Test
