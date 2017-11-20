@@ -24,7 +24,6 @@ public class StandbyState extends State {
 		String output = null;
 		
 		if(matchCheatDayTrigger(userId, text)){
-			System.out.println(sql.canClaimCheatDay(userId));
 			if(sql.canClaimCheatDay(userId)){
 				sql.addUserEatingHistory(userId, "cheat day");
 				output = "Congratulations! You have done well to stick to your diet plan for more than a week, you can now enjoy your cheat day! Feel free to eat whatever you wish for the rest of the day.";

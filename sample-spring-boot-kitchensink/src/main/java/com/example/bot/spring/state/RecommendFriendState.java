@@ -46,12 +46,13 @@ public class RecommendFriendState extends State {
  
     public String replyForFriendCommand(String userId) {
         String reply = null;
-        if(true/*there are still some coupon left*/){
-            int newCode = sql.generateAndStoreCode(userId);
-            reply = "Thank you, your code is " + Integer.toString(newCode);
+        if(sql.couponExceeds5000(5000)){
+            reply = "Sorry, all coupon has been claimed already!";
+            
         }
         else{
-            reply = "Sorry, all coupon has been claimed already!";
+            int newCode = sql.generateAndStoreCode(userId);
+            reply = "Thank you, your code is " + Integer.toString(newCode);
         }
         return reply;
     }
@@ -80,7 +81,7 @@ public class RecommendFriendState extends State {
                 else if(requestUser.equals(userId)) {
                     vec.add("Sorry, You cannot claim your own code!");
                 }
-                else if(false/*there is no coupon left*/){
+                else if(sql.couponExceeds5000(5000)){
                     vec.add("Sorry, all coupon has been claimed already!");
                 }
                 else{
