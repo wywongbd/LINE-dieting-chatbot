@@ -134,7 +134,12 @@ public class DietbotTester {
 		databaseEngine.reset("testUserCalories", "userallergies");
 		databaseEngine.reset("testUserInputImage", "userinfo");
 		databaseEngine.reset("testRecommendFriendState", "campaign_user");
+
 		databaseEngine.reset("testRequestCoupon", "userinfo");
+		databaseEngine.reset("testUserChatImageInputMenu1", "userinfo");
+		databaseEngine.reset("testUserChatImageInputMenu2", "userinfo");
+		databaseEngine.reset("testUserChatImageUpdateUserInfo", "userinfo");
+		databaseEngine.reset("testUserChatImagePostEating", "userinfo");
 	}
 	
 	@Test
@@ -706,10 +711,6 @@ public class DietbotTester {
 		String chatBotReponse = null;
 		String expectedResponse = null;
 
-		// delete the testing userId first
-		databaseEngine.reset("testCollectUserInformation", "userinfo");
-		databaseEngine.reset("testCollectUserInformation", "userallergies");
-
 		//example random userId from LINE
 		String userId = "testCollectUserInformation";
 		stateManager = new StateManager("src/test/resources/rivescriptChatbot");
@@ -1043,6 +1044,13 @@ public class DietbotTester {
 		}
 		assertThat(thrown).isEqualTo(false);
 
+		// Reset database
+		databaseEngine.reset(userId, "userinfo");
+		databaseEngine.reset(userId, "userallergies");
+		databaseEngine.reset(userId, "menu");
+		databaseEngine.reset(userId, "recommendations");
+		databaseEngine.reset(userId, "eating_history");
+		databaseEngine.resetCoupon(userId);
 	}
 
 	@Test
