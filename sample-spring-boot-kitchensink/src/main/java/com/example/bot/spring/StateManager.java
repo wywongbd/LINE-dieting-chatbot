@@ -100,7 +100,8 @@ public class StateManager {
     };
     
     /**
-     * Default constructor for StateManager
+     * Prints two messages indicating current state and topic of RiveScript bot for debugging purposes
+     * @param path A string indicating the path of RiveScript resources 
      */
     public StateManager(String path) {
         // Load rive files for Rivescript object
@@ -111,6 +112,11 @@ public class StateManager {
         bot.setSubroutine("getNutritionOfFood", new getNutritionOfFood());
     }
 
+    /**
+     * Prints two messages indicating current state and topic of RiveScript bot for debugging purposes
+     * @param userId A String data type
+     * @return a String indicating whether the userId is a recognized by Database or not
+     */
     public String syncRiveScriptWithSQL(String userId){
         boolean isRegisteredUser = sql.searchUser(userId, "userinfo");
         
@@ -133,6 +139,13 @@ public class StateManager {
         }
     }
 
+    /**
+     * Prints two messages indicating current state and topic of RiveScript bot for debugging purposes
+     * @param userId A String data type
+     * @param replyMessages A Vector of String 
+     * @param debug A boolean 
+     * @return nothing
+     */
     public void debugMessage(String userId, Vector<String> replyMessages, boolean debug){
         if(debug == true) {
             replyMessages.add("Current state is " + bot.getUservar(userId, "state"));
@@ -265,10 +278,14 @@ public class StateManager {
     }
     
 
-    //use for save user info to database inside Rivescript
     public class setVariableToDB implements Subroutine {
 
-        // assume the order of parameter is: variable name, value1, ... , userID
+        /**
+        * Subroutine to be used within RiveScript to update user info 
+        * @param rs A RiveScript object
+        * @param args A String array
+        * @return a String 
+        */
         public String call(RiveScript rs, String[] args) {
 
             if ( args[0].equals("weight") || args[0].equals("height") ) {
