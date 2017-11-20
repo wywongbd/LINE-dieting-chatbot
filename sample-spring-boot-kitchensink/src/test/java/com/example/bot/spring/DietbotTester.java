@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.google.common.io.ByteStreams;
+import java.time.Instant;
 
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.ReplyMessage;
@@ -42,6 +43,10 @@ import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.Message;
+import com.linecorp.bot.model.event.source.Source;
+import com.linecorp.bot.model.event.source.UserSource;
+import com.linecorp.bot.model.event.postback.PostbackContent;
+import com.linecorp.bot.model.event.PostbackEvent;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -80,46 +85,46 @@ public class DietbotTester {
 
 	@BeforeClass
 	public static void addTestUser() {
-		ArrayList<String> menu = new ArrayList<String>();
-		menu.add("chicken potato soup");
-		ArrayList<String> allergies = new ArrayList<String>();
-		allergies.add("seafood");
+		// ArrayList<String> menu = new ArrayList<String>();
+		// menu.add("chicken potato soup");
+		// ArrayList<String> allergies = new ArrayList<String>();
+		// allergies.add("seafood");
 
-		databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "normal", "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, new ArrayList<String>(), "normal", "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, "normal", "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserHistory", 21, "male", 1.73, 65, allergies, "normal", "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserGoalLittle", 22, "male", 1.69, 69, allergies, "little_diet", "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserGoalSerious", 23, "male", 1.71, 68, allergies, "serious_diet", "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserCalories", 24, "male", 1.83, 77, allergies, "normal", "testTopic", "testState");
-		databaseEngine.addMenu("testUser", menu);
-		databaseEngine.addRecommendations("testUser");
+		// databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "normal", "testTopic", "testState");
+		// databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, new ArrayList<String>(), "normal", "testTopic", "testState");
+		// databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, "normal", "testTopic", "testState");
+		// databaseEngine.writeUserInfo("testUserHistory", 21, "male", 1.73, 65, allergies, "normal", "testTopic", "testState");
+		// databaseEngine.writeUserInfo("testUserGoalLittle", 22, "male", 1.69, 69, allergies, "little_diet", "testTopic", "testState");
+		// databaseEngine.writeUserInfo("testUserGoalSerious", 23, "male", 1.71, 68, allergies, "serious_diet", "testTopic", "testState");
+		// databaseEngine.writeUserInfo("testUserCalories", 24, "male", 1.83, 77, allergies, "normal", "testTopic", "testState");
+		// databaseEngine.addMenu("testUser", menu);
+		// databaseEngine.addRecommendations("testUser");
 	}
 
 	@AfterClass
 	public static void removeTestUser() {
-		databaseEngine.reset("testUser", "userinfo");
-		databaseEngine.reset("testUser", "menu");
-		databaseEngine.reset("testUser", "recommendations");
-		databaseEngine.reset("testUser", "userallergies");
-		databaseEngine.reset("testUserIntake", "userinfo");
-		databaseEngine.reset("testUserIntake", "userallergies");
-		databaseEngine.reset("testUserAllergy", "userinfo");
-		databaseEngine.reset("testUserAllergy", "userallergies");
-		databaseEngine.reset("testUserHistory", "userinfo");
-		databaseEngine.reset("testUserHistory", "userallergies");
-		databaseEngine.reset("testUserGoalLittle", "userinfo");
-		databaseEngine.reset("testUserGoalLittle", "userallergies");
-		databaseEngine.reset("testUserGoalSerious", "userinfo");
-		databaseEngine.reset("testUserGoalSerious", "userallergies");
-		databaseEngine.reset("testUserCalories", "userinfo");
-		databaseEngine.reset("testUserCalories", "userallergies");
+		// databaseEngine.reset("testUser", "userinfo");
+		// databaseEngine.reset("testUser", "menu");
+		// databaseEngine.reset("testUser", "recommendations");
+		// databaseEngine.reset("testUser", "userallergies");
+		// databaseEngine.reset("testUserIntake", "userinfo");
+		// databaseEngine.reset("testUserIntake", "userallergies");
+		// databaseEngine.reset("testUserAllergy", "userinfo");
+		// databaseEngine.reset("testUserAllergy", "userallergies");
+		// databaseEngine.reset("testUserHistory", "userinfo");
+		// databaseEngine.reset("testUserHistory", "userallergies");
+		// databaseEngine.reset("testUserGoalLittle", "userinfo");
+		// databaseEngine.reset("testUserGoalLittle", "userallergies");
+		// databaseEngine.reset("testUserGoalSerious", "userinfo");
+		// databaseEngine.reset("testUserGoalSerious", "userallergies");
+		// databaseEngine.reset("testUserCalories", "userinfo");
+		// databaseEngine.reset("testUserCalories", "userallergies");
 
 		// for testCollectAndUpdateUserInformation function below
-		databaseEngine.reset("testCollectAndUpdateUserInformation", "userinfo");
+		// databaseEngine.reset("testCollectAndUpdateUserInformation", "userinfo");
+		databaseEngine.reset("testHandleFollowEvent", "campaign_user");
 	}
 
-	
 	@Test
 	public void writeUserInfoExisting() {
 		ArrayList<String> allergies = null;
@@ -939,5 +944,60 @@ public class DietbotTester {
 		}
 		assertThat(thrown).isEqualTo(false);
 	}
+	
+		@Test
+	public void testHandleFollowEvent() throws Exception {
+		boolean thrown = false;
+		try{
+			String testUserId = "testHandleFollowEvent";
+			String testReplyToken = "testReplyToken";
+			Instant timestamp = Instant.now();
+			Source testSource = new UserSource("testHandleFollowEvent");
+			Event testFollowEvent = new FollowEvent(testReplyToken, testSource, timestamp);
+			DietbotController.handleFollowEvent(((FollowEvent) testFollowEvent));
+			assertThat(databaseEngine.searchUser(testSource.getUserId(), "campaign_user")).isEqualTo(true);
+
+		} catch (Exception e){
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+	}
+
+
+	@Test
+	public void testCreateTempFile() throws Exception {
+		boolean thrown = false;
+		try{
+			 DietbotController.DownloadedContent dl = DietbotController.createTempFile("");
+		} catch (Exception e){
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(true);
+	}
+
+	@Test
+	public void testSaveContent() throws Exception{
+		boolean thrown = false;
+		try{
+			DietbotController.DownloadedContent dl = DietbotController.saveContent("jpg", null);
+		} catch (Exception e){
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(true);
+
+	}
+
+	@Test
+	public void testCreateUri() throws Exception{
+		boolean thrown = false;
+		try{
+			String out = DietbotController.createUri("jpg");
+		} catch (Exception e){
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+
+	}
+
 
  }

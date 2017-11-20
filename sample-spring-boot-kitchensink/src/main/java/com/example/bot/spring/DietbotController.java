@@ -62,7 +62,8 @@ import com.linecorp.bot.model.message.template.ConfirmTemplate;
 import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
-
+import com.linecorp.bot.model.event.source.Source;
+import com.linecorp.bot.model.event.source.UserSource;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -113,9 +114,8 @@ public class DietbotController {
 	}
     
     @EventMapping
-    public void handleFollowEvent(FollowEvent event) {
-        String replyToken = event.getReplyToken();
-        this.replyText(replyToken, "Got followed event");
+    public static void handleFollowEvent(FollowEvent event) {
+        // String replyToken = event.getReplyToken();
         String userId = event.getSource().getUserId();
 		SQLDatabaseEngine sql = new SQLDatabaseEngine();
 
@@ -290,7 +290,7 @@ public class DietbotController {
 	    this.reply(replyToken,replyList);
     }
 	
-	private static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
+	public static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
 		log.info("Got content-type: {}", responseBody);
 
 		DownloadedContent tempFile = createTempFile(ext);
@@ -303,14 +303,14 @@ public class DietbotController {
 		}
 	}
 	
-	private static DownloadedContent createTempFile(String ext) {
+	public static DownloadedContent createTempFile(String ext) {
 		String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID().toString() + '.' + ext;
 		Path tempFile = DietbotApplication.downloadedContentDir.resolve(fileName);
 		tempFile.toFile().deleteOnExit();
 		return new DownloadedContent(tempFile, createUri("/downloaded/" + tempFile.getFileName()));
 	}
 	
-	static String createUri(String path) {
+	public static String createUri(String path) {
 		return ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();
 	}
 
