@@ -63,6 +63,10 @@ import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
 import lombok.NonNull;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -121,6 +125,37 @@ public class DietbotController {
 			sql.addCampaignUser(userId);
 		}
     }
+
+    @EventMapping
+    public void handlePostbackEvent(PostbackEvent event) {
+        String replyToken = event.getReplyToken();
+        String userId = event.getSource().getUserId();
+        String data = event.getPostbackContent().getData();
+        String date = event.getPostbackContent().getParams().toString();
+        List<Message> replyList = null;
+        date = date.replace("{date=", "").replace("}", "");
+
+        if (date.length() > 0) {
+        	String[] temp = date.split("-");
+        	LocalDate inputDate = LocalDate.of(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), Integer.parseInt(temp[2]));
+        	LocalDate today = LocalDate.now().plusDays(1);
+        	long daysBetween = ChronoUnit.DAYS.between(inputDate, today);
+        	data = data + " " + Long.toString(daysBetween);
+        }
+
+        try {
+
+			replyList = stateManager.chat(userId, data, true);
+	        this.reply(replyToken, replyList);
+
+    	} catch (Exception e) {
+    		this.replyText(replyToken, defaultString);
+    		return;
+    	}
+        // this.replyText(replyToken, "Got postback data " + event.getPostbackContent().getData()
+        // 	+ ", param " + event.getPostbackContent().getParams().toString());
+    }
+
 	
 	private void replyText(@NonNull String replyToken, @NonNull String message) {
 		if (replyToken.isEmpty()) {
@@ -187,9 +222,10 @@ public class DietbotController {
         log.info("Got text message from {}: {}", replyToken, text);
         
         Vector<String> reply = null;
-        List<Message> replyList = new ArrayList<Message>(0);
+        List<Message> replyList = null;
         String userId = event.getSource().getUserId();
         SQLDatabaseEngine sql = new SQLDatabaseEngine();
+            System.out.println("controller 1");
 
         try {
 			UserProfileResponse profile = lineMessagingClient.getProfile(event.getSource().getUserId()).get();
@@ -209,21 +245,30 @@ public class DietbotController {
             		this.pushImage(requestUser, url);
 					return;
 				}
+            System.out.println("controller 2");
+
+				// create a List of Message object for this condition
+				replyList = new ArrayList<Message>(0);
+		    	for (String replyMessage:reply) {
+		         	log.info("Returns echo message {}: {}", replyToken, replyMessage);
+		         	replyList.add(new TextMessage(replyMessage));
+		        }
+    	
+            System.out.println("controller 3");
 			}
 			else {
-				reply = stateManager.chat(userId, text, true);
+            System.out.println("controller 4");
+				// a general List of message
+				replyList = stateManager.chat(userId, text, true);
+
+            System.out.println("controller 5");
 			}
     	} catch (Exception e) {
-    		this.replyText(replyToken,defaultString);
+    		this.replyText(replyToken, defaultString);
     		return;
     	}
     	
-    	for (String replyMessage:reply) {
-         	log.info("Returns echo message {}: {}", replyToken, replyMessage);
-         	replyList.add(new TextMessage(replyMessage));
-        }
-    	
-        this.reply(replyToken,replyList);
+        this.reply(replyToken, replyList);
      
     }
 	

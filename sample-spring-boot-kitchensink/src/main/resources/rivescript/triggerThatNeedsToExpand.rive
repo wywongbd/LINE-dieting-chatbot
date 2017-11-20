@@ -9,20 +9,6 @@
 
 < topic
 
-
-> topic input_menu 
-	+ [*] (talk [to you] later|leave) [*]
-	- Okay see you later.{topic=standby}<set state=standby>
-    
-	+ *
-	* <get img_received> == true => Thanks, I'm looking at your photo now! I'll try to give you some recommendations.
-	* <get url_received> == true => Thanks, I'm looking at your url now! I'll try to give you some recommendations.
-	- I don't understand. Can you please provide me with a photo or url of your menu?
-	
-< topic
-
-
-
 > topic post_eating
 
 	+ [*] leave [*]
@@ -32,18 +18,6 @@
     - Okay. I have recorded that down. :D{topic=standby}<set state=standby>
 
 < topic
-
-
-
-//> topic provide_info
-//    + [*] (talk [to you] later|leave) [*]
-//    - Okay see you later.{topic=standby}<set state=standby>
-//    
-//	+ *
-//	- provide_info
-//< topic
-
-
 
 > topic recommend
 
