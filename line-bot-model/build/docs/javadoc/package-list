@@ -1,0 +1,13 @@
+com.linecorp.bot.model
+com.linecorp.bot.model.action
+com.linecorp.bot.model.error
+com.linecorp.bot.model.event
+com.linecorp.bot.model.event.beacon
+com.linecorp.bot.model.event.message
+com.linecorp.bot.model.event.postback
+com.linecorp.bot.model.event.source
+com.linecorp.bot.model.message
+com.linecorp.bot.model.message.imagemap
+com.linecorp.bot.model.message.template
+com.linecorp.bot.model.profile
+com.linecorp.bot.model.response
