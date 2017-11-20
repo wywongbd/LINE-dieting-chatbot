@@ -71,7 +71,7 @@ import java.util.Arrays;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-
+	
 @RunWith(SpringRunner.class)
 //@SpringBootTest(classes = { DietbotTester.class, DatabaseEngine.class })
 @SpringBootTest(classes = { DietbotTester.class, SQLDatabaseEngine.class })
@@ -132,74 +132,7 @@ public class DietbotTester {
 		databaseEngine.reset("testUserCalories", "userinfo");
 		databaseEngine.reset("testUserCalories", "userallergies");
 		databaseEngine.reset("testUserInputImage", "userinfo");
-
-		// for testCollectUserInformation function below
-		databaseEngine.reset("testCollectUserInformation", "userinfo");
-		databaseEngine.reset("testCollectUserInformation", "userallergies");
 		databaseEngine.reset("testRecommendFriendState", "campaign_user");
-	}
-
-	
-@RunWith(SpringRunner.class)
-//@SpringBootTest(classes = { DietbotTester.class, DatabaseEngine.class })
-@SpringBootTest(classes = { DietbotTester.class, SQLDatabaseEngine.class })
-public class DietbotTester {
-	@Autowired
-	private static SQLDatabaseEngine databaseEngine;
-	private RiveScript bot;
-	private StateManager stateManager;
-
-	static {
-		databaseEngine = new SQLDatabaseEngine();
-	}
-	
-	public DietbotTester() {
-		bot = new RiveScript();
-		stateManager = new StateManager("src/main/resources/rivescript");
-	}
-
-	@BeforeClass
-	public static void addTestUser() {
-		ArrayList<String> menu = new ArrayList<String>();
-		menu.add("chicken potato soup");
-		ArrayList<String> allergies = new ArrayList<String>();
-		allergies.add("seafood");
-
-		 databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "normal", "testTopic", "testState");
-		 databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, new ArrayList<String>(), "normal", "testTopic", "testState");
-		 databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, "normal", "testTopic", "testState");
-		 databaseEngine.writeUserInfo("testUserHistory", 21, "male", 1.73, 65, allergies, "normal", "testTopic", "testState");
-		 databaseEngine.writeUserInfo("testUserGoalLittle", 22, "male", 1.69, 69, allergies, "little_diet", "testTopic", "testState");
-		 databaseEngine.writeUserInfo("testUserGoalSerious", 23, "male", 1.71, 68, allergies, "serious_diet", "testTopic", "testState");
-		 databaseEngine.writeUserInfo("testUserCalories", 24, "male", 1.83, 77, allergies, "normal", "testTopic", "testState");
-		 databaseEngine.writeUserInfo("testUserInputImage", 22, "male", 1.70, 81, allergies, "normal", "standby", "standby");
-		 databaseEngine.writeUserInfo("testUserChatImageInputMenu1", 15, "male", 1.72, 82, allergies, "normal", "input_menu", "input_menu");
-		 databaseEngine.writeUserInfo("testUserChatImageInputMenu2", 15, "male", 1.72, 82, allergies, "normal", "input_menu", "input_menu");
-		 databaseEngine.writeUserInfo("testUserChatImageUpdateUserInfo", 17, "male", 1.73, 83, allergies, "normal", "update_user_info", "update_user_info");
-		 databaseEngine.writeUserInfo("testUserChatImagePostEating", 18, "male", 1.74, 84, allergies, "normal", "post_eating", "post_eating");
-		 databaseEngine.addMenu("testUser", menu);
-		 databaseEngine.addRecommendations("testUser");
-	}
-
-	@AfterClass
-	public static void removeTestUser() {
-		databaseEngine.reset("testUser", "userinfo");
-		databaseEngine.reset("testUser", "menu");
-		databaseEngine.reset("testUser", "recommendations");
-		databaseEngine.reset("testUser", "userallergies");
-		databaseEngine.reset("testUserIntake", "userinfo");
-		databaseEngine.reset("testUserIntake", "userallergies");
-		databaseEngine.reset("testUserAllergy", "userinfo");
-		databaseEngine.reset("testUserAllergy", "userallergies");
-		databaseEngine.reset("testUserHistory", "userinfo");
-		databaseEngine.reset("testUserHistory", "userallergies");
-		databaseEngine.reset("testUserGoalLittle", "userinfo");
-		databaseEngine.reset("testUserGoalLittle", "userallergies");
-		databaseEngine.reset("testUserGoalSerious", "userinfo");
-		databaseEngine.reset("testUserGoalSerious", "userallergies");
-		databaseEngine.reset("testUserCalories", "userinfo");
-		databaseEngine.reset("testUserCalories", "userallergies");
-		databaseEngine.reset("testUserInputImage", "userinfo");
 	}
 
 	@Test
