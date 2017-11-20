@@ -133,6 +133,10 @@ public class DietbotTester {
 		databaseEngine.reset("testUserCalories", "userallergies");
 		databaseEngine.reset("testUserInputImage", "userinfo");
 		databaseEngine.reset("testRecommendFriendState", "campaign_user");
+		databaseEngine.reset("testUserChatImageInputMenu1", "userinfo");
+		databaseEngine.reset("testUserChatImageInputMenu2", "userinfo");
+		databaseEngine.reset("testUserChatImageUpdateUserInfo", "userinfo");
+		databaseEngine.reset("testUserChatImagePostEating", "userinfo");
 	}
 
 	@Test
