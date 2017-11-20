@@ -15,7 +15,8 @@
 > topic update_user_name_confirmation
 
     + @yes [*]
-    - Ok. Nice to meet you <get name>!<set state=standby>{topic=standby}<call>setVariableToDB name <get name> <id> </call>
+    - Ok. Nice to meet you <get name>!<set state=standby>{topic=standby}
+    // <call>setVariableToDB name <get name> <id> </call>
 
     + *
     - Can you enter your name again? Pls~{topic=update_user_name}

@@ -115,7 +115,8 @@ public class DietbotTester {
 		databaseEngine.reset("testUserCalories", "userinfo");
 		databaseEngine.reset("testUserCalories", "userallergies");
 
-		databaseEngine.reset("testCollectUserInformation", "userinfo");
+		// for testCollectAndUpdateUserInformation function below
+		databaseEngine.reset("testCollectAndUpdateUserInformation", "userinfo");
 	}
 
 	
@@ -666,10 +667,8 @@ public class DietbotTester {
 	
  }
 
-
-
 	@Test
-	public void testCollectUserInformation() throws Exception {
+	public void testCollectAndUpdateUserInformation() throws Exception {
 		boolean thrown = false;
 		String input = null;
 		String chatBotReponse = null;
@@ -677,9 +676,10 @@ public class DietbotTester {
 
 		//example random userId from LINE
 		String userId = "testCollectUserInformation";
+		stateManager = new StateManager("src/test/resources/rivescriptChatbot");
+    	SQLDatabaseEngine db = new SQLDatabaseEngine();
 
 		try{
-			stateManager = new StateManager("src/test/resources/rivescriptChatbot");
 			//random input at first when the user start chatting
 			input = "fajsofifeojfeoijj";
     		expectedResponse = "Hi! I am your personal Dieting Chatbot!\n"
@@ -693,6 +693,13 @@ public class DietbotTester {
     		expectedResponse = "Is Gord your name?";
     		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
     		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+
+		try{
 
     		//user entered a wrong name so they say no
     		input = "no";
@@ -712,6 +719,12 @@ public class DietbotTester {
     		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
     		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+		
+		try{
     		//user enter their age
     		input = "i'm 8";
     		expectedResponse = "Are you 8 years old?";
@@ -735,6 +748,12 @@ public class DietbotTester {
     		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
     		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+		
+		try{
     		//user enter their gender
     		input = "M";
     		expectedResponse = "You are a m. Ok, so what is your weight (in kg)? Please input an integer.";
@@ -758,6 +777,12 @@ public class DietbotTester {
     		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
     		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+		
+		try{
     		//confirm
     		input = "Yes";
     		expectedResponse = "Alright, then what is your height in cm?";
@@ -781,6 +806,12 @@ public class DietbotTester {
     		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
     		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+		
+		try{
     		//confirm
     		input = "yes";
     		expectedResponse = "Great. Are you allergic to milk? (Yes/No)";
@@ -805,6 +836,12 @@ public class DietbotTester {
     		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
     		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+		
+		try{
     		//answer allergy
     		input = "yes";
     		expectedResponse ="I see, I'll take note of that. From a scale of 1 to 3, how urgent are you in cutting down your weight? Please input 1, 2 or 3." 
@@ -822,12 +859,17 @@ public class DietbotTester {
     		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
     		//query user information to check the correctness
-    		SQLDatabaseEngine db = new SQLDatabaseEngine();
     		assertThat(db.getUserInfo(userId, "age")).isEqualTo("20");
     		assertThat(db.getUserInfo(userId, "gender")).isEqualTo("male");
     		assertThat(db.getUserInfo(userId, "height")).isEqualTo("176.0");
     		assertThat(db.getUserInfo(userId, "weight")).isEqualTo("62.0");
 
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+		
+		try{
 
 
     		//user want to update their personal info
@@ -858,6 +900,12 @@ public class DietbotTester {
     		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
 
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+
+		try{
     		// repeat the questioning process
 
     		//user enter their age
@@ -866,11 +914,25 @@ public class DietbotTester {
     		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
     		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+
+		try{
+
     		//confirm
     		input = "yes";
     		expectedResponse = "Alright!";
     		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
     		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+    		
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+
+		try{
 
 
     		// //user entered a wrong name so they say no
@@ -1002,4 +1064,3 @@ public class DietbotTester {
 	}
 
  }
-

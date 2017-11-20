@@ -36,8 +36,4 @@ public class TextMessage implements Message {
     public TextMessage(final String text) {
         this.text = text;
     }
-
-    public String getText(){
-    	return text;
-    }
 }
