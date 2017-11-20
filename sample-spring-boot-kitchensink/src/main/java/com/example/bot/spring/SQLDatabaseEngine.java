@@ -95,8 +95,8 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				stmtUpdate.close();
-				connection.close();
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -125,8 +125,8 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				stmtUpdate.close();
-				connection.close();
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -155,8 +155,8 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				stmtUpdate.close();
-				connection.close();
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -185,8 +185,8 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				stmtUpdate.close();
-				connection.close();
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -225,9 +225,9 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -270,8 +270,8 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				stmtUpdate.close();
-				connection.close();
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -301,9 +301,9 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception ex) {
 				log.info("Exception while closing connection of database: {}", ex.toString());
 			}
@@ -339,8 +339,8 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				stmtDelete.close();
-				connection.close();
+				if (stmtDelete != null) {stmtDelete.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -370,8 +370,8 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				stmtUpdate.close();
-				connection.close();
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -414,8 +414,8 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				stmtUpdate.close();
-				connection.close();
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -462,10 +462,10 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				stmtUpdate.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -509,8 +509,8 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				stmtUpdate.close();
-				connection.close();
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -561,10 +561,10 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				stmtUpdate.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -613,10 +613,10 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				stmtUpdate.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -653,9 +653,9 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -685,9 +685,9 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception ex) {
 				log.info("Exception while closing connection of database: {}", ex.toString());
 			}
@@ -721,9 +721,9 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception ex) {
 				log.info("Exception while closing connection of database: {}", ex.toString());
 			}
@@ -757,9 +757,9 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception ex) {
 				log.info("Exception while closing connection of database: {}", ex.toString());
 			}
@@ -793,9 +793,9 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception ex) {
 				log.info("Exception while closing connection of database: {}", ex.toString());
 			}
@@ -822,8 +822,8 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				stmtUpdate.close();
-				connection.close();
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -863,10 +863,10 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				stmtUpdate.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -904,8 +904,8 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				stmtUpdate.close();
-				connection.close();
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -937,9 +937,9 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception ex) {
 				log.info("Exception while closing connection of database: {}", ex.toString());
 			}
@@ -974,8 +974,8 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				stmtUpdate.close();
-				connection.close();
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -1004,9 +1004,9 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception ex) {
 				log.info("Exception while closing connection of database: {}", ex.toString());
 			}
@@ -1018,8 +1018,7 @@ public class SQLDatabaseEngine {
 	// Adds the input meals to the user's eating history
 	public void addUserEatingHistory(String userId, String meals) {
 		String[] mealList = meals.split(",");
-		StringJoiner foodJoiner = new StringJoiner(",");
-		StringJoiner typeJoiner = new StringJoiner(",");
+		StringJoiner joiner = new StringJoiner(",");
 		Connection connection = null;
 		PreparedStatement stmtQuery = null;
 		PreparedStatement stmtUpdate = null;
@@ -1032,7 +1031,6 @@ public class SQLDatabaseEngine {
 				"SELECT " +
 					"DISTINCT ON (meal_name) " +
 					"food, " +
-					"type, " +
 					"? AS meal_name, " +
 					"similarity(?, food_type.food) AS sim " +
 				"FROM food_type " +
@@ -1043,28 +1041,26 @@ public class SQLDatabaseEngine {
 				stmtQuery.setString(2, meal);
 				rs = stmtQuery.executeQuery();
 				while(rs.next()) {
-					foodJoiner.add(rs.getString(1));
-					typeJoiner.add(rs.getString(2));
+					joiner.add(rs.getString(1));
 				}
 			}
 
 			stmtUpdate = connection.prepareStatement(
 				"INSERT INTO eating_history " +
-				"VALUES (?, ?, ?, ?, CURRENT_DATE)"
+				"VALUES (?, ?, ?, CURRENT_DATE)"
 			);
 			stmtUpdate.setString(1, userId);
 			stmtUpdate.setString(2, meals);
-			stmtUpdate.setString(3, foodJoiner.toString());
-			stmtUpdate.setString(4, typeJoiner.toString());
+			stmtUpdate.setString(3, joiner.toString());
 			stmtUpdate.executeUpdate();
 		} catch (Exception e) {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				stmtUpdate.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -1097,9 +1093,9 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception ex) {
 				log.info("Exception while closing connection of database: {}", ex.toString());
 			}
@@ -1134,8 +1130,8 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				stmtUpdate.close();
-				connection.close();
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -1165,9 +1161,9 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception ex) {
 				log.info("Exception while closing connection of database: {}", ex.toString());
 			}
@@ -1208,9 +1204,9 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception ex) {
 				log.info("Exception while closing connection of database: {}", ex.toString());
 			}
@@ -1246,85 +1242,15 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				rs.close();
-				stmtQuery.close();
-				connection.close();
+				if (rs != null) {rs.close();}
+				if (stmtQuery != null) {stmtQuery.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception ex) {
 				log.info("Exception while closing connection of database: {}", ex.toString());
 			}
 		}
 		return result;
-	}
-
-
-	// Returns true if the user has exceed their daily calorie quota, returns false otherwise
-	public boolean exceedDailyCalorieQuota(String userId) {
-		Connection connection = null;
-		PreparedStatement stmtQuery = null;
-		ResultSet rs = null;
-		double calorieQuota = 0;
-		double consumedCalories = 0;
-		ArrayList<String> eatenFoodTypes = new ArrayList<String>();
-		try {
-			connection = this.getConnection();
-
-			// Retrieve the user's daily calorie quota
-			stmtQuery = connection.prepareStatement(
-				"SELECT calories " + 
-				"FROM recommended_daily_calories RDC " +
-				"JOIN userinfo ON userid = ? " + 
-					"AND userinfo.age >= RDC.age_min " + 
-					"AND userinfo.age <= RDC.age_max " + 
-					"AND userinfo.gender = RDC.gender" 
-			);
-			stmtQuery.setString(1, userId);
-			rs = stmtQuery.executeQuery(); 
-			while(rs.next()) {
-				calorieQuota = rs.getDouble(1);
-			}
-
-			// Collect the food types that the user has consumed today
-			stmtQuery = connection.prepareStatement(
-				"SELECT food_type " +
-				"FROM eating_history " +
-				"WHERE userid = ? " +
-					"AND date = CURRENT_DATE"
-			);
-			stmtQuery.setString(1, userId);
-			rs = stmtQuery.executeQuery(); 
-			while(rs.next()) {
-				for (String food_type: rs.getString(1).split(",")) {
-					eatenFoodTypes.add(food_type);
-				}
-			}
-
-			// Aggregate the total calories that the user has consumed today
-			stmtQuery = connection.prepareStatement(
-				"SELECT average_calories " +
-				"FROM food_type_calories " +
-				"WHERE food_type = ?"
-			);
-			for (String food_type: eatenFoodTypes) {
-				stmtQuery.setString(1, food_type);
-				rs = stmtQuery.executeQuery(); 
-				while(rs.next()) {
-					consumedCalories += rs.getDouble(1);
-				}
-			}
-		} catch (Exception e) {
-			log.info("Exception while connecting to database: {}", e.toString());
-		} finally {
-			try {
-				rs.close();
-				stmtQuery.close();
-				connection.close();
-			} catch (Exception ex) {
-				log.info("Exception while closing connection of database: {}", ex.toString());
-			}
-		}
-		if (consumedCalories >= calorieQuota) {return true;}
-		else {return false;}
-	}
+	}	
 
 
 	// Deletes all records corresponding to the userId in the input table
@@ -1345,8 +1271,8 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				stmtUpdate.close();
-				connection.close();
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
@@ -1372,8 +1298,8 @@ public class SQLDatabaseEngine {
 			log.info("Exception while connecting to database: {}", e.toString());
 		} finally {
 			try {
-				stmtUpdate.close();
-				connection.close();
+				if (stmtUpdate != null) {stmtUpdate.close();}
+				if (connection != null) {connection.close();}
 			} catch (Exception e) {
 				log.info("Exception while closing connection to database: {}", e.toString());
 			}
