@@ -46,7 +46,7 @@ public class RecommendFriendState extends State {
  
     public String replyForFriendCommand(String userId) {
         String reply = null;
-        if(sql.couponExceeds5000(5000)){
+        if(sql.couponExceeds5000(3)){
             reply = "Sorry, all coupon has been claimed already!";
             
         }
@@ -81,7 +81,7 @@ public class RecommendFriendState extends State {
                 else if(requestUser.equals(userId)) {
                     vec.add("Sorry, You cannot claim your own code!");
                 }
-                else if(sql.couponExceeds5000(5000)){
+                else if(sql.couponExceeds5000(3)){
                     vec.add("Sorry, all coupon has been claimed already!");
                 }
                 else{
