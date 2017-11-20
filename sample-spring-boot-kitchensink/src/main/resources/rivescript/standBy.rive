@@ -12,6 +12,7 @@
         ^ * Record what you have eaten last meal
         ^ * Update personal information
         ^ * Check your nutrient history or food nutrient
+        ^ * Claim your cheat day and enjoy eating whatever you wish for today!
 
     + [*] google *
     - Google results for "<star>": <a href="http://google.com/search?q=<star>">Click Here</a>
