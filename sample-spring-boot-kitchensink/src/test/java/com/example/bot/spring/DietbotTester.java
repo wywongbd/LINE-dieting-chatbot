@@ -180,7 +180,7 @@ public class DietbotTester {
 		assertThat(this.databaseEngine.getUserInfo("testUser", "age")).isEqualTo("20");
 	}
 
-
+	
 	@Test
 	public void setUserInfoDouble() {
 		this.databaseEngine.setUserInfo("testUser", "height", 2.17);
@@ -1233,7 +1233,8 @@ public class DietbotTester {
 		assertThat(thrown).isEqualTo(false);
 		
 	}
-	
+
+
 	@Test
 	public void testRecommendFriendState() throws Exception{
 		boolean thrown = false;
