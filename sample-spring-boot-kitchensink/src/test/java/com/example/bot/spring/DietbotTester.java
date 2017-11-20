@@ -664,11 +664,9 @@ public class DietbotTester {
 		assertThat(ans2.contains(realOutput2));
 	}
 
-	
- }
 
 	@Test
-	public void testCollectAndUpdateUserInformation() throws Exception {
+	public void testCollectUserInformation() throws Exception {
 		boolean thrown = false;
 		String input = null;
 		String chatBotReponse = null;
@@ -934,128 +932,7 @@ public class DietbotTester {
 
 		try{
 
-
-    		// //user entered a wrong name so they say no
-    		// input = "no";
-    		// expectedResponse = "Can you enter your name again? Pls~";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// //user enter their name again
-    		// input = "gordon";
-    		// expectedResponse = "Is Gordon your name?";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// //confirm
-    		// input = "yes";
-    		// expectedResponse = "Ok. Nice to meet you Gordon! Next question! What is your age?";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// //user enter their age
-    		// input = "i'm 8";
-    		// expectedResponse = "Are you 8 years old?";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// input = "no";
-    		// expectedResponse = "Can you enter your age again? Pls~";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// //user enter their age again
-    		// input = "ok it should be 20";
-    		// expectedResponse = "Are you 20 years old?";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// //confirm
-    		// input = "yeah";
-    		// expectedResponse = "Alright, what is your gender?";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// //user enter their gender
-    		// input = "M";
-    		// expectedResponse = "You are a m. Ok, so what is your weight (in kg)? Please input an integer.";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// //user enter their weight
-    		// input = "60kg";
-    		// expectedResponse = "Is your weight 60kg?";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// input = "no";
-    		// expectedResponse = "Can you enter your weight again? Please input an integer.";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// //user enter their weight again
-    		// input = "80 kg";
-    		// expectedResponse = "Is your weight 80kg?";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// //confirm
-    		// input = "Yes";
-    		// expectedResponse = "Alright, then what is your height in cm?";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// //user enter their height
-    		// input = "180cm";
-    		// expectedResponse = "Is your height 180cm?";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// input = "no";
-    		// expectedResponse = "Can you enter your height (in cm) again? Please input an integer.";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// //user enter their height
-    		// input = "181 cm";
-    		// expectedResponse = "Is your height 181cm?";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// //confirm
-    		// input = "yes";
-    		// expectedResponse = "Great. Are you allergic to milk? (Yes/No)";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// //answer allergy
-    		// input = "yes";
-    		// expectedResponse = "I see, I'll take note of that. Are you allergic to eggs? (Yes/No)";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// //answer allergy
-    		// input = "yes";
-    		// expectedResponse = "I see, I'll take note of that. Are you allergic to nuts in general? (Yes/No)";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// //answer allergy
-    		// input = "yes";
-    		// expectedResponse = "I see, I'll take note of that. Are you allergic to seafood? (Yes/No)";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
-
-    		// //answer allergy
-    		// input = "yes";
-    		// expectedResponse = "I see, I'll take note of that. Thank you for your cooperation, "
-    		// 				+"I have a better understanding of your physical conditions now.";
-    		// chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
-    		// assertThat(chatBotReponse).isEqualTo(expectedResponse);
     		assertThat(db.getUserInfo(userId, "age")).isEqualTo("30");
-    		// assertThat(db.getUserInfo(userId, "gender")).isEqualTo("male");
-    		// assertThat(db.getUserInfo(userId, "height")).isEqualTo("181.0");
-    		// assertThat(db.getUserInfo(userId, "weight")).isEqualTo("80.0");
 
 		} catch (Exception e) {
 			thrown = true;
