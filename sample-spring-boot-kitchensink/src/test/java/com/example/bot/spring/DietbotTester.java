@@ -57,14 +57,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.jsoup.*;
-import org.jsoup.helper.*;
-import org.jsoup.nodes.*;
-import org.jsoup.select.*;
-
+import com.example.bot.spring.JSONPreprocessing;
+import com.example.bot.spring.Dish;
 
 import java.util.Arrays;
 
@@ -87,470 +81,488 @@ public class DietbotTester {
 		stateManager = new StateManager("src/main/resources/rivescript");
 	}
 
-	@BeforeClass
-	public static void addTestUser() {
-		ArrayList<String> menu = new ArrayList<String>();
-		menu.add("chicken potato soup");
-		ArrayList<String> allergies = new ArrayList<String>();
-		allergies.add("seafood");
+//	@BeforeClass
+//	public static void addTestUser() {
+//		ArrayList<String> menu = new ArrayList<String>();
+//		menu.add("chicken potato soup");
+//		ArrayList<String> allergies = new ArrayList<String>();
+//		allergies.add("seafood");
+//
+//		databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "normal", "testTopic", "testState");
+//		databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, new ArrayList<String>(), "normal", "testTopic", "testState");
+//		databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, "normal", "testTopic", "testState");
+//		databaseEngine.writeUserInfo("testUserHistory", 21, "male", 1.73, 65, allergies, "normal", "testTopic", "testState");
+//		databaseEngine.writeUserInfo("testUserGoalLittle", 22, "male", 1.69, 69, allergies, "little_diet", "testTopic", "testState");
+//		databaseEngine.writeUserInfo("testUserGoalSerious", 23, "male", 1.71, 68, allergies, "serious_diet", "testTopic", "testState");
+//		databaseEngine.addMenu("testUser", menu);
+//		databaseEngine.addRecommendations("testUser");
+//	}
+//
+//	@AfterClass
+//	public static void removeTestUser() {
+//		databaseEngine.reset("testUser", "userinfo");
+//		databaseEngine.reset("testUser", "menu");
+//		databaseEngine.reset("testUser", "recommendations");
+//		databaseEngine.reset("testUser", "userallergies");
+//		databaseEngine.reset("testUserIntake", "userinfo");
+//		databaseEngine.reset("testUserIntake", "userallergies");
+//		databaseEngine.reset("testUserAllergy", "userinfo");
+//		databaseEngine.reset("testUserAllergy", "userallergies");
+//		databaseEngine.reset("testUserHistory", "userinfo");
+//		databaseEngine.reset("testUserHistory", "userallergies");
+//		databaseEngine.reset("testUserGoalLittle", "userinfo");
+//		databaseEngine.reset("testUserGoalLittle", "userallergies");
+//		databaseEngine.reset("testUserGoalSerious", "userinfo");
+//		databaseEngine.reset("testUserGoalSerious", "userallergies");
+//	}
+//
+//	
+//	@Test
+//	public void writeUserInfoExisting() {
+//		ArrayList<String> allergies = null;
+//
+//		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "normal", "testTopic", "testState");
+//		assertThat(this.databaseEngine.searchUser("testUser", "userinfo")).isEqualTo(true);
+//	}
+//	
+//	
+//	@Test
+//	public void writeUserInfoNonExisting() {
+//		ArrayList<String> allergies = new ArrayList<String>();
+//		allergies.add("milk");
+//
+//		this.databaseEngine.writeUserInfo("testUserNonExisting", 21, "female", 1.64, 55, allergies, "normal", "testTopic", "testState");
+//		assertThat(this.databaseEngine.searchUser("testUserNonExisting", "userinfo")).isEqualTo(true);
+//		this.databaseEngine.deleteUserInfo("testUserNonExisting");
+//	}
+//	
+//
+//	@Test
+//	public void setUserInfoString() {
+//		this.databaseEngine.setUserInfo("testUser", "gender", "female");
+//		assertThat(this.databaseEngine.getUserInfo("testUser", "gender")).isEqualTo("female");
+//		this.databaseEngine.setUserInfo("testUser", "gender", "male");
+//		assertThat(this.databaseEngine.getUserInfo("testUser", "gender")).isEqualTo("male");
+//	}
+//
+//
+//	@Test
+//	public void setUserInfoInt() {
+//		this.databaseEngine.setUserInfo("testUser", "age", 55);
+//		assertThat(this.databaseEngine.getUserInfo("testUser", "age")).isEqualTo("55");
+//		this.databaseEngine.setUserInfo("testUser", "age", 20);
+//		assertThat(this.databaseEngine.getUserInfo("testUser", "age")).isEqualTo("20");
+//	}
+//
+//
+//	@Test
+//	public void setUserInfoDouble() {
+//		this.databaseEngine.setUserInfo("testUser", "height", 2.17);
+//		assertThat(this.databaseEngine.getUserInfo("testUser", "height")).isEqualTo("2.17");
+//		this.databaseEngine.setUserInfo("testUser", "height", 1.75);
+//		assertThat(this.databaseEngine.getUserInfo("testUser", "height")).isEqualTo("1.75");
+//	}
+//
+//
+//	@Test
+//	public void setUserAllergies() {
+//		ArrayList<String> allergies = new ArrayList<String>();
+//		allergies.add("nut");
+//
+//		this.databaseEngine.setUserAllergies("testUser", allergies);
+//		assertThat(this.databaseEngine.getUserAllergies("testUser")).isEqualTo(allergies);
+//
+//		allergies.remove("nut");
+//
+//		this.databaseEngine.setUserAllergies("testUser", allergies);
+//		assertThat(this.databaseEngine.getUserAllergies("testUser")).isEqualTo(allergies);
+//	}
+//
+//
+//	@Test
+//	public void getMenuFound() {
+//		assertThat(this.databaseEngine.getMenu("testUser", "chicken")).isEqualTo("chicken potato soup");
+//	}
+//
+//
+//	@Test
+//	public void getMenuNotFound() {
+//		assertThat(this.databaseEngine.getMenu("testUser", "asdf")).isEqualTo(null);
+//	}
+//
+//
+//	@Test
+//	public void getRecommendationFound() {
+//		assertThat(this.databaseEngine.getRecommendation("testUser", "chicken")).isEqualTo("chicken potato soup");
+//	}
+//
+//
+//	@Test
+//	public void getRecommendationNotFound() {
+//		assertThat(this.databaseEngine.getRecommendation("testUser", "asdf")).isEqualTo(null);
+//	}
+//
+//
+//	@Test
+//	public void testAdd() {
+//		ArrayList<String> menu = new ArrayList<String>();
+//		menu.add("fish and chips");
+//		menu.add("sausages and chicken wings");
+//
+//		this.databaseEngine.reset("testUserAddReset", "menu");
+//		this.databaseEngine.reset("testUserAddReset", "recommendations");
+//		this.databaseEngine.addMenu("testUserAddReset", menu);
+//		this.databaseEngine.addRecommendations("testUserAddReset");
+//		assertThat(this.databaseEngine.getMenu("testUserAddReset", "fish")).isEqualTo("fish and chips");
+//		assertThat(this.databaseEngine.getMenu("testUserAddReset", "sausage")).isEqualTo("sausages and chicken wings");
+//		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "fish")).isEqualTo("fish and chips");
+//		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "sausage")).isEqualTo("sausages and chicken wings");
+//		this.databaseEngine.reset("testUserAddReset", "menu");
+//		this.databaseEngine.reset("testUserAddReset", "recommendations");
+//	}
+//
+//
+//	@Test
+//	public void testReset() {
+//		ArrayList<String> menu = new ArrayList<String>();
+//		menu.add("fish and chips");
+//		menu.add("sausages and chicken wings");
+//
+//		this.databaseEngine.addMenu("testUserAddReset", menu);
+//		this.databaseEngine.addRecommendations("testUserAddReset");
+//		this.databaseEngine.reset("testUserAddReset", "menu");
+//		this.databaseEngine.reset("testUserAddReset", "recommendations");
+//		assertThat(this.databaseEngine.getMenu("testUserAddReset", "fish")).isEqualTo(null);
+//		assertThat(this.databaseEngine.getMenu("testUserAddReset", "sausage")).isEqualTo(null);
+//		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "fish")).isEqualTo(null);
+//		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "sausage")).isEqualTo(null);
+//	}
+//
+//
+//	@Test
+//	public void addUserEatingHistory() {
+//		String meals1 = "chicken soup, spaghetti bolognese";
+//		String meals2 = "apples, chocolate cake";
+//		this.databaseEngine.addUserEatingHistory("testUserEating", meals1);
+//		this.databaseEngine.addUserEatingHistory("testUserEating", meals2);
+//		assertThat(this.databaseEngine.searchUser("testUserEating", "eating_history")).isEqualTo(true);
+//		assertThat(this.databaseEngine.getUserEatingHistory("testUserEating", 1).get(0)).isEqualTo(meals1);
+//		assertThat(this.databaseEngine.getUserEatingHistory("testUserEating", 1).get(1)).isEqualTo(meals2);
+//		this.databaseEngine.reset("testUserEating", "eating_history");
+//	}
+//	
+//
+//	@Test
+//	public void processRecommendationsByAllergies() {
+//		ArrayList<String> menu = new ArrayList<String>();
+//		menu.add("chicken potato soup");
+//		menu.add("grilled salmon");
+//
+//		this.databaseEngine.addMenu("testUserAllergy", menu);
+//		this.databaseEngine.addRecommendations("testUserAllergy");
+//		this.databaseEngine.processRecommendationsByAllergies("testUserAllergy");
+//		assertThat(this.databaseEngine.getRecommendation("testUserAllergy", "chicken")).isEqualTo("chicken potato soup");
+//		assertThat(this.databaseEngine.getRecommendation("testUserAllergy", "salmon")).isEqualTo(null);
+//		this.databaseEngine.reset("testUserAllergy", "menu");
+//		this.databaseEngine.reset("testUserAllergy", "recommendations");
+//	}
+//	
+//
+//	@Test
+//	public void processRecommendationsByIntake() {
+//		ArrayList<String> menu = new ArrayList<String>();
+//		menu.add("chicken potato soup");
+//		menu.add("caramel apples");
+//
+//		this.databaseEngine.addMenu("testUserIntake", menu);
+//		this.databaseEngine.addRecommendations("testUserIntake");
+//		this.databaseEngine.processRecommendationsByIntake("testUserIntake");
+//		assertThat(this.databaseEngine.getWeightage("testUserIntake", "chicken")).isEqualTo(2.5);
+//		assertThat(this.databaseEngine.getWeightage("testUserIntake", "apples")).isEqualTo(2);
+//		this.databaseEngine.reset("testUserIntake", "menu");
+//		this.databaseEngine.reset("testUserIntake", "recommendations");
+//	}
+//	
+//
+//	@Test
+//	public void processRecommendationsByEatingHistory() {
+//		ArrayList<String> menu = new ArrayList<String>();
+//		menu.add("apple");
+//		menu.add("banana");
+//		menu.add("orange");
+//		String meals1 = "apples";
+//		String meals2 = "bananas";
+//
+//		this.databaseEngine.addMenu("testUserHistory", menu);
+//		this.databaseEngine.addRecommendations("testUserHistory");
+//		this.databaseEngine.addUserEatingHistory("testUserHistory", meals1);
+//		this.databaseEngine.addUserEatingHistory("testUserHistory", meals1);
+//		this.databaseEngine.addUserEatingHistory("testUserHistory", meals2);
+//		this.databaseEngine.processRecommendationsByIntake("testUserHistory");
+//		this.databaseEngine.processRecommendationsByEatingHistory("testUserHistory");
+//
+//		assertThat(this.databaseEngine.getWeightage("testUserHistory", "apple")).isEqualTo(0.5);
+//		assertThat(this.databaseEngine.getWeightage("testUserHistory", "banana")).isEqualTo(1);
+//		assertThat(this.databaseEngine.getWeightage("testUserHistory", "orange")).isEqualTo(2);
+//
+//		this.databaseEngine.reset("testUserHistory", "menu");
+//		this.databaseEngine.reset("testUserHistory", "recommendations");
+//		this.databaseEngine.reset("testUserHistory", "eating_history");
+//	}
+//
+//
+//	@Test
+//	public void processRecommendationsByGoal() {
+//		ArrayList<String> menu = new ArrayList<String>();
+//		menu.add("apple");
+//		menu.add("broccoli");
+//		menu.add("cereal");
+//		menu.add("chicken");
+//
+//		this.databaseEngine.addMenu("testUserGoalLittle", menu);
+//		this.databaseEngine.addRecommendations("testUserGoalLittle");
+//		this.databaseEngine.addMenu("testUserGoalSerious", menu);
+//		this.databaseEngine.addRecommendations("testUserGoalSerious");
+//		this.databaseEngine.processRecommendationsByGoal("testUserGoalLittle");
+//		this.databaseEngine.processRecommendationsByGoal("testUserGoalSerious");
+//
+//		assertThat(this.databaseEngine.getWeightage("testUserGoalLittle", "apple")).isEqualTo(1);
+//		assertThat(this.databaseEngine.getWeightage("testUserGoalLittle", "broccoli")).isEqualTo(1);
+//		assertThat(this.databaseEngine.getWeightage("testUserGoalLittle", "cereal")).isEqualTo(0.7);
+//		assertThat(this.databaseEngine.getWeightage("testUserGoalLittle", "chicken")).isEqualTo(0.8);
+//		assertThat(this.databaseEngine.getWeightage("testUserGoalSerious", "apple")).isEqualTo(1.2);
+//		assertThat(this.databaseEngine.getWeightage("testUserGoalSerious", "broccoli")).isEqualTo(1.2);
+//		assertThat(this.databaseEngine.getWeightage("testUserGoalSerious", "cereal")).isEqualTo(0.5);
+//		assertThat(this.databaseEngine.getWeightage("testUserGoalSerious", "chicken")).isEqualTo(0.6);
+//
+//		this.databaseEngine.reset("testUserGoalLittle", "menu");
+//		this.databaseEngine.reset("testUserGoalLittle", "recommendations");
+//		this.databaseEngine.reset("testUserGoalSerious", "menu");
+//		this.databaseEngine.reset("testUserGoalSerious", "recommendations");
+//	}
+//
+//
+//	@Test
+//	public void getRecommendationList() {
+//		HashMap<String, Double> result = new HashMap<String, Double>();
+//
+//		result = this.databaseEngine.getRecommendationList("testUser");
+//		assertThat(result.get("chicken potato soup")).isEqualTo(1.0);
+//	}
+//	
+//
+//	@Test
+//	public void recommendFood() {
+//		String result = null;
+//		String resultString = "grilled salmon vege fish chip mayo rice fried chicken fish";
+//		RecommendationState recommend = new RecommendationState();
+//		ArrayList<String> foodList = new ArrayList<String>();
+//		foodList.add("grilled pork vege");
+//		foodList.add("fish chip mayo");
+//		foodList.add("rice fried chicken");
+//		foodList.add("fruit apple");
+//
+//		result = recommend.recommendFood("testUser", foodList);
+//		assertThat(resultString.contains(result));
+//	}
+//
+//
+//	@Test
+//	public void addCampaignUser() {
+//		this.databaseEngine.addCampaignUser("testUser");
+//		assertThat(this.databaseEngine.searchUser("testUser", "campaign_user")).isEqualTo(true);
+//		this.databaseEngine.reset("testUser", "campaign_user");
+//		assertThat(this.databaseEngine.searchUser("testUser", "campaign_user")).isEqualTo(false);
+//	}
+//
+//
+//	@Test
+//	public void generateAndStoreCode() {
+//		ArrayList<String> result = new ArrayList<String>();
+//
+//		this.databaseEngine.generateAndStoreCode("testUserCode");
+//		result = this.databaseEngine.getCodeInfo(100000);
+//		assertThat(result.get(0)).isEqualTo("testUserCode");
+//		assertThat(result.get(1)).isEqualTo(null);
+//		this.databaseEngine.resetCoupon("testUserCode");
+//		assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(false);
+//	}
+//
+//
+//	@Test
+//	public void claimCode() {
+//		ArrayList<String> result = new ArrayList<String>();
+//
+//		this.databaseEngine.addCampaignUser("testUserClaim");
+//		this.databaseEngine.generateAndStoreCode("testUserCode");
+//		this.databaseEngine.claimCode("testUserClaim", 100000);
+//		assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(false);
+//		result = this.databaseEngine.getCodeInfo(100000);
+//		assertThat(result.get(0)).isEqualTo("testUserCode");
+//		assertThat(result.get(1)).isEqualTo("testUserClaim");
+//		this.databaseEngine.reset("testUserClaim", "campaign_user");
+//		this.databaseEngine.resetCoupon("testUserCode");
+//	}
+//
+//
+//	@Test
+//	public void setCouponUrl() {
+//		String url = "testCouponUrlButIPurposedlyMakeItLongerJustToTestIfItCanHandleLongLengths";
+//
+//		this.databaseEngine.setCouponUrl(url);
+//		assertThat(this.databaseEngine.getCouponUrl()).isEqualTo(url);
+//	}
+//
+//
+//	@Test
+//	public void setCampaign() {
+//		this.databaseEngine.setCampaign(1);
+//		assertThat(this.databaseEngine.isCampaignOpen()).isEqualTo(1);
+//		this.databaseEngine.setCampaign(0);
+//		assertThat(this.databaseEngine.isCampaignOpen()).isEqualTo(0);
+//	}
+//
+//
+//	@Test
+//	public void testNewRivescript() throws Exception {
+//		bot = new RiveScript();
+//		File resourcesDirectory = new File("src/test/resources/rivescript");
+//		// assertThat(resourcesDirectory.getAbsolutePath()).isEqualTo("abc");
+//		bot.loadDirectory(resourcesDirectory.getAbsolutePath());
+//
+//		// Sort the replies after loading them!
+//		bot.sortReplies();
+//
+//		// Get a reply.
+//		String reply = bot.reply("user2", "can you tell me my id");
+//		assertThat(reply).isEqualTo("user2");
+//	}
+//
+//
+//	// to test how to use RiveScript with different users and get user variables
+//	// that have been set before or not.
+//	@Test
+//	public void testRivescriptToGetVariableFromDifferentUsers() throws Exception {
+//		bot = new RiveScript();
+//		File resourcesDirectory = new File("src/test/resources/rivescript");
+//		bot.loadDirectory(resourcesDirectory.getAbsolutePath());
+//
+//		bot.sortReplies();
+//
+//		String reply1 = bot.reply("user1", "can you tell me my id");
+//		assertThat(reply1).isEqualTo("user1");
+//
+//		String reply2 = bot.reply("user2", "can you tell me my id");
+//		assertThat(reply2).isEqualTo("user2");
+//
+//		// try to set user variable "name" for two different users
+//		String setName1 = bot.reply("user1", "my name is Gordon.");
+//		assertThat(setName1).contains("Gordon");
+//		String setName2 = bot.reply("user2", "my name is Tom.");
+//		assertThat(setName2).contains("Tom");
+//
+//		// try to get them back and check equality
+//		String user1Name = bot.getUservar("user1", "name");
+//		assertThat(user1Name).isEqualTo("Gordon");
+//		String user2Name = bot.getUservar("user2", "name");
+//		assertThat(user2Name).isEqualTo("Tom");
+//
+//		// try to get unset user variable
+//		String unsetVar = bot.getUservar("user1", "age");
+//		assertThat(unsetVar).isEqualTo(null);
+//
+//
+//		Map<String, String> varSetToValue = new HashMap<String, String>();
+//		varSetToValue.put("age", "100");
+//		varSetToValue.put("weight", "200");
+//		bot.setUservars("user1", varSetToValue);
+//		String age = bot.getUservar("user1", "age");
+//		assertThat(age).isEqualTo("100");
+//
+//		String weight = bot.getUservar("user1", "weight");
+//		assertThat(weight).isEqualTo("200");
+//	}
+//
+//
+//	public class MyTestingSubroutine implements Subroutine {
+//		
+// 		public String call(RiveScript rs, String[] args) {
+// 			assertThat(args.length).isEqualTo(2);
+// 			assertThat(args[0]).isEqualTo("abc");
+// 			return "yes";
+// 		}
+// 	}
+// 
+//
+// 	// to test how to use RiveScript Subroutine
+// 	@Test
+// 	public void testRivescriptSubroutine() throws Exception {
+// 		bot = new RiveScript();
+// 		File resourcesDirectory = new File("src/test/resources/rivescript");
+// 		bot.loadDirectory(resourcesDirectory.getAbsolutePath());
+// 
+// 		bot.sortReplies();
+// 
+// 		bot.setSubroutine("MyTestingSubroutine", new MyTestingSubroutine());
+// 
+// 		String reply1 = bot.reply("user1", "MyTestingSubroutine abc");
+// 		assertThat(reply1).isEqualTo("yes");
+// 	}
+//  	
 
-		databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "normal", "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, new ArrayList<String>(), "normal", "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, "normal", "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserHistory", 21, "male", 1.73, 65, allergies, "normal", "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserGoalLittle", 22, "male", 1.69, 69, allergies, "little_diet", "testTopic", "testState");
-		databaseEngine.writeUserInfo("testUserGoalSerious", 23, "male", 1.71, 68, allergies, "serious_diet", "testTopic", "testState");
-		databaseEngine.addMenu("testUser", menu);
-		databaseEngine.addRecommendations("testUser");
-	}
-
-	@AfterClass
-	public static void removeTestUser() {
-		databaseEngine.reset("testUser", "userinfo");
-		databaseEngine.reset("testUser", "menu");
-		databaseEngine.reset("testUser", "recommendations");
-		databaseEngine.reset("testUser", "userallergies");
-		databaseEngine.reset("testUserIntake", "userinfo");
-		databaseEngine.reset("testUserIntake", "userallergies");
-		databaseEngine.reset("testUserAllergy", "userinfo");
-		databaseEngine.reset("testUserAllergy", "userallergies");
-		databaseEngine.reset("testUserHistory", "userinfo");
-		databaseEngine.reset("testUserHistory", "userallergies");
-		databaseEngine.reset("testUserGoalLittle", "userinfo");
-		databaseEngine.reset("testUserGoalLittle", "userallergies");
-		databaseEngine.reset("testUserGoalSerious", "userinfo");
-		databaseEngine.reset("testUserGoalSerious", "userallergies");
-	}
-
+//	
+//	
 	
 	@Test
-	public void writeUserInfoExisting() {
-		ArrayList<String> allergies = null;
-
-		this.databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "normal", "testTopic", "testState");
-		assertThat(this.databaseEngine.searchUser("testUser", "userinfo")).isEqualTo(true);
-	}
-	
-	
-	@Test
-	public void writeUserInfoNonExisting() {
-		ArrayList<String> allergies = new ArrayList<String>();
-		allergies.add("milk");
-
-		this.databaseEngine.writeUserInfo("testUserNonExisting", 21, "female", 1.64, 55, allergies, "normal", "testTopic", "testState");
-		assertThat(this.databaseEngine.searchUser("testUserNonExisting", "userinfo")).isEqualTo(true);
-		this.databaseEngine.deleteUserInfo("testUserNonExisting");
-	}
-	
-
-	@Test
-	public void setUserInfoString() {
-		this.databaseEngine.setUserInfo("testUser", "gender", "female");
-		assertThat(this.databaseEngine.getUserInfo("testUser", "gender")).isEqualTo("female");
-		this.databaseEngine.setUserInfo("testUser", "gender", "male");
-		assertThat(this.databaseEngine.getUserInfo("testUser", "gender")).isEqualTo("male");
-	}
-
-
-	@Test
-	public void setUserInfoInt() {
-		this.databaseEngine.setUserInfo("testUser", "age", 55);
-		assertThat(this.databaseEngine.getUserInfo("testUser", "age")).isEqualTo("55");
-		this.databaseEngine.setUserInfo("testUser", "age", 20);
-		assertThat(this.databaseEngine.getUserInfo("testUser", "age")).isEqualTo("20");
-	}
-
-
-	@Test
-	public void setUserInfoDouble() {
-		this.databaseEngine.setUserInfo("testUser", "height", 2.17);
-		assertThat(this.databaseEngine.getUserInfo("testUser", "height")).isEqualTo("2.17");
-		this.databaseEngine.setUserInfo("testUser", "height", 1.75);
-		assertThat(this.databaseEngine.getUserInfo("testUser", "height")).isEqualTo("1.75");
-	}
-
-
-	@Test
-	public void setUserAllergies() {
-		ArrayList<String> allergies = new ArrayList<String>();
-		allergies.add("nut");
-
-		this.databaseEngine.setUserAllergies("testUser", allergies);
-		assertThat(this.databaseEngine.getUserAllergies("testUser")).isEqualTo(allergies);
-
-		allergies.remove("nut");
-
-		this.databaseEngine.setUserAllergies("testUser", allergies);
-		assertThat(this.databaseEngine.getUserAllergies("testUser")).isEqualTo(allergies);
-	}
-
-
-	@Test
-	public void getMenuFound() {
-		assertThat(this.databaseEngine.getMenu("testUser", "chicken")).isEqualTo("chicken potato soup");
-	}
-
-
-	@Test
-	public void getMenuNotFound() {
-		assertThat(this.databaseEngine.getMenu("testUser", "asdf")).isEqualTo(null);
-	}
-
-
-	@Test
-	public void getRecommendationFound() {
-		assertThat(this.databaseEngine.getRecommendation("testUser", "chicken")).isEqualTo("chicken potato soup");
-	}
-
-
-	@Test
-	public void getRecommendationNotFound() {
-		assertThat(this.databaseEngine.getRecommendation("testUser", "asdf")).isEqualTo(null);
-	}
-
-
-	@Test
-	public void testAdd() {
-		ArrayList<String> menu = new ArrayList<String>();
-		menu.add("fish and chips");
-		menu.add("sausages and chicken wings");
-
-		this.databaseEngine.reset("testUserAddReset", "menu");
-		this.databaseEngine.reset("testUserAddReset", "recommendations");
-		this.databaseEngine.addMenu("testUserAddReset", menu);
-		this.databaseEngine.addRecommendations("testUserAddReset");
-		assertThat(this.databaseEngine.getMenu("testUserAddReset", "fish")).isEqualTo("fish and chips");
-		assertThat(this.databaseEngine.getMenu("testUserAddReset", "sausage")).isEqualTo("sausages and chicken wings");
-		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "fish")).isEqualTo("fish and chips");
-		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "sausage")).isEqualTo("sausages and chicken wings");
-		this.databaseEngine.reset("testUserAddReset", "menu");
-		this.databaseEngine.reset("testUserAddReset", "recommendations");
-	}
-
-
-	@Test
-	public void testReset() {
-		ArrayList<String> menu = new ArrayList<String>();
-		menu.add("fish and chips");
-		menu.add("sausages and chicken wings");
-
-		this.databaseEngine.addMenu("testUserAddReset", menu);
-		this.databaseEngine.addRecommendations("testUserAddReset");
-		this.databaseEngine.reset("testUserAddReset", "menu");
-		this.databaseEngine.reset("testUserAddReset", "recommendations");
-		assertThat(this.databaseEngine.getMenu("testUserAddReset", "fish")).isEqualTo(null);
-		assertThat(this.databaseEngine.getMenu("testUserAddReset", "sausage")).isEqualTo(null);
-		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "fish")).isEqualTo(null);
-		assertThat(this.databaseEngine.getRecommendation("testUserAddReset", "sausage")).isEqualTo(null);
-	}
-
-
-	@Test
-	public void addUserEatingHistory() {
-		String meals1 = "chicken soup, spaghetti bolognese";
-		String meals2 = "apples, chocolate cake";
-		this.databaseEngine.addUserEatingHistory("testUserEating", meals1);
-		this.databaseEngine.addUserEatingHistory("testUserEating", meals2);
-		assertThat(this.databaseEngine.searchUser("testUserEating", "eating_history")).isEqualTo(true);
-		assertThat(this.databaseEngine.getUserEatingHistory("testUserEating", 1).get(0)).isEqualTo(meals1);
-		assertThat(this.databaseEngine.getUserEatingHistory("testUserEating", 1).get(1)).isEqualTo(meals2);
-		this.databaseEngine.reset("testUserEating", "eating_history");
-	}
-	
-
-	@Test
-	public void processRecommendationsByAllergies() {
-		ArrayList<String> menu = new ArrayList<String>();
-		menu.add("chicken potato soup");
-		menu.add("grilled salmon");
-
-		this.databaseEngine.addMenu("testUserAllergy", menu);
-		this.databaseEngine.addRecommendations("testUserAllergy");
-		this.databaseEngine.processRecommendationsByAllergies("testUserAllergy");
-		assertThat(this.databaseEngine.getRecommendation("testUserAllergy", "chicken")).isEqualTo("chicken potato soup");
-		assertThat(this.databaseEngine.getRecommendation("testUserAllergy", "salmon")).isEqualTo(null);
-		this.databaseEngine.reset("testUserAllergy", "menu");
-		this.databaseEngine.reset("testUserAllergy", "recommendations");
-	}
-	
-
-	@Test
-	public void processRecommendationsByIntake() {
-		ArrayList<String> menu = new ArrayList<String>();
-		menu.add("chicken potato soup");
-		menu.add("caramel apples");
-
-		this.databaseEngine.addMenu("testUserIntake", menu);
-		this.databaseEngine.addRecommendations("testUserIntake");
-		this.databaseEngine.processRecommendationsByIntake("testUserIntake");
-		assertThat(this.databaseEngine.getWeightage("testUserIntake", "chicken")).isEqualTo(2.5);
-		assertThat(this.databaseEngine.getWeightage("testUserIntake", "apples")).isEqualTo(2);
-		this.databaseEngine.reset("testUserIntake", "menu");
-		this.databaseEngine.reset("testUserIntake", "recommendations");
-	}
-	
-
-	@Test
-	public void processRecommendationsByEatingHistory() {
-		ArrayList<String> menu = new ArrayList<String>();
-		menu.add("apple");
-		menu.add("banana");
-		menu.add("orange");
-		String meals1 = "apples";
-		String meals2 = "bananas";
-
-		this.databaseEngine.addMenu("testUserHistory", menu);
-		this.databaseEngine.addRecommendations("testUserHistory");
-		this.databaseEngine.addUserEatingHistory("testUserHistory", meals1);
-		this.databaseEngine.addUserEatingHistory("testUserHistory", meals1);
-		this.databaseEngine.addUserEatingHistory("testUserHistory", meals2);
-		this.databaseEngine.processRecommendationsByIntake("testUserHistory");
-		this.databaseEngine.processRecommendationsByEatingHistory("testUserHistory");
-
-		assertThat(this.databaseEngine.getWeightage("testUserHistory", "apple")).isEqualTo(0.5);
-		assertThat(this.databaseEngine.getWeightage("testUserHistory", "banana")).isEqualTo(1);
-		assertThat(this.databaseEngine.getWeightage("testUserHistory", "orange")).isEqualTo(2);
-
-		this.databaseEngine.reset("testUserHistory", "menu");
-		this.databaseEngine.reset("testUserHistory", "recommendations");
-		this.databaseEngine.reset("testUserHistory", "eating_history");
-	}
-
-
-	@Test
-	public void processRecommendationsByGoal() {
-		ArrayList<String> menu = new ArrayList<String>();
-		menu.add("apple");
-		menu.add("broccoli");
-		menu.add("cereal");
-		menu.add("chicken");
-
-		this.databaseEngine.addMenu("testUserGoalLittle", menu);
-		this.databaseEngine.addRecommendations("testUserGoalLittle");
-		this.databaseEngine.addMenu("testUserGoalSerious", menu);
-		this.databaseEngine.addRecommendations("testUserGoalSerious");
-		this.databaseEngine.processRecommendationsByGoal("testUserGoalLittle");
-		this.databaseEngine.processRecommendationsByGoal("testUserGoalSerious");
-
-		assertThat(this.databaseEngine.getWeightage("testUserGoalLittle", "apple")).isEqualTo(1);
-		assertThat(this.databaseEngine.getWeightage("testUserGoalLittle", "broccoli")).isEqualTo(1);
-		assertThat(this.databaseEngine.getWeightage("testUserGoalLittle", "cereal")).isEqualTo(0.7);
-		assertThat(this.databaseEngine.getWeightage("testUserGoalLittle", "chicken")).isEqualTo(0.8);
-		assertThat(this.databaseEngine.getWeightage("testUserGoalSerious", "apple")).isEqualTo(1.2);
-		assertThat(this.databaseEngine.getWeightage("testUserGoalSerious", "broccoli")).isEqualTo(1.2);
-		assertThat(this.databaseEngine.getWeightage("testUserGoalSerious", "cereal")).isEqualTo(0.5);
-		assertThat(this.databaseEngine.getWeightage("testUserGoalSerious", "chicken")).isEqualTo(0.6);
-
-		this.databaseEngine.reset("testUserGoalLittle", "menu");
-		this.databaseEngine.reset("testUserGoalLittle", "recommendations");
-		this.databaseEngine.reset("testUserGoalSerious", "menu");
-		this.databaseEngine.reset("testUserGoalSerious", "recommendations");
-	}
-
-
-	@Test
-	public void getRecommendationList() {
-		HashMap<String, Double> result = new HashMap<String, Double>();
-
-		result = this.databaseEngine.getRecommendationList("testUser");
-		assertThat(result.get("chicken potato soup")).isEqualTo(1.0);
-	}
-	
-
-	@Test
-	public void recommendFood() {
-		String result = null;
-		String resultString = "grilled salmon vege fish chip mayo rice fried chicken fish";
-		RecommendationState recommend = new RecommendationState();
-		ArrayList<String> foodList = new ArrayList<String>();
-		foodList.add("grilled pork vege");
-		foodList.add("fish chip mayo");
-		foodList.add("rice fried chicken");
-		foodList.add("fruit apple");
-
-		result = recommend.recommendFood("testUser", foodList);
-		assertThat(resultString.contains(result));
-	}
-
-
-	@Test
-	public void addCampaignUser() {
-		this.databaseEngine.addCampaignUser("testUser");
-		assertThat(this.databaseEngine.searchUser("testUser", "campaign_user")).isEqualTo(true);
-		this.databaseEngine.reset("testUser", "campaign_user");
-		assertThat(this.databaseEngine.searchUser("testUser", "campaign_user")).isEqualTo(false);
-	}
-
-
-	@Test
-	public void generateAndStoreCode() {
-		ArrayList<String> result = new ArrayList<String>();
-
-		this.databaseEngine.generateAndStoreCode("testUserCode");
-		result = this.databaseEngine.getCodeInfo(100000);
-		assertThat(result.get(0)).isEqualTo("testUserCode");
-		assertThat(result.get(1)).isEqualTo(null);
-		this.databaseEngine.resetCoupon("testUserCode");
-		assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(false);
-	}
-
-
-	@Test
-	public void claimCode() {
-		ArrayList<String> result = new ArrayList<String>();
-
-		this.databaseEngine.addCampaignUser("testUserClaim");
-		this.databaseEngine.generateAndStoreCode("testUserCode");
-		this.databaseEngine.claimCode("testUserClaim", 100000);
-		assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(false);
-		result = this.databaseEngine.getCodeInfo(100000);
-		assertThat(result.get(0)).isEqualTo("testUserCode");
-		assertThat(result.get(1)).isEqualTo("testUserClaim");
-		this.databaseEngine.reset("testUserClaim", "campaign_user");
-		this.databaseEngine.resetCoupon("testUserCode");
-	}
-
-
-	@Test
-	public void setCouponUrl() {
-		String url = "testCouponUrlButIPurposedlyMakeItLongerJustToTestIfItCanHandleLongLengths";
-
-		this.databaseEngine.setCouponUrl(url);
-		assertThat(this.databaseEngine.getCouponUrl()).isEqualTo(url);
-	}
-
-
-	@Test
-	public void setCampaign() {
-		this.databaseEngine.setCampaign(1);
-		assertThat(this.databaseEngine.isCampaignOpen()).isEqualTo(1);
-		this.databaseEngine.setCampaign(0);
-		assertThat(this.databaseEngine.isCampaignOpen()).isEqualTo(0);
-	}
-
-
-	@Test
-	public void testNewRivescript() throws Exception {
-		bot = new RiveScript();
-		File resourcesDirectory = new File("src/test/resources/rivescript");
-		// assertThat(resourcesDirectory.getAbsolutePath()).isEqualTo("abc");
-		bot.loadDirectory(resourcesDirectory.getAbsolutePath());
-
-		// Sort the replies after loading them!
-		bot.sortReplies();
-
-		// Get a reply.
-		String reply = bot.reply("user2", "can you tell me my id");
-		assertThat(reply).isEqualTo("user2");
-	}
-
-
-	// to test how to use RiveScript with different users and get user variables
-	// that have been set before or not.
-	@Test
-	public void testRivescriptToGetVariableFromDifferentUsers() throws Exception {
-		bot = new RiveScript();
-		File resourcesDirectory = new File("src/test/resources/rivescript");
-		bot.loadDirectory(resourcesDirectory.getAbsolutePath());
-
-		bot.sortReplies();
-
-		String reply1 = bot.reply("user1", "can you tell me my id");
-		assertThat(reply1).isEqualTo("user1");
-
-		String reply2 = bot.reply("user2", "can you tell me my id");
-		assertThat(reply2).isEqualTo("user2");
-
-		// try to set user variable "name" for two different users
-		String setName1 = bot.reply("user1", "my name is Gordon.");
-		assertThat(setName1).contains("Gordon");
-		String setName2 = bot.reply("user2", "my name is Tom.");
-		assertThat(setName2).contains("Tom");
-
-		// try to get them back and check equality
-		String user1Name = bot.getUservar("user1", "name");
-		assertThat(user1Name).isEqualTo("Gordon");
-		String user2Name = bot.getUservar("user2", "name");
-		assertThat(user2Name).isEqualTo("Tom");
-
-		// try to get unset user variable
-		String unsetVar = bot.getUservar("user1", "age");
-		assertThat(unsetVar).isEqualTo(null);
-
-
-		Map<String, String> varSetToValue = new HashMap<String, String>();
-		varSetToValue.put("age", "100");
-		varSetToValue.put("weight", "200");
-		bot.setUservars("user1", varSetToValue);
-		String age = bot.getUservar("user1", "age");
-		assertThat(age).isEqualTo("100");
-
-		String weight = bot.getUservar("user1", "weight");
-		assertThat(weight).isEqualTo("200");
-	}
-
-
-	public class MyTestingSubroutine implements Subroutine {
-		
- 		public String call(RiveScript rs, String[] args) {
- 			assertThat(args.length).isEqualTo(2);
- 			assertThat(args[0]).isEqualTo("abc");
- 			return "yes";
- 		}
- 	}
- 
-
- 	// to test how to use RiveScript Subroutine
- 	@Test
- 	public void testRivescriptSubroutine() throws Exception {
- 		bot = new RiveScript();
- 		File resourcesDirectory = new File("src/test/resources/rivescript");
- 		bot.loadDirectory(resourcesDirectory.getAbsolutePath());
- 
- 		bot.sortReplies();
- 
- 		bot.setSubroutine("MyTestingSubroutine", new MyTestingSubroutine());
- 
- 		String reply1 = bot.reply("user1", "MyTestingSubroutine abc");
- 		assertThat(reply1).isEqualTo("yes");
- 	}
-  	
-
-	@Test
-	public void convertHTMLTabletoJson() throws Exception{
-		
+	public void testJSONUrl() throws Exception{
 		boolean thrown = false;
-		String output = null;
-		final String realOutput = "{\"Network\":[{\"2G bands\":\"GSM 900 / 1800 - SIM 1 & SIM 2\",\"Technology\":\"GSM\",\"GPRS\":\"Class 12\",\"EDGE\":\"Yes\"}]}";
-		try{
-			final String HTML = "<table cellspacing=\"0\" style=\"height: 24px;\">\r\n<tr class=\"tr-hover\">\r\n<th rowspan=\"15\" scope=\"row\">Network</th>\r\n<td class=\"ttl\"><a href=\"network-bands.php3\">Technology</a></td>\r\n<td class=\"nfo\"><a href=\"#\" class=\"link-network-detail collapse\">GSM</a></td>\r\n</tr>\r\n<tr class=\"tr-toggle\">\r\n<td class=\"ttl\"><a href=\"network-bands.php3\">2G bands</a></td>\r\n<td class=\"nfo\">GSM 900 / 1800 - SIM 1 & SIM 2</td>\r\n</tr>   \r\n<tr class=\"tr-toggle\">\r\n<td class=\"ttl\"><a href=\"glossary.php3?term=gprs\">GPRS</a></td>\r\n<td class=\"nfo\">Class 12</td>\r\n</tr>   \r\n<tr class=\"tr-toggle\">\r\n<td class=\"ttl\"><a href=\"glossary.php3?term=edge\">EDGE</a></td>\r\n<td class=\"nfo\">Yes</td>\r\n</tr>\r\n</table>";
-			HTMLStringPreprocessing h = new HTMLStringPreprocessing();
-			JSONObject jsonObj = h.parseHTMLTableToJson(HTML);
-			output = jsonObj.toString();
-		} catch (Exception e) {
-			thrown = true;
-		}
-		assertThat(output).isEqualTo(realOutput);
-	}
-	
-
-	// @Test
-	// public void testURLtoJSON() throws Exception{
 		
-	// 	boolean thrown = false;
-	// 	String output = null;
-	// 	final String realOutput = "[apps snacks salads burgers sandwiches pairings desserts drinks, spinach queso dip, panseared pot stickers, chicken quesadilla, grilled salmon, flat iron steak, grilled salmon, flat iron steak, salads, soups, burger greenstyle, burgers sandwiches fries salad sweet potato fries instead, steaks ribs, pastas, chicken seafood, slushes, smoothies, freshly brewed teas, juices, handcrafted alcoholfree beverages made fruit pures natural flavors, refills freshly brewed teas slushes, fruit teas, slushes, drink options, casamigos strawberry rita, boba long island tea, sangria rita, peach sangria, crown apple cooler, tropical berry mojito shaker, tap drafts, happy tell what other local craft beers, bottles cans, red, white, bubbles, bottle selections, glutensensitive, tgi fridays franchisor llc drink responsibly locations see]";
-	// 	try{
-	// 		final String urlString = "https://tgifridays.com/menu/dine-in/";
-	// 		HTMLStringPreprocessing h = new HTMLStringPreprocessing();
-	// 		output =Arrays.toString(h.processURLRawContent((h.readFromUrl(urlString))).toArray());
-	// 	} catch (Exception e) {
-	// 		thrown = true;
-	// 	}
-	// 	assertThat(output).isEqualTo(realOutput);
-	// }
+		final String JSONUrl = "http://www.json-generator.com/api/json/get/cjTeRHAnfS?indent=2";
+		Dish[] actualDishes = new Dish[3];
+		String actualResponse = "";
+		
+		ArrayList<String> firstIngredients = new ArrayList<String>();
+		firstIngredients.add("Pork");
+		firstIngredients.add("Bean curd");
+		firstIngredients.add("Rice");
+		
+		actualDishes[0] = new Dish(35, "Spicy Bean curd with Minced Pork served with Rice", firstIngredients);
+		
+		ArrayList<String> secondIngredients = new ArrayList<String>();
+		firstIngredients.add("Pork"); 
+		firstIngredients.add("Sweet and Sour Sauce");
+		firstIngredients.add("Pork");
+		
+		actualDishes[1] = new Dish(36, "Sweet and Sour Pork served with Rice", secondIngredients);
 
+		ArrayList<String> thirdIngredients = new ArrayList<String>();
+		firstIngredients.add("Chili");
+		firstIngredients.add("Chicken");
+		firstIngredients.add("Rice"); 
+		
+		actualDishes[2] = new Dish(28, "Chili Chicken on Rice", thirdIngredients);
 
+		actualResponse += Arrays.toString(JSONPreprocessing.getDishName(actualDishes));
+		
+		String rawJSONString = "";
+    	Dish[] dishObjects = null; 
+    	String observedResponse = "";
+    	
+    	try {
+    		rawJSONString += JSONPreprocessing.readJSONUrl(JSONUrl);
+    		dishObjects = JSONPreprocessing.getDishFromJSON(rawJSONString);
+    		observedResponse = Arrays.toString(JSONPreprocessing.getDishName(dishObjects));
+    		 
+    	}
+    	catch (Exception e){ 
+    		thrown = true;
+    	}
+    	
+    	assertThat(observedResponse).isEqualTo(actualResponse);
+    	
+	}
+
+ 
 	// @Test
 	// public void testOCR() throws Exception{
 
@@ -898,6 +910,6 @@ public class DietbotTester {
 	// 	}
 	// 	assertThat(thrown).isEqualTo(false);
 	// }
->>>>>>> 1672943cb2b99bd20e0de73b73d3045cbb8a7850
+
 
  }
