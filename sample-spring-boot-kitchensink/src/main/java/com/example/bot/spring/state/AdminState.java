@@ -54,7 +54,7 @@ public class AdminState extends State {
 			return "Hi admin, please input a coupon image!";
 		}
 		else {
-			// Still in this state, but user doesn't want to 
+			// Still in this state, but user doesn't want to input image
 			return "You should input a coupon image!";
 		}
 	}

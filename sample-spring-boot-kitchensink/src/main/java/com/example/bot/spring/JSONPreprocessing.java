@@ -27,23 +27,15 @@ import java.nio.charset.Charset;
 */
 
 public class JSONPreprocessing {
-	
-	// first check if a string is JSON
-//	public boolean contentIsJSON(String content) {
-//		try{
-//			JSON.parse(content);
-//		}
-//		catch (Exception e) {
-//			return false;
-//		}
-//		return true;
-//	}
-	
-	public String getNameFromJSON(String url) throws IOException {
-		String jsonString = JSONPreprocessing.readJSONUrl(url); // get the JSON String
-		return Arrays.toString(JSONPreprocessing.getDishName(JSONPreprocessing.getDishFromJson(jsonString)));
-	}
-	
+
+	/**
+	 * This function takes in a url that leads to json content
+	 * To process the result, the function 
+	 * @param a String that is the url 
+	 * @return the names of the dishes in the URL list
+	 * @throws IOException
+	 */
+		
 	public static String readJSONUrl(String url) throws IOException {
 	  	String jsonString = "" ;
 	    InputStream is = new URL(url).openStream();
@@ -67,7 +59,7 @@ public class JSONPreprocessing {
 	    return jsonString;
   	} 
 	
-	public static Dish[] getDishFromJson(String rawJsonString){ 
+	public static Dish[] getDishFromJSON(String rawJsonString){ 
 
 		GsonBuilder b = new GsonBuilder();
 		
@@ -93,18 +85,7 @@ public class JSONPreprocessing {
 		return dishNames;
 	}
 	
-	
-	
-	// this is the test function
-//	public static void main(String[] args){
-//		JSONPreprocessing t = new JSONPreprocessing();
-//		final String jsonString = "[{\"price\": 35,\"name\": \"Spicy Bean curd with Minced Pork served with Rice\",\"ingredients\": [\"Pork\",\"Bean curd\",\"Rice\"]},{\"price\": 36,\"name\": \"Sweet and Sour Pork served with Rice\",\"ingredients\": [\"Pork\",\"Sweet and Sour Sauce\",\"Pork\"]},{\"price\": 28,\"name\": \"Chili Chicken on Rice\",\"ingredients\": [\"Chili\",\"Chicken\",\"Rice\"]}]";
-//		ArrayList<String> names = t.getDishName(t.getDishFromJson(jsonString)); 
-//		
-//		for(String s : names){
-//			System.out.println(s);
-//		}
-//	}
+
 }
 
 /**
@@ -132,54 +113,4 @@ public Dish deserialize(JsonElement arg0, Type arg1, JsonDeserializationContext 
  }
 }
 
-
-
-
-// this class is needed to parse the Json string into Java objects
-class Dish{
-	private double price;
-	private String name;
-	private ArrayList<String> ingredients = new ArrayList<String>();
-	
-	@Override
-	public String toString() {
-		return "Menu [price=" + price + ", name=" + name + ", ingredients=" + ingredients + ";";
-	}
-	
-	public double getPrice() {
-		return this.price;
-	}
-	
-	public void setPrice(double price) {
-		this.price = price;
-	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public ArrayList<String> getIngredients() {
-		return this.ingredients;
-	}
-	
-	public void setIngredients(ArrayList<String> ingredients){
-		this.ingredients = ingredients;
-	}
-	
-//	@Override
-//	public boolean equals(Object obj) {
-//		if(obj instanceof Dish) {
-//			if(this.price == ((Dish) obj).getPrice() && this.name.equals(((Dish) obj).getName()) && this.ingredients.equals(((Dish) obj).getIngredients())) {
-//				return true;
-//			}
-//			else return false;
-//		}
-//		else return false; // not a dish type
-//	}
-}
-	
 
