@@ -26,6 +26,10 @@ import lombok.Value;
 public class TextMessage implements Message {
     private final String text;
 
+    public String getText() {
+        return this.text;
+    }
+
     @JsonCreator
     // Constructor which has only one argument needs Jackson Annotation.
     // see MessageJsonReconstructionTest for detail.
