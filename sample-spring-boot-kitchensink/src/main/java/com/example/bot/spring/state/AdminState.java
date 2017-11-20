@@ -27,7 +27,11 @@ public class AdminState extends State {
         
     }
 
-
+    /**
+     * Match trigger of this state
+     * @param text String data type as input text
+     * @return int data type as binary boolean value
+     */
     public int matchTrigger(String text) {
 		if(text.toLowerCase().equals(ADMIN_TRIGGER)) {
 			return 1;
@@ -35,19 +39,32 @@ public class AdminState extends State {
 		return 0;
     }
 
+    /**
+     * Reply a message for input image in this state
+     * @param userId String data type
+     * @param jpg DownloadedContent data type as the image
+     * @param bot RiveScript data type 
+     * @return String data type as the reply
+     */
     public String replyImage(String userId, DownloadedContent jpg, RiveScript bot) {
         sql.setCouponUrl(jpg.getUrl());
 		return "Hi Admin, your image has been well received!";
     }
 
+    /**
+     * Get url for coupon image
+     * @return String data type
+     */
     public static String getImageUrl() {
 		return sql.getCouponUrl();
     }
 
     /**
-     * Reply a message for input text
-     * @param text A String data type
-     * @return A String data type
+     * Reply a message for input text in this state
+     * @param userId String data type
+     * @param text String data type
+     * @param bot RiveScript data type 
+     * @return String data type as the reply
      */
 	public String reply(String userId, String text, RiveScript bot) {
 		if(matchTrigger(text) == 1) {

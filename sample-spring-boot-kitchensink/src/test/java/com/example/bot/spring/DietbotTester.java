@@ -109,6 +109,7 @@ public class DietbotTester {
 		 databaseEngine.writeUserInfo("testUserChatImageInputMenu2", 15, "male", 1.72, 82, allergies, "normal", "input_menu", "input_menu");
 		 databaseEngine.writeUserInfo("testUserChatImageUpdateUserInfo", 17, "male", 1.73, 83, allergies, "normal", "update_user_info", "update_user_info");
 		 databaseEngine.writeUserInfo("testUserChatImagePostEating", 18, "male", 1.74, 84, allergies, "normal", "post_eating", "post_eating");
+		 databaseEngine.writeUserInfo("testRequestCoupon", 18, "male", 1.74, 84, allergies, "normal", "standby", "standby");
 		 databaseEngine.addMenu("testUser", menu);
 		 databaseEngine.addRecommendations("testUser");
 	}
@@ -133,13 +134,15 @@ public class DietbotTester {
 		databaseEngine.reset("testUserCalories", "userallergies");
 		databaseEngine.reset("testUserInputImage", "userinfo");
 		databaseEngine.reset("testRecommendFriendState", "campaign_user");
+
+		databaseEngine.reset("testRequestCoupon", "userinfo");
 		databaseEngine.reset("testUserChatImageInputMenu1", "userinfo");
 		databaseEngine.reset("testUserChatImageInputMenu2", "userinfo");
 		databaseEngine.reset("testUserChatImageUpdateUserInfo", "userinfo");
 		databaseEngine.reset("testUserChatImagePostEating", "userinfo");
 	}
 
-
+  
 	@Test
 	public void writeUserInfoExisting() {
 		ArrayList<String> allergies = null;
@@ -1230,7 +1233,7 @@ public class DietbotTester {
 		assertThat(thrown).isEqualTo(false);
 		
 	}
-
+	
 	@Test
 	public void testRecommendFriendState() throws Exception{
 		boolean thrown = false;
