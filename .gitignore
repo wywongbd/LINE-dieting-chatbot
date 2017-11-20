@@ -2,7 +2,6 @@
 *.idx
 *.xml
 *.properties
-*.html
 *.original
 
 # Build directory
