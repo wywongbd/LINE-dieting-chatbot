@@ -114,6 +114,8 @@ public class DietbotTester {
 		databaseEngine.reset("testUserGoalSerious", "userallergies");
 		databaseEngine.reset("testUserCalories", "userinfo");
 		databaseEngine.reset("testUserCalories", "userallergies");
+
+		databaseEngine.reset("testCollectUserInformation", "userinfo");
 	}
 
 	
@@ -674,7 +676,7 @@ public class DietbotTester {
 		String expectedResponse = null;
 
 		//example random userId from LINE
-		String userId = "123";
+		String userId = "testCollectUserInformation";
 
 		try{
 			stateManager = new StateManager("src/test/resources/rivescriptChatbot");
