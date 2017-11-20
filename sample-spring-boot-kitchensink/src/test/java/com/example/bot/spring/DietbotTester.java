@@ -41,8 +41,10 @@ import com.linecorp.bot.model.event.message.MessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
+import com.example.bot.spring.DietbotController.DownloadedContent;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.Message;
+
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -57,8 +59,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
-
 import java.util.Arrays;
+import java.nio.file.Path;
+import java.nio.file.Paths; 
 
 
 @RunWith(SpringRunner.class)
@@ -93,6 +96,7 @@ public class DietbotTester {
 		databaseEngine.writeUserInfo("testUserGoalLittle", 22, "male", 1.69, 69, allergies, "little_diet", "testTopic", "testState");
 		databaseEngine.writeUserInfo("testUserGoalSerious", 23, "male", 1.71, 68, allergies, "serious_diet", "testTopic", "testState");
 		databaseEngine.writeUserInfo("testUserCalories", 24, "male", 1.83, 77, allergies, "normal", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserInputImage", 22, "male", 1.70, 81, allergies, "normal", "standby", "standby");
 		databaseEngine.addMenu("testUser", menu);
 		databaseEngine.addRecommendations("testUser");
 	}
@@ -115,12 +119,12 @@ public class DietbotTester {
 		databaseEngine.reset("testUserGoalSerious", "userallergies");
 		databaseEngine.reset("testUserCalories", "userinfo");
 		databaseEngine.reset("testUserCalories", "userallergies");
-
+		databaseEngine.reset("testUserInputImage", "userinfo");
 		// for testCollectAndUpdateUserInformation function below
 		databaseEngine.reset("testCollectAndUpdateUserInformation", "userinfo");
 	}
 
-	
+
 	@Test
 	public void writeUserInfoExisting() {
 		ArrayList<String> allergies = null;
@@ -887,8 +891,6 @@ public class DietbotTester {
 		assertThat(thrown).isEqualTo(false);
 		
 		try{
-
-
     		//user want to update their personal info
     		input = "update";
     		expectedResponse = "Do you want to update your personal information?";
@@ -958,5 +960,47 @@ public class DietbotTester {
 		}
 		assertThat(thrown).isEqualTo(false);
 	}
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+	}
 
+	@Test
+	public void testInputImage() throws Exception{
+		// testUserInputImage
+		boolean thrown = false;
+		String ans1 = null;
+		String ans2 = null;
+		String ans2a = null;
+		String ans2b = null;
+
+		final Path path1 = Paths.get("test-reply-image-1.jpg");
+		final Path path2 = Paths.get("test-reply-image-2.jpg");
+
+		final String reply1 = "There is no useful information in your image!";
+		final String reply2a = "Thanks, I'm looking at your photo now! I'll try to give you some recommendations.";
+		final String reply2b = "Sweet and Sour Park";
+
+		try{
+			// Load image here, pass uri as null
+			DownloadedContent jpg1 = new DownloadedContent(path1, null);
+			DownloadedContent jpg2 = new DownloadedContent(path2, null);
+
+			InputMenuState obj = new InputMenuState();
+			ans1 = obj.replyImage("testUserInputImage", jpg1, bot);
+
+			ans2 = obj.replyImage("testUserInputImage", jpg2, bot);
+			String[] ans2Split = ans2.split("AAAAAAAAAA");
+			ans2a = ans2Split[0];
+			ans2b = ans2Split[1];
+			ans2b = ans2b.substring(1, ans2b.length() - 1);    // Slice the '[' and ']'
+
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(reply1.contains(ans1));
+		assertThat(reply2a.contains(ans2a));
+		assertThat(reply2b.contains(ans2b));
+	}
  }

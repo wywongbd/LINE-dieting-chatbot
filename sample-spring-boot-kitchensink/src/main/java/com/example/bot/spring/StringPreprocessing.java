@@ -58,7 +58,7 @@ public class StringPreprocessing {
 
 		return processUnitContentString;
 	}
-	
+
     /**
      * Get long string and convert to lower case
      * @param unitContentArray A String[] data type
@@ -74,18 +74,6 @@ public class StringPreprocessing {
 	        }
 	    }
 	    return wordsList;
-	}
-
-    /**
-     * Remove words having length shorter than minWordLength
-     * @param unitContent A String data type
-     * @param minWordLength A int data type
-     * @return A String data type
-     */
-	public String removeShortWords(String unitContent, int minWordLength) {
-		// Currently not used
-		String pattern = "\\b\\w{1," + minWordLength + "}\\b\\s?";
-		return unitContent.replaceAll(pattern, "");
 	}
 
     /**
