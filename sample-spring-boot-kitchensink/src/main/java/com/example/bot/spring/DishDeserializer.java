@@ -15,16 +15,17 @@ import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
 public class DishDeserializer implements JsonDeserializer<Dish> {
-	
-	/**
+	 /**
 	 * This is an overriden function of the GSON class
 	 * The purpose of this is to tell the GSON parse function 
 	 * how to create the custom java objects 
 	 * which is defined by the Dish Class
-	 * @param JsonElement and JsonDeserializationContext 
-	 * @return A customized Dish Object
-	 * @throws IOException
-	 */
+     * @param text A JsonElement data type
+     * @param text A Type data type
+     * @param text A JsonDeserializationContext data type
+     * @return A Dish data type
+     * @throws IOException
+     */
 	@Override 
 	public Dish deserialize(JsonElement arg0, Type arg1, JsonDeserializationContext arg2) throws JsonParseException {
 	    JsonObject decodeObj = arg0.getAsJsonObject();
