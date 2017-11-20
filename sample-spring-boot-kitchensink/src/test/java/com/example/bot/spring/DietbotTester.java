@@ -115,31 +115,23 @@ public class DietbotTester {
 
 	@AfterClass
 	public static void removeTestUser() {
-		 databaseEngine.reset("testUser", "userinfo");
-		 databaseEngine.reset("testUser", "menu");
-		 databaseEngine.reset("testUser", "recommendations");
-		 databaseEngine.reset("testUser", "userallergies");
-		 databaseEngine.reset("testUserIntake", "userinfo");
-		 databaseEngine.reset("testUserIntake", "userallergies");
-		 databaseEngine.reset("testUserAllergy", "userinfo");
-		 databaseEngine.reset("testUserAllergy", "userallergies");
-		 databaseEngine.reset("testUserHistory", "userinfo");
-		 databaseEngine.reset("testUserHistory", "userallergies");
-		 databaseEngine.reset("testUserGoalLittle", "userinfo");
-		 databaseEngine.reset("testUserGoalLittle", "userallergies");
-		 databaseEngine.reset("testUserGoalSerious", "userinfo");
-		 databaseEngine.reset("testUserGoalSerious", "userallergies");
-		 databaseEngine.reset("testUserCalories", "userinfo");
-		 databaseEngine.reset("testUserCalories", "userallergies");
-		 databaseEngine.reset("testUserInputImage", "userinfo");
-	     databaseEngine.reset("testUserChatImageInputMenu1", "userinfo");
-		 databaseEngine.reset("testUserChatImageInputMenu2", "userinfo");
-		 databaseEngine.reset("testUserChatImageUpdateUserInfo", "userinfo");
-		 databaseEngine.reset("testUserChatImagePostEating", "userinfo");
-
-		// for testCollectUserInformation function below
-		 databaseEngine.reset("testCollectUserInformation", "userinfo");
-		 databaseEngine.reset("testCollectUserInformation", "userallergies");
+		databaseEngine.reset("testUser", "userinfo");
+		databaseEngine.reset("testUser", "menu");
+		databaseEngine.reset("testUser", "recommendations");
+		databaseEngine.reset("testUser", "userallergies");
+		databaseEngine.reset("testUserIntake", "userinfo");
+		databaseEngine.reset("testUserIntake", "userallergies");
+		databaseEngine.reset("testUserAllergy", "userinfo");
+		databaseEngine.reset("testUserAllergy", "userallergies");
+		databaseEngine.reset("testUserHistory", "userinfo");
+		databaseEngine.reset("testUserHistory", "userallergies");
+		databaseEngine.reset("testUserGoalLittle", "userinfo");
+		databaseEngine.reset("testUserGoalLittle", "userallergies");
+		databaseEngine.reset("testUserGoalSerious", "userinfo");
+		databaseEngine.reset("testUserGoalSerious", "userallergies");
+		databaseEngine.reset("testUserCalories", "userinfo");
+		databaseEngine.reset("testUserCalories", "userallergies");
+		databaseEngine.reset("testUserInputImage", "userinfo");
 	}
 
 	@Test
@@ -711,10 +703,13 @@ public class DietbotTester {
 		String chatBotReponse = null;
 		String expectedResponse = null;
 
+		// delete the testing userId first
+		databaseEngine.reset("testCollectUserInformation", "userinfo");
+		databaseEngine.reset("testCollectUserInformation", "userallergies");
+
 		//example random userId from LINE
 		String userId = "testCollectUserInformation";
 		stateManager = new StateManager("src/test/resources/rivescriptChatbot");
-    	SQLDatabaseEngine db = new SQLDatabaseEngine();
 
 		try{
 			//random input at first when the user start chatting
@@ -896,10 +891,10 @@ public class DietbotTester {
     		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
     		//query user information to check the correctness
-    		assertThat(db.getUserInfo(userId, "age")).isEqualTo("20");
-    		assertThat(db.getUserInfo(userId, "gender")).isEqualTo("male");
-    		assertThat(db.getUserInfo(userId, "height")).isEqualTo("176.0");
-    		assertThat(db.getUserInfo(userId, "weight")).isEqualTo("62.0");
+    		assertThat(databaseEngine.getUserInfo(userId, "age")).isEqualTo("20");
+    		assertThat(databaseEngine.getUserInfo(userId, "gender")).isEqualTo("male");
+    		assertThat(databaseEngine.getUserInfo(userId, "height")).isEqualTo("176.0");
+    		assertThat(databaseEngine.getUserInfo(userId, "weight")).isEqualTo("62.0");
 
 		} catch (Exception e) {
 			thrown = true;
@@ -968,7 +963,8 @@ public class DietbotTester {
 		assertThat(thrown).isEqualTo(false);
 
 		try{
-    		assertThat(db.getUserInfo(userId, "age")).isEqualTo("30");
+
+    		assertThat(databaseEngine.getUserInfo(userId, "age")).isEqualTo("30");
 
 		} catch (Exception e) {
 			thrown = true;
@@ -1009,6 +1005,35 @@ public class DietbotTester {
     		expectedResponse = "Thanks, I'm looking at your url now! I'll try to give you some recommendations.";
     		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
     		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+    		
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+
+		try{
+    		//test inputMenuState
+    		input = "friend:generate";
+    		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
+    		assertThat(chatBotReponse.length()).isEqualTo("Thank you, your code is ".length() + 6);
+
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+
+		try{
+
+    		//test provide info state
+    		input = "check";
+    		expectedResponse = "Which one do you want to choose? Nutrient history or food nutrient? Btw you can type \"leave\" to exit.";
+    		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
+    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+
+    		//test history
+    		input = "history";
+    		expectedResponse = "Please click to enter the starting date of your query.";
+    		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
     		
 		} catch (Exception e) {
 			thrown = true;
@@ -1157,4 +1182,36 @@ public class DietbotTester {
 		assertThat(thrown).isEqualTo(false);
 	}
 
+	@Test
+	public void testAdminUploadCoupon() throws Exception{
+
+		boolean thrown = false;
+		String input = null;
+		String chatBotReponse = null;
+		String expectedResponse = null;
+
+		//example random userId from LINE
+		String userId = "testCollectUserInformation";
+		stateManager = new StateManager("src/test/resources/rivescriptChatbot");
+		String adminUserId = "Udfd2991f287cc5c75f6c1d2c30c58a3a";
+		ArrayList<String> allergies = new ArrayList<String>();
+		allergies.add("seafood");
+
+		databaseEngine.reset(adminUserId, "userinfo");
+		databaseEngine.reset(adminUserId, "userallergies");
+		databaseEngine.writeUserInfo(adminUserId, 20, "male", 1.75, 60, allergies, "normal", "standby", "standby");
+
+		try{
+    		//test admin upload image
+    		input = "admin:upload_coupon";
+    		expectedResponse = "Hi admin, please input a coupon image!";
+    		chatBotReponse = ((TextMessage)stateManager.chat(adminUserId, input, true).get(0)).getText();
+    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+		
+	}
  }
