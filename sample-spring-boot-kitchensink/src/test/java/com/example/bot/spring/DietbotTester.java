@@ -404,6 +404,20 @@ public class DietbotTester {
 
 
 	@Test
+	public void couponExceeds5000() {
+		this.databaseEngine.generateAndStoreCode("testUserCode");
+		assertThat(this.databaseEngine.couponExceeds5000(2)).isEqualTo(false);
+		this.databaseEngine.generateAndStoreCode("testUserCode");
+		assertThat(this.databaseEngine.couponExceeds5000(2)).isEqualTo(false);
+		this.databaseEngine.claimCode("testUserClaim", 100000);
+		assertThat(this.databaseEngine.couponExceeds5000(2)).isEqualTo(false);
+		this.databaseEngine.claimCode("testUserClaim2", 100001);
+		assertThat(this.databaseEngine.couponExceeds5000(2)).isEqualTo(true);
+		this.databaseEngine.resetCoupon("testUserCode");
+	}
+
+
+	@Test
 	public void setCouponUrl() {
 		String url = "testCouponUrlButIPurposedlyMakeItLongerJustToTestIfItCanHandleLongLengths";
 
