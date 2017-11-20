@@ -109,7 +109,6 @@ public class StateManager {
         bot.loadDirectory(resourcesDirectory.getAbsolutePath());
         bot.sortReplies();
         bot.setSubroutine("setVariableToDB", new setVariableToDB());
-        bot.setSubroutine("getNutritionOfFood", new getNutritionOfFood());
         bot.setSubroutine("getNutritionHistory", new getNutritionHistory());
     }
 
@@ -324,27 +323,6 @@ public class StateManager {
                     sql.setUserInfo(args[2], args[0], args[1]);
                 }
             }
-
-            return "";
-        }
-    }
-
-
-    //use for query nutrient of a food
-    public class getNutritionOfFood implements Subroutine {
-
-        // assume the order of parameter is: food name
-        public String call(RiveScript rs, String[] args) {
-        	ArrayList<Double> result = null;
-        	String resultString = "";
-        	if (args.length > 0) {
-        		result = sql.getNutritionInfo(args[0]);
-				resultString = args[0] + "(per 100g) contains "
-								+ "\n*energy: " + Double.toString(result.get(0)) + "kcal"
-								+ "\n*sodium: " + Double.toString(result.get(1)) + "mg"
-								+ "\n*fat: " 	+ Double.toString(result.get(2)) + "g";
-				return resultString;
-        	}
 
             return "";
         }

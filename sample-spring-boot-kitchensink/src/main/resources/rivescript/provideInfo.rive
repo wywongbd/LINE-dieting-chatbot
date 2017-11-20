@@ -31,7 +31,7 @@
 > topic provide_info_food_nutrient
 
     + *
-    - <call>getNutritionOfFood <star> </call>{topic=standby}<set state=standby>
+    - {topic=standby}<set state=standby>
 
     + [*] leave [*]
     - OK. Tell me when you need help~~~~{topic=standby}<set state=standby>
