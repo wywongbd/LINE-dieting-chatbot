@@ -30,7 +30,7 @@ public class RecommendFriendState extends State {
 			return "FRIEND";
 		}
         else{
-            String[] splitText = text.toLowerCase().split(" ");
+            String[] splitText = text.toLowerCase().split(":");
             if(splitText.length == 2){
                 if(splitText[0].equals("code") && splitText[1].matches(DIGIT_REGEX)){
                     return "CODE";
@@ -41,7 +41,7 @@ public class RecommendFriendState extends State {
     }
 
     public String decodeCodeMessage(String text) {
-    	return text.split(" ")[1];
+    	return text.split(":")[1];
     }
  
     public String replyForFriendCommand(String userId) {
