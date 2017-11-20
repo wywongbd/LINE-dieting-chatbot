@@ -31,17 +31,17 @@ public class RecommendFriendState extends State {
 		}
         else{
             String[] splitText = text.toLowerCase().split(":");
-            if(splitText.length == 2 && splitText[0].equals("code") && splitText[1].matches(DIGIT_REGEX)){
-                return "CODE";
+            if(splitText.length == 2){
+                if(splitText[0].equals("code") && splitText[1].matches(DIGIT_REGEX)){
+                    return "CODE";
+                }
             }
-            else{
-                return "nothing";
-            }
+            return "nothing";
         }
     }
 
     public String decodeCodeMessage(String text) {
-    	return text.split(" ")[1];
+    	return text.split(":")[1];
     }
  
     public String replyForFriendCommand(String userId) {
