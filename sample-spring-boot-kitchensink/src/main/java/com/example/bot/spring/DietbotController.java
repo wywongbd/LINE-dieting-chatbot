@@ -242,10 +242,10 @@ public class DietbotController {
 					String requestUser = reply.get(0);
             		// String temp = reply.get(1);	
             		// Reply to claimUser
-                    // this.pushText(userId, appreciateUsingCoupon);
+                    this.pushText(userId, appreciateUsingCoupon);
             		this.pushImage(userId, url);
             		// Push image to requestUser
-                    // this.pushText(requestUser, appreciateUsingCoupon);
+                    this.pushText(requestUser, appreciateUsingCoupon);
             		this.pushImage(requestUser, url);
 					return;
 				}
