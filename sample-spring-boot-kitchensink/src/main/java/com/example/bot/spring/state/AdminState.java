@@ -17,7 +17,7 @@ import java.awt.image.BufferedImage;
 
 public class AdminState extends State {
     // Constant values
-    private static final String ADMIN_TRIGGER = "admin_upload_image";
+    private static final String ADMIN_TRIGGER = "admin:upload_coupon";
     private static String couponImageUrl = null;
 
     /**
@@ -29,7 +29,7 @@ public class AdminState extends State {
 
 
     public int matchTrigger(String text) {
-		if(text.equals(ADMIN_TRIGGER)) {
+		if(text.toLowerCase().equals(ADMIN_TRIGGER)) {
 			return 1;
 		}
 		return 0;
