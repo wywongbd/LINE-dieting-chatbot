@@ -31,22 +31,22 @@ public class RecommendFriendState extends State {
 		}
         else{
             String[] splitText = text.toLowerCase().split(":");
-            if(splitText.length == 2 && splitText[0].equals("code") && splitText[1].matches(DIGIT_REGEX)){
-                return "CODE";
+            if(splitText.length == 2){
+                if(splitText[0].equals("code") && splitText[1].matches(DIGIT_REGEX)){
+                    return "CODE";
+                }
             }
-            else{
-                return "nothing";
-            }
+            return "nothing";
         }
     }
 
     public String decodeCodeMessage(String text) {
-    	return text.split(" ")[1];
+    	return text.split(":")[1];
     }
  
     public String replyForFriendCommand(String userId) {
         String reply = null;
-        if(sql.couponExceeds5000(5000)){
+        if(sql.couponExceeds5000(3)){
             reply = "Sorry, all coupon has been claimed already!";
             
         }
@@ -59,7 +59,6 @@ public class RecommendFriendState extends State {
 
     public Vector<String> actionForCodeCommand(String userId, String code) {
         Vector<String> vec = new Vector<String>(0);
-
         if(!sql.searchUser(userId, "campaign_user")){
             // The user cannot claim
             vec.add("Sorry, you cannot claim coupon!");
@@ -81,7 +80,7 @@ public class RecommendFriendState extends State {
                 else if(requestUser.equals(userId)) {
                     vec.add("Sorry, You cannot claim your own code!");
                 }
-                else if(sql.couponExceeds5000(5000)){
+                else if(sql.couponExceeds5000(3)){
                     vec.add("Sorry, all coupon has been claimed already!");
                 }
                 else{
