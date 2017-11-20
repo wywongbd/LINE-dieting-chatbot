@@ -51,7 +51,7 @@ public class RecommendFriendState extends State {
             reply = "Thank you, your code is " + Integer.toString(newCode);
         }
         else{
-            reply = "Sorry, all coupon has been claimed already!"
+            reply = "Sorry, all coupon has been claimed already!";
         }
         return reply;
     }
