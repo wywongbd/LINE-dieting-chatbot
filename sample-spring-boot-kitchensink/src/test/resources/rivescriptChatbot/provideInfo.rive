@@ -18,7 +18,7 @@
 > topic provide_info_nutrient_history
 
     + set starting date for nutrient history #
-    - call function here to get the text to return{topic=standby}<set state=standby>
+    - <call>getNutritionHistory <star> <id> </call>{topic=standby}<set state=standby>
 
     + [*] leave [*]
     - OK. Tell me when you need help~~~~{topic=standby}<set state=standby>

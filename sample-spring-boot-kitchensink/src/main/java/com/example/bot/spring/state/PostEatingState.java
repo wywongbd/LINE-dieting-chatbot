@@ -41,6 +41,10 @@ public class PostEatingState extends State {
 
 		afterState = bot.getUservar(userId, "state");
 
+        if (sql.exceedDailyCalorieQuota(userId)) {
+             output += "\nWARNING!!! You have exceeded daily calorie quota.";
+        }
+
 		// write to DB
 		syncSQLWithRiveScript(userId, bot);
 		return output;
