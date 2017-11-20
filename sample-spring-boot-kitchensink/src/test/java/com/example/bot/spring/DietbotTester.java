@@ -384,47 +384,47 @@ public class DietbotTester {
 	}
 
 
-	@Test
-	public void generateAndStoreCode() {
-		ArrayList<String> result = new ArrayList<String>();
+	// @Test
+	// public void generateAndStoreCode() {
+	// 	ArrayList<String> result = new ArrayList<String>();
 
-		this.databaseEngine.generateAndStoreCode("testUserCode");
-		result = this.databaseEngine.getCodeInfo(100000);
-		assertThat(result.get(0)).isEqualTo("testUserCode");
-		assertThat(result.get(1)).isEqualTo(null);
-		this.databaseEngine.resetCoupon("testUserCode");
-		assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(false);
-	}
-
-
-	@Test
-	public void claimCode() {
-		ArrayList<String> result = new ArrayList<String>();
-
-		this.databaseEngine.addCampaignUser("testUserClaim");
-		this.databaseEngine.generateAndStoreCode("testUserCode");
-		this.databaseEngine.claimCode("testUserClaim", 100000);
-		assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(false);
-		result = this.databaseEngine.getCodeInfo(100000);
-		assertThat(result.get(0)).isEqualTo("testUserCode");
-		assertThat(result.get(1)).isEqualTo("testUserClaim");
-		this.databaseEngine.reset("testUserClaim", "campaign_user");
-		this.databaseEngine.resetCoupon("testUserCode");
-	}
+	// 	this.databaseEngine.generateAndStoreCode("testUserCode");
+	// 	result = this.databaseEngine.getCodeInfo(100000);
+	// 	assertThat(result.get(0)).isEqualTo("testUserCode");
+	// 	assertThat(result.get(1)).isEqualTo(null);
+	// 	this.databaseEngine.resetCoupon("testUserCode");
+	// 	assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(false);
+	// }
 
 
-	@Test
-	public void couponExceeds5000() {
-		this.databaseEngine.generateAndStoreCode("testUserCode");
-		assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(false);
-		this.databaseEngine.generateAndStoreCode("testUserCode");
-		assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(false);
-		this.databaseEngine.claimCode("testUserClaim", 100000);
-		assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(false);
-		this.databaseEngine.claimCode("testUserClaim2", 100001);
-		assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(true);
-		this.databaseEngine.resetCoupon("testUserCode");
-	}
+	// @Test
+	// public void claimCode() {
+	// 	ArrayList<String> result = new ArrayList<String>();
+
+	// 	this.databaseEngine.addCampaignUser("testUserClaim");
+	// 	this.databaseEngine.generateAndStoreCode("testUserCode");
+	// 	this.databaseEngine.claimCode("testUserClaim", 100000);
+	// 	assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(false);
+	// 	result = this.databaseEngine.getCodeInfo(100000);
+	// 	assertThat(result.get(0)).isEqualTo("testUserCode");
+	// 	assertThat(result.get(1)).isEqualTo("testUserClaim");
+	// 	this.databaseEngine.reset("testUserClaim", "campaign_user");
+	// 	this.databaseEngine.resetCoupon("testUserCode");
+	// }
+
+
+	// @Test
+	// public void couponExceeds5000() {
+	// 	this.databaseEngine.generateAndStoreCode("testUserCode");
+	// 	assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(false);
+	// 	this.databaseEngine.generateAndStoreCode("testUserCode");
+	// 	assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(false);
+	// 	this.databaseEngine.claimCode("testUserClaim", 100000);
+	// 	assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(false);
+	// 	this.databaseEngine.claimCode("testUserClaim2", 100001);
+	// 	assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(true);
+	// 	this.databaseEngine.resetCoupon("testUserCode");
+	// }
 
 
 	@Test
@@ -959,6 +959,32 @@ public class DietbotTester {
 			thrown = true;
 		}
 		assertThat(thrown).isEqualTo(false);
+
+
+		try{
+
+    		//confirm
+    		input = "input";
+    		expectedResponse = "Alright!";
+    		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
+    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+
+    		
+    		//confirm
+    		input = "input";
+    		expectedResponse = "Alright!";
+    		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
+    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+    		
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+
+
+
+
+
 	}
 		} catch (Exception e) {
 			thrown = true;
