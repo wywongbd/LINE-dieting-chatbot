@@ -28,7 +28,7 @@ public class StandbyState extends State {
 				output = "Congratulations! You have done well to stick to your diet plan for more than a week, you can now enjoy your cheat day! Feel free to eat whatever you wish for the rest of the day.";
 			}
 			else{
-				output = "Sorry, you can only claim you cheat day once a week. Hang on for a little longer!"
+				output = "Sorry, you can only claim you cheat day once a week. Hang on for a little longer!";
 			}
 		}
 		else{
