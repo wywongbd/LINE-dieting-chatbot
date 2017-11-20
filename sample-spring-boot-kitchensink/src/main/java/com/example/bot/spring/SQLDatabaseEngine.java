@@ -46,15 +46,15 @@ public class SQLDatabaseEngine {
 	*	Writes the input user info into the database.
 	*	Writes into both the userinfo and userallergies databases.
 	*	
-	*	@param userId - the user's Line ID.
-	*	@param age - the user's age.
-	*	@param gender - the user's gender, either "male" or "female".
-	*	@param height - the user's height, in meters.
-	*	@param weight - the user's weight, in kilograms.
-	*	@param allergies - a list of the user's allergies.
-	*	@param diet - the user's dieting goals, either "little_diet", "normal" or "serious_diet".
-	*	@param topic - the user's topic within Rivescript.
-	*	@param state - the user's state within Rivescript.
+	*	@param userId the user's Line ID.
+	*	@param age the user's age.
+	*	@param gender the user's gender, either "male" or "female".
+	*	@param height the user's height, in meters.
+	*	@param weight the user's weight, in kilograms.
+	*	@param allergies a list of the user's allergies.
+	*	@param diet the user's dieting goals, either "little_diet", "normal" or "serious_diet".
+	*	@param topic the user's topic within Rivescript.
+	*	@param state the user's state within Rivescript.
 	*/
 	public void writeUserInfo(String userId, int age, String gender, double height, double weight, ArrayList<String> allergies, String diet, String topic, String state) {
 		Connection connection = null;
@@ -123,9 +123,9 @@ public class SQLDatabaseEngine {
 	/**
 	*	Sets the String value of a single column for the specified user in the userinfo table.
 	*
-	*	@param userId - the user's Line ID.
-	*	@param info - the name of the column whose value is to be overwritten.
-	*	@param newInfo - the new String value to be written.
+	*	@param userId the user's Line ID.
+	*	@param info the name of the column whose value is to be overwritten.
+	*	@param newInfo the new String value to be written.
 	*/
 	public void setUserInfo(String userId, String info, String newInfo) {
 		Connection connection = null;
@@ -158,9 +158,9 @@ public class SQLDatabaseEngine {
 	/**
 	*	Sets the int value of a single column for the specified user in the userinfo table.
 	*
-	*	@param userId - the user's Line ID.
-	*	@param info - the name of the column whose value is to be overwritten.
-	*	@param newInfo - the new int value to be written.
+	*	@param userId the user's Line ID.
+	*	@param info the name of the column whose value is to be overwritten.
+	*	@param newInfo the new int value to be written.
 	*/
 	public void setUserInfo(String userId, String info, int newInfo) {
 		Connection connection = null;
@@ -193,9 +193,9 @@ public class SQLDatabaseEngine {
 	/**
 	*	Sets the double value of a single column for the specified user in the userinfo table.
 	*
-	*	@param userId - the user's Line ID.
-	*	@param info - the name of the column whose value is to be overwritten.
-	*	@param newInfo - the new double value to be written.
+	*	@param userId the user's Line ID.
+	*	@param info the name of the column whose value is to be overwritten.
+	*	@param newInfo the new double value to be written.
 	*/
 	public void setUserInfo(String userId, String info, double newInfo) {
 		Connection connection = null;
@@ -228,8 +228,8 @@ public class SQLDatabaseEngine {
 	/**
 	*	Returns the value of a single column of the specified user from the userinfo table.
 	*
-	*	@param userId - the user's Line ID.
-	*	@param info - the name of the column whose value is to be returned.
+	*	@param userId the user's Line ID.
+	*	@param info the name of the column whose value is to be returned.
 	*	@return the desired user info as a String.
 	*/
 	public String getUserInfo(String userId, String info) {
@@ -276,8 +276,8 @@ public class SQLDatabaseEngine {
 	/**
 	*	Sets the allergies for the specified user in the userallergies table.
 	*
-	*	@param userId - the user's Line ID.
-	*	@param allergies - a list of the user's allergies.
+	*	@param userId the user's Line ID.
+	*	@param allergies a list of the user's allergies.
 	*/
 	public void setUserAllergies(String userId, ArrayList<String> allergies) {
 		Connection connection = null;
@@ -324,7 +324,7 @@ public class SQLDatabaseEngine {
 	/**
 	*	Returns the allergies for the specified user.
 	*
-	*	@param userId - the user's Line ID.
+	*	@param userId the user's Line ID.
 	*	@return a list of the user's allergies.
 	*/
 	public ArrayList<String> getUserAllergies(String userId) {
@@ -363,7 +363,7 @@ public class SQLDatabaseEngine {
 	*	Deletes the specified user's info from the database.
 	*	Deletes from both the userinfo and userallergies databases.
 	*
-	*	@param userId - the user's Line ID.
+	*	@param userId the user's Line ID.
 	*/
 	public void deleteUserInfo(String userId) {
 		Connection connection = null;
@@ -403,8 +403,8 @@ public class SQLDatabaseEngine {
 	/**
 	*	Adds meal name from the input menu into the meal table for the specified user.
 	*
-	*	@param userId - the user's Line ID.
-	*	@param menu - a food menu.
+	*	@param userId the user's Line ID.
+	*	@param menu a food menu.
 	*/
 	public void addMenu(String userId, ArrayList<String> menu) {
 		Connection connection = null;
@@ -440,7 +440,7 @@ public class SQLDatabaseEngine {
 	*	Reads meal names from the meal table for the specified user, and matches them to the food in our food_type table.
 	*	Stores the closes match for each meal name into the recommendation table for the specified user.
 	*
-	*	@param userId - the user's Line ID.
+	*	@param userId the user's Line ID.
 	*/
 	public void addRecommendations(String userId) {
 		Connection connection = null;
@@ -485,7 +485,7 @@ public class SQLDatabaseEngine {
 	/**
 	*	Removes recommendations from the recommendations table that the specified user is allergic to.
 	*
-	*	@param userId - the user's Line ID.
+	*	@param userId the user's Line ID.
 	*/
 	public void processRecommendationsByAllergies(String userId) {
 		Connection connection = null;
@@ -539,7 +539,7 @@ public class SQLDatabaseEngine {
 	/**
 	*	Adjusts the weightages of meals for the specified user in the recommendations table based on their recommended daily intake.
 	*
-	*	@param userId - the user's Line ID.
+	*	@param userId the user's Line ID.
 	*/
 	public void processRecommendationsByIntake(String userId) {
 		Connection connection = null;
@@ -588,7 +588,7 @@ public class SQLDatabaseEngine {
 	/**
 	*	Adjusts the weightages of meals for the specified user in the recommendations table based on their eating history.
 	*
-	*	@param userId - the user's Line ID.
+	*	@param userId the user's Line ID.
 	*/
 	public void processRecommendationsByEatingHistory(String userId) {
 		Connection connection = null;
@@ -646,7 +646,7 @@ public class SQLDatabaseEngine {
 	/**
 	*	Adjusts the weightages of meals for the specified user in the recommendations table based on their dieting goals.
 	*
-	*	@param userId - the user's Line ID.
+	*	@param userId the user's Line ID.
 	*/
 	public void processRecommendationsByGoal(String userId) {
 		Connection connection = null;
@@ -702,7 +702,7 @@ public class SQLDatabaseEngine {
 	/**
 	*	Returns a HashMap of meal recommendations for the specified user.
 	*
-	*	@param userId - the user's Line ID.
+	*	@param userId the user's Line ID.
 	*/
 	public HashMap<String, Double> getRecommendationList(String userId) {
 		Connection connection = null;
@@ -746,8 +746,8 @@ public class SQLDatabaseEngine {
 	/**
 	*	Determines if the specified user is stored within the input table.
 	*
-	*	@param userId - the user's Line ID.
-	*	@param table - the name of the table where you want to search for the user.
+	*	@param userId the user's Line ID.
+	*	@param table the name of the table where you want to search for the user.
 	*	@return true if the specified user exists within the table; false otherwise.
 	*/
 	public boolean searchUser(String userId, String table) {
@@ -786,8 +786,8 @@ public class SQLDatabaseEngine {
 	*	Gets the input meal from the menu table for the specified user.
 	*	Used for debugging and testing purposes.
 	*
-	*	@param userId - the user's Line ID.
-	*	@param text - the name of the meal.
+	*	@param userId the user's Line ID.
+	*	@param text the name of the meal.
 	*	@return the meal name if exists within the table; null otherwise.
 	*/
 	public String getMenu(String userId, String text) {
@@ -828,8 +828,8 @@ public class SQLDatabaseEngine {
 	*	Gets the input meal from the recommendations table for the specified user.
 	*	Used for debugging and testing purposes.
 	*
-	*	@param userId - the user's Line ID.
-	*	@param text - the name of the meal.
+	*	@param userId the user's Line ID.
+	*	@param text the name of the meal.
 	*	@return the meal name if exists within the table; null otherwise.
 	*/
 	public String getRecommendation(String userId, String text) {
@@ -871,8 +871,8 @@ public class SQLDatabaseEngine {
 	*	Gets the weightage of the input meal from the menu table for the specified user.
 	*	Used for debugging and testing purposes.
 	*
-	*	@param userId - the user's Line ID.
-	*	@param text - the name of the meal.
+	*	@param userId the user's Line ID.
+	*	@param text the name of the meal.
 	*	@return the weightage of the meal if exists within the table; null otherwise.
 	*/
 	public double getWeightage(String userId, String text) {
@@ -913,7 +913,7 @@ public class SQLDatabaseEngine {
 	/**
 	*	Adds the specified user into the campaign_user table.
 	*
-	*	@param userId - the user's Line ID.
+	*	@param userId the user's Line ID.
 	*/
 	public void addCampaignUser(String userId) {
 		Connection connection = null;
@@ -944,7 +944,7 @@ public class SQLDatabaseEngine {
 	/**
 	*	Generates and stores a unique 6-digit code in the coupon_code database, together with the userId of the user who requested it.
 	*
-	*	@param userId - the user's Line ID.
+	*	@param userId the user's Line ID.
 	*	@return the generated code.
 	*/
 	public int generateAndStoreCode(String userId) {
@@ -990,7 +990,12 @@ public class SQLDatabaseEngine {
 	}
 
 
-	// Sets the value of a the claimUser column with corresponding code to userId in the coupon_code table
+	/**
+	*	Sets the value of the claimuser column with corresponding code to the input userId in the coupon_code table.
+	*
+	*	@param userId the user's Line ID.
+	*	@param code the code to be claimed.
+	*/
 	public void claimCode(String userId, int code) {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
@@ -1028,7 +1033,12 @@ public class SQLDatabaseEngine {
 	}
 
 
-	// Returns the allergies of the input user
+	/**
+	*	Gets the requestuser and claimuser values for the specified code.
+	*
+	*	@param code a coupon code.
+	*	@return a list of strings, where the first element is the requestuser, and the second element is the claimuser.
+	*/
 	public ArrayList<String> getCodeInfo(int code) {
 		ArrayList<String> result = new ArrayList<String>();
 		Connection connection = null;
@@ -1038,7 +1048,7 @@ public class SQLDatabaseEngine {
 			connection = this.getConnection();
 
 			stmtQuery = connection.prepareStatement(
-				"SELECT requestUser, claimUser " +
+				"SELECT requestuser, claimuser " +
 				"FROM coupon_code " +
 				"WHERE code = ?"
 			);
@@ -1063,7 +1073,12 @@ public class SQLDatabaseEngine {
 	}
 
 
-	// Returns true if there are already more than 2500 claimed codes (more than 5000 claimed coupons) in the database, returns false otherwise
+	/**
+	*	Determines if they are already 5000 claimed coupons.
+	*
+	*	@param limit should be 5000. This parameter is added for testing purposes.
+	*	@return true if there are >= 5000 claimed coupons; false otherwise.
+	*/
 	public boolean couponExceeds5000(int limit) {
 		boolean result = true;
 		Connection connection = null;
@@ -1074,9 +1089,8 @@ public class SQLDatabaseEngine {
 		try {
 			connection = this.getConnection();
 
-			// Generate and insert the code into the coupon_code database, together with the userId
 			stmtQuery = connection.prepareStatement(
-				"SELECT count(claimuser) " +
+				"SELECT count(claimuser) * 2 " +
 				"FROM coupon_code;"
 			);
 			rs = stmtQuery.executeQuery(); 
@@ -1100,7 +1114,11 @@ public class SQLDatabaseEngine {
 	}	
 
 
-	// Sets the url in the coupon_url database
+	/**
+	*	Sets the url in the coupon_url database
+	*
+	*	@param url a coupon url.
+	*/
 	public void setCouponUrl(String url) {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
@@ -1135,7 +1153,11 @@ public class SQLDatabaseEngine {
 	}
 
 
-	// Returns the coupon url
+	/**
+	*	Returns the coupon url from the coupon_url database
+	*
+	*	@return the coupon url.
+	*/
 	public String getCouponUrl() {
 		String result = null;
 		Connection connection = null;
@@ -1167,7 +1189,12 @@ public class SQLDatabaseEngine {
 	}
 
 
-	// Adds the input meals to the user's eating history
+	/**
+	*	Adds the input meals to the specified user's eating history
+	*
+	*	@param userId the user's Line ID.
+	*	@param meals meals that the user has eaten.
+	*/
 	public void addUserEatingHistory(String userId, String meals) {
 		String[] mealList = meals.split(",");
 		StringJoiner foodJoiner = new StringJoiner(",");
@@ -1224,7 +1251,13 @@ public class SQLDatabaseEngine {
 	}
 
 
-	// Retrieves the user's eating history for the past input number of days
+	/**
+	*	Gets the user's eating history for the past input number of days
+	*	Used for debugging and testing purposes.
+	*
+	*	@param userId the user's Line ID.
+	*	@param days the number of days of eating history to be retrieved.
+	*/
 	public ArrayList<String> getUserEatingHistory(String userId, int days) {
 		ArrayList<String> result = new ArrayList<String>();
 		Connection connection = null;
@@ -1260,7 +1293,11 @@ public class SQLDatabaseEngine {
 	}
 
 
-	// Sets the isopen value of is_campaign_open
+	/**
+	*	Sets the isopen value of the is_campaign_open table
+	*
+	*	@param state 1 for open; 0 for closed.
+	*/
 	public void setCampaign(int state) {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
@@ -1295,7 +1332,11 @@ public class SQLDatabaseEngine {
 	}
 
 
-	// Returns true if campaign is open, returns false otherwise
+	/**
+	*	Determines if the campaign is open.
+	*
+	*	@return true if campaign is open; false otherwise.
+	*/
 	public boolean isCampaignOpen() {
 		Connection connection = null;
 		PreparedStatement stmtQuery = null;
@@ -1328,7 +1369,12 @@ public class SQLDatabaseEngine {
 	}
 
 
-	// Returns the nutrition info of the input food
+	/**
+	*	Gets the nutrition info of the specified food.
+	*
+	*	@param food a food.
+	*	@return a list of nutritional values. The first element is calories(kcal), the second element is sodium(mg), and the third element is fat(g).
+	*/
 	public ArrayList<Double> getNutritionInfo(String food) {
 		ArrayList<Double> result = new ArrayList<Double>();
 		Connection connection = null;
@@ -1371,7 +1417,12 @@ public class SQLDatabaseEngine {
 	}
 
 
-	// Returns true if the user has not claimed a cheat day in the past 7 days, returns false otherwise
+	/**
+	*	Determines if the specified user can claim a cheat day.
+	*
+	*	@param userId the user's Line ID.
+	*	@return true if the user has not claimed a cheat day within the past 7 days; false otherwise.
+	*/
 	public boolean canClaimCheatDay(String userId) {
 		Connection connection = null;
 		PreparedStatement stmtQuery = null;
@@ -1409,7 +1460,12 @@ public class SQLDatabaseEngine {
 	}
 
 
-	// Returns true if the user has exceed their daily calorie quota, returns false otherwise
+	/**
+	*	Determines if the specified user has exceeded their daily calorie quota.
+	*
+	*	@param userId the user's Line ID.
+	*	@return true if the user has exceed their daily calorie quota, false otherwise.
+	*/
 	public boolean exceedDailyCalorieQuota(String userId) {
 		Connection connection = null;
 		PreparedStatement stmtQuery = null;
@@ -1479,7 +1535,12 @@ public class SQLDatabaseEngine {
 	}
 
 
-	// Deletes all records corresponding to the userId in the input table
+	/**
+	*	Deletes all records corresponding to the specified user from the input table.
+	*
+	*	@param userId the user's Line ID.
+	*	@param table the database table to delete records from.
+	*/
 	public void reset(String userId, String table) {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;
@@ -1506,7 +1567,11 @@ public class SQLDatabaseEngine {
 	}
 
 
-	// Deletes all records corresponding to the requestUserId in the coupon_code table
+	/**
+	*	Deletes all records corresponding to the specified requestuser from the coupon_code table.
+	*
+	*	@param requestUserId the user's Line ID.
+	*/
 	public void resetCoupon(String requestUserId) {
 		Connection connection = null;
 		PreparedStatement stmtUpdate = null;

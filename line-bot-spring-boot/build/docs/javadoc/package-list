@@ -1,0 +1,4 @@
+com.linecorp.bot.spring.boot
+com.linecorp.bot.spring.boot.annotation
+com.linecorp.bot.spring.boot.interceptor
+com.linecorp.bot.spring.boot.support

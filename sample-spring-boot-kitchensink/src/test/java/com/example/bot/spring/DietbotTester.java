@@ -406,23 +406,26 @@ public class DietbotTester {
 	@Test
 	public void couponExceeds5000() {
 		this.databaseEngine.generateAndStoreCode("testUserCode");
-		assertThat(this.databaseEngine.couponExceeds5000(2)).isEqualTo(false);
+		assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(false);
 		this.databaseEngine.generateAndStoreCode("testUserCode");
-		assertThat(this.databaseEngine.couponExceeds5000(2)).isEqualTo(false);
+		assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(false);
 		this.databaseEngine.claimCode("testUserClaim", 100000);
-		assertThat(this.databaseEngine.couponExceeds5000(2)).isEqualTo(false);
+		assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(false);
 		this.databaseEngine.claimCode("testUserClaim2", 100001);
-		assertThat(this.databaseEngine.couponExceeds5000(2)).isEqualTo(true);
+		assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(true);
 		this.databaseEngine.resetCoupon("testUserCode");
 	}
 
 
 	@Test
 	public void setCouponUrl() {
+		String orgUrl = "https://dieting-chatbot.herokuapp.com/downloaded/2017-11-20T07:33:48.762-49f1625f-82f7-4c67-91cf-bb87586273b9.jpg";
 		String url = "testCouponUrlButIPurposedlyMakeItLongerJustToTestIfItCanHandleLongLengths";
 
 		this.databaseEngine.setCouponUrl(url);
 		assertThat(this.databaseEngine.getCouponUrl()).isEqualTo(url);
+		this.databaseEngine.setCouponUrl(orgUrl);
+		assertThat(this.databaseEngine.getCouponUrl()).isEqualTo(orgUrl);
 	}
 
 
