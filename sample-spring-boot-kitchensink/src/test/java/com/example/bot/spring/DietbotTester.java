@@ -120,8 +120,10 @@ public class DietbotTester {
 		databaseEngine.reset("testUserCalories", "userinfo");
 		databaseEngine.reset("testUserCalories", "userallergies");
 		databaseEngine.reset("testUserInputImage", "userinfo");
-		// for testCollectAndUpdateUserInformation function below
-		databaseEngine.reset("testCollectAndUpdateUserInformation", "userinfo");
+
+		// for testCollectUserInformation function below
+		databaseEngine.reset("testCollectUserInformation", "userinfo");
+		databaseEngine.reset("testCollectUserInformation", "userallergies");
 	}
 
 
@@ -384,47 +386,47 @@ public class DietbotTester {
 	}
 
 
-	// @Test
-	// public void generateAndStoreCode() {
-	// 	ArrayList<String> result = new ArrayList<String>();
+	@Test
+	public void generateAndStoreCode() {
+		ArrayList<String> result = new ArrayList<String>();
 
-	// 	this.databaseEngine.generateAndStoreCode("testUserCode");
-	// 	result = this.databaseEngine.getCodeInfo(100000);
-	// 	assertThat(result.get(0)).isEqualTo("testUserCode");
-	// 	assertThat(result.get(1)).isEqualTo(null);
-	// 	this.databaseEngine.resetCoupon("testUserCode");
-	// 	assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(false);
-	// }
-
-
-	// @Test
-	// public void claimCode() {
-	// 	ArrayList<String> result = new ArrayList<String>();
-
-	// 	this.databaseEngine.addCampaignUser("testUserClaim");
-	// 	this.databaseEngine.generateAndStoreCode("testUserCode");
-	// 	this.databaseEngine.claimCode("testUserClaim", 100000);
-	// 	assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(false);
-	// 	result = this.databaseEngine.getCodeInfo(100000);
-	// 	assertThat(result.get(0)).isEqualTo("testUserCode");
-	// 	assertThat(result.get(1)).isEqualTo("testUserClaim");
-	// 	this.databaseEngine.reset("testUserClaim", "campaign_user");
-	// 	this.databaseEngine.resetCoupon("testUserCode");
-	// }
+		this.databaseEngine.generateAndStoreCode("testUserCode");
+		result = this.databaseEngine.getCodeInfo(100000);
+		assertThat(result.get(0)).isEqualTo("testUserCode");
+		assertThat(result.get(1)).isEqualTo(null);
+		this.databaseEngine.resetCoupon("testUserCode");
+		assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(false);
+	}
 
 
-	// @Test
-	// public void couponExceeds5000() {
-	// 	this.databaseEngine.generateAndStoreCode("testUserCode");
-	// 	assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(false);
-	// 	this.databaseEngine.generateAndStoreCode("testUserCode");
-	// 	assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(false);
-	// 	this.databaseEngine.claimCode("testUserClaim", 100000);
-	// 	assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(false);
-	// 	this.databaseEngine.claimCode("testUserClaim2", 100001);
-	// 	assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(true);
-	// 	this.databaseEngine.resetCoupon("testUserCode");
-	// }
+	@Test
+	public void claimCode() {
+		ArrayList<String> result = new ArrayList<String>();
+
+		this.databaseEngine.addCampaignUser("testUserClaim");
+		this.databaseEngine.generateAndStoreCode("testUserCode");
+		this.databaseEngine.claimCode("testUserClaim", 100000);
+		assertThat(this.databaseEngine.searchUser("testUserCode", "campaign_user")).isEqualTo(false);
+		result = this.databaseEngine.getCodeInfo(100000);
+		assertThat(result.get(0)).isEqualTo("testUserCode");
+		assertThat(result.get(1)).isEqualTo("testUserClaim");
+		this.databaseEngine.reset("testUserClaim", "campaign_user");
+		this.databaseEngine.resetCoupon("testUserCode");
+	}
+
+
+	@Test
+	public void couponExceeds5000() {
+		this.databaseEngine.generateAndStoreCode("testUserCode");
+		assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(false);
+		this.databaseEngine.generateAndStoreCode("testUserCode");
+		assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(false);
+		this.databaseEngine.claimCode("testUserClaim", 100000);
+		assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(false);
+		this.databaseEngine.claimCode("testUserClaim2", 100001);
+		assertThat(this.databaseEngine.couponExceeds5000(4)).isEqualTo(true);
+		this.databaseEngine.resetCoupon("testUserCode");
+	}
 
 
 	@Test
@@ -960,19 +962,38 @@ public class DietbotTester {
 		}
 		assertThat(thrown).isEqualTo(false);
 
-
 		try{
 
-    		//confirm
+    		//test inputMenuState
     		input = "input";
-    		expectedResponse = "Alright!";
+    		expectedResponse = "Please let me have a look at your menu first. You can take a photo, or share the menu url with me."
+    							+ "\nIf you want to input menu using text, pls input food only and separate them by a comma.";
     		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
     		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
     		
     		//confirm
-    		input = "input";
+    		input = "orange";
     		expectedResponse = "Alright!";
+    		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
+    		
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+
+		try{
+    		//test inputMenuState
+    		input = "input";
+    		expectedResponse = "Please let me have a look at your menu first. You can take a photo, or share the menu url with me."
+    							+ "\nIf you want to input menu using text, pls input food only and separate them by a comma.";
+    		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
+    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+
+    		
+    		//confirm
+    		input = "http://fake_url";
+    		expectedResponse = "Thanks, I'm looking at your url now! I'll try to give you some recommendations.";
     		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
     		assertThat(chatBotReponse).isEqualTo(expectedResponse);
     		
@@ -980,10 +1001,6 @@ public class DietbotTester {
 			thrown = true;
 		}
 		assertThat(thrown).isEqualTo(false);
-
-
-
-
 
 	}
 		} catch (Exception e) {
