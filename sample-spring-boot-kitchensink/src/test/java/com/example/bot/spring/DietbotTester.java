@@ -40,6 +40,8 @@ import com.linecorp.bot.model.event.message.MessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
+import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.message.Message;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -659,6 +661,10 @@ public class DietbotTester {
 		assertThat(ans2.contains(realOutput2));
 	}
 
+	
+ }
+
+
 
 	// @Test
 	// public void testCollectUserInformation() throws Exception {
@@ -964,3 +970,4 @@ public class DietbotTester {
 	// }
 
  }
+
