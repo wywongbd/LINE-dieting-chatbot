@@ -23,9 +23,7 @@ public class OCRStringPreprocessing extends StringPreprocessing{
 			if(unitContent.length()> MAX_LINE_LENGTH) {continue;}
 
 			processUnitContentString = processUnitContent(unitContent);
-			if(!processUnitContentString.equals("")) {
-				result.add(processUnitContentString);
-			}
+			result.add(processUnitContentString);
 		}
 		return result;
 	}

@@ -51,6 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.example.bot.spring.RecommendationState;
 import com.example.bot.spring.InputMenuState;
+import com.example.bot.spring.OCRStringPreprocessing;
 
 import com.rivescript.Config;
 import com.rivescript.RiveScript;
@@ -1032,11 +1033,33 @@ public class DietbotTester {
 			ans2b = ans2Split[1];
 			ans2b = ans2b.substring(1, ans2b.length() - 1);    // Slice the '[' and ']'
 
+			assertThat(reply1.contains(ans1));
+			assertThat(reply2a.contains(ans2a));
+			assertThat(reply2b.contains(ans2b));
+
 		} catch (Exception e) {
 			thrown = true;
 		}
-		assertThat(reply1.contains(ans1));
-		assertThat(reply2a.contains(ans2a));
-		assertThat(reply2b.contains(ans2b));
+		assertThat(thrown).isEqualTo(false);
+	}
+	
+	@Test
+	public void testInputImageLongString() throws Exception{
+		// testUserInputImage
+		ArrayList<String> ans = null;
+		boolean thrown = false;
+		String longString = "Image search is a traditional method to search for similar products based on"
+				+ "input keywords. Search engines like Google and Bing enable keyword search to obtain"
+				+ "similar products. Similarly, fashion search services like Shopstyle and Lyst focuses"
+				+ "in searching for fashionable products";
+
+		try{
+			OCRStringPreprocessing obj = new OCRStringPreprocessing();
+			ans = obj.processOcrRawString(longString);
+			assertThat(ans.size()).isEqualTo(0);
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
 	}
  }
