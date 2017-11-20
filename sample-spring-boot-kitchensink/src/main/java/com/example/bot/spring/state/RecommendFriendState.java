@@ -25,6 +25,11 @@ public class RecommendFriendState extends State {
         
     }
 
+    /**
+     * Match trigger of this state
+     * @param text String data type
+     * @return String data type indicating which state
+     */
     public String matchTrigger(String text) {
 		if(text.toLowerCase().equals(FRIEND_TRIGGER)) {
 			return "FRIEND";
@@ -40,6 +45,11 @@ public class RecommendFriendState extends State {
         }
     }
  
+     /**
+     * Reply a message if a user uses 'friend' command
+     * @param userId String data type
+     * @return String data type as the reply
+     */
     public String replyForFriendCommand(String userId) {
         String reply = null;
         if(sql.couponExceeds5000(3)){
@@ -53,6 +63,12 @@ public class RecommendFriendState extends State {
         return reply;
     }
 
+     /**
+     * Provide action after a user uses 'code' command
+     * @param userId String data type
+     * @param code tring data type
+     * @return Vector<String> data type as a list of replies
+     */
     public Vector<String> actionForCodeCommand(String userId, String code) {
         Vector<String> vec = new Vector<String>(0);
         if(!sql.searchUser(userId, "campaign_user")){
@@ -91,11 +107,13 @@ public class RecommendFriendState extends State {
     }
 
     /**
-     * Reply a message for input text
-     * @param text A String data type
-     * @return A String data type
+     * Reply a message for input text in this state
+     * @param userId String data type
+     * @param text String data type
+     * @param bot RiveScript data type 
+     * @return String data type as the reply (dummy reply here)
      */
 	public String reply(String userId, String text, RiveScript bot) {
-		return "This function is not used";
+		return "";
 	}
 }

@@ -47,8 +47,8 @@ public class StringPreprocessing {
 
     /**
      * Process the unitContent string
-     * @param unitContent A String data type
-     * @return A String data type
+     * @param unitContent String data type
+     * @return String data type as the processed unitContent
      */
 	public String processUnitContent(String unitContent){
 		String processUnitContentString = null;    // Working variable
@@ -60,10 +60,10 @@ public class StringPreprocessing {
 	}
 
     /**
-     * Get long string and convert to lower case
-     * @param unitContentArray A String[] data type
-     * @param minLineLength A int data type
-     * @return A ArrayList<String> data type
+     * Get long string and convert to lower case w.r.t minLineLength
+     * @param unitContentArray String[] data type
+     * @param minLineLength int data type
+     * @return ArrayList<String> data type
      */
 	public ArrayList<String> getLongLowerCaseString(String[] unitContentArray, int minLineLength) {
 		// This function also converts to lower case
@@ -79,7 +79,7 @@ public class StringPreprocessing {
     /**
      * Remove special characters in the string
      * @param unitContent A String data type
-     * @return A String data type
+     * @return A String data type with special characters removed
      */
 	public String removeSpecialCharacters(String unitContent){
 		return unitContent.replaceAll("[^a-zA-Z\\s]", "");	  
@@ -88,8 +88,8 @@ public class StringPreprocessing {
     /**
      * Remove short and stopwords in the string
      * @param unitContent A String data type
-     * @param minWordLength A int data type
-     * @param stopWordsSet A Set<String> data type
+     * @param minWordLength A int data type as the minimum length of word required
+     * @param stopWordsSet A Set<String> data type as list of common words
      * @return A String data type
      */
 	public String removeShortAndStopWord(String unitContent, int minWordLength, Set<String> stopWordsSet) {
