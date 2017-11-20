@@ -1003,6 +1003,9 @@ public class SQLDatabaseEngine {
 		try {
 			connection = this.getConnection();
 
+			System.out.println(userId);
+			System.out.println(code);
+			System.out.println("BEFORE UPDATING COUPON_CODE");
 			// Set claimUser of code to be userId
 			stmtUpdate = connection.prepareStatement(
 				"UPDATE coupon_code " +
@@ -1012,6 +1015,8 @@ public class SQLDatabaseEngine {
 			stmtUpdate.setString(1, userId);
 			stmtUpdate.setInt(2, code);
 			stmtUpdate.executeUpdate();
+
+			System.out.println("DONE UPDATING COUPON_CODE");
 
 			// Delete userId from campaignUser table
 			stmtUpdate = connection.prepareStatement(

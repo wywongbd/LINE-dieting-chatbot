@@ -86,7 +86,9 @@ public class RecommendFriendState extends State {
                 }
                 else{
                     // Can claim code
+                    System.out.println("===============");
                     sql.claimCode(userId, Integer.valueOf(code));
+                    System.out.println("DONE CLAIMING");
                     vec.add(requestUser);
                     vec.add(" ");    // To indicate that it's successful
                 }
