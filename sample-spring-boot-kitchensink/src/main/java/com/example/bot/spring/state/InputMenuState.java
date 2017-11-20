@@ -99,7 +99,7 @@ public class InputMenuState extends State {
     public String replyImage(String userId, DownloadedContent jpg, RiveScript bot) {
 	    ArrayList<String> processedOcrImage = processImage(jpg);
 	    String replyText = null;
-	    	
+
 	    if(processedOcrImage.size() > 0){
             // Convert to string to be replied as message for testing
     		bot.setUservar(userId, "img_received", "true");
@@ -109,7 +109,7 @@ public class InputMenuState extends State {
 	        bot.setUservar(userId, "img_received", "false");
 	        bot.setUservar(userId, "topic", "recommend");
 	        bot.setUservar(userId, "state", "recommend");
-	        	
+
 	        syncSQLWithRiveScript(userId, bot);
 	        return replyText + "AAAAAAAAAA" + Arrays.toString(processedOcrImage.toArray());
         }

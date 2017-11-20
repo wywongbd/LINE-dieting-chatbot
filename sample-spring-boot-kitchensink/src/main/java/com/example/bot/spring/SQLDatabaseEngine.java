@@ -1369,6 +1369,89 @@ public class SQLDatabaseEngine {
 
 
 	/**
+	*	Gets the average daily consumption nutrition info of the specified user over the past input number of days.
+	*
+	*	@param userId the user's Line ID.
+	*	@param days the number of days to obtain the average daily consumption info.
+	*	@return a list of average daily consumption nutritional values. The first element is calories(kcal), the second element is sodium(mg), and the third element is fat(g).
+	*/
+	public ArrayList<Double> getAverageConsumptionInfo(String userId, int days) {
+		ArrayList<Double> result = new ArrayList<Double>();
+		Connection connection = null;
+		PreparedStatement stmtQuery = null;
+		ResultSet rs = null;
+		int numDays = -1;
+		double consumedCalories = 0;
+		double consumedSodium = 0;
+		double consumedFats = 0;
+		ArrayList<String> eatenFoodTypes = new ArrayList<String>();
+		try {
+			connection = this.getConnection();
+
+			// Get the number of days
+			stmtQuery = connection.prepareStatement(
+				"SELECT COUNT(DISTINCT date) " +
+				"FROM eating_history " +
+				"WHERE userid = ? " +
+					"AND date >= CURRENT_DATE - ?"
+			);
+			stmtQuery.setString(1, userId);
+			stmtQuery.setInt(2, days);
+			rs = stmtQuery.executeQuery(); 
+			while(rs.next()) {
+				numDays = rs.getInt(1);
+			}
+
+			// Collect the food types that the user has consumed
+			stmtQuery = connection.prepareStatement(
+				"SELECT food_type " +
+				"FROM eating_history " +
+				"WHERE userid = ? " +
+					"AND date >= CURRENT_DATE - ?"
+			);
+			stmtQuery.setString(1, userId);
+			stmtQuery.setInt(2, days);
+			rs = stmtQuery.executeQuery(); 
+			while(rs.next()) {
+				for (String food_type: rs.getString(1).split(",")) {
+					eatenFoodTypes.add(food_type);
+				}
+			}
+
+			// Aggregate the total nutritional values that the user has consumed
+			stmtQuery = connection.prepareStatement(
+				"SELECT calories_kj, sodium_mg, fat_g " +
+				"FROM food_type_nutrient_per_serve " +
+				"WHERE food_type = ?"
+			);
+			for (String food_type: eatenFoodTypes) {
+				stmtQuery.setString(1, food_type);
+				rs = stmtQuery.executeQuery(); 
+				while(rs.next()) {
+					consumedCalories += rs.getDouble(1);
+					consumedSodium += rs.getDouble(2);
+					consumedFats += rs.getDouble(3);
+				}
+			}
+		} catch (Exception e) {
+			log.info("Exception while connecting to database: {}", e.toString());
+		} finally {
+			try {
+				rs.close();
+				stmtQuery.close();
+				connection.close();
+			} catch (Exception ex) {
+				log.info("Exception while closing connection of database: {}", ex.toString());
+			}
+		}
+		result.add(consumedCalories/numDays);
+		result.add(consumedSodium/numDays);
+		result.add(consumedFats/numDays);
+		return result;
+	}
+
+
+	/**
 	*	Gets the nutrition info of the specified food.
 	*
 	*	@param food a food.
@@ -1507,8 +1590,8 @@ public class SQLDatabaseEngine {
 
 			// Aggregate the total calories that the user has consumed today
 			stmtQuery = connection.prepareStatement(
-				"SELECT average_calories " +
-				"FROM food_type_calories " +
+				"SELECT calories_kj " +
+				"FROM food_type_nutrient_per_serve " +
 				"WHERE food_type = ?"
 			);
 			for (String food_type: eatenFoodTypes) {

@@ -1,6 +1,7 @@
 package com.example.bot.spring;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -41,6 +42,7 @@ import com.linecorp.bot.model.event.message.MessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
+import com.example.bot.spring.DietbotController.DownloadedContent;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.event.source.Source;
@@ -48,11 +50,13 @@ import com.linecorp.bot.model.event.source.UserSource;
 import com.linecorp.bot.model.event.postback.PostbackContent;
 import com.linecorp.bot.model.event.PostbackEvent;
 
+
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import com.example.bot.spring.RecommendationState;
 import com.example.bot.spring.InputMenuState;
+import com.example.bot.spring.OCRStringPreprocessing;
 
 import com.rivescript.Config;
 import com.rivescript.RiveScript;
@@ -61,8 +65,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
-
 import java.util.Arrays;
+import java.nio.file.Path;
+import java.nio.file.Paths; 
 
 
 @RunWith(SpringRunner.class)
@@ -85,45 +90,48 @@ public class DietbotTester {
 
 	@BeforeClass
 	public static void addTestUser() {
-		// ArrayList<String> menu = new ArrayList<String>();
-		// menu.add("chicken potato soup");
-		// ArrayList<String> allergies = new ArrayList<String>();
-		// allergies.add("seafood");
+		ArrayList<String> menu = new ArrayList<String>();
+		menu.add("chicken potato soup");
+		ArrayList<String> allergies = new ArrayList<String>();
+		allergies.add("seafood");
 
-		// databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "normal", "testTopic", "testState");
-		// databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, new ArrayList<String>(), "normal", "testTopic", "testState");
-		// databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, "normal", "testTopic", "testState");
-		// databaseEngine.writeUserInfo("testUserHistory", 21, "male", 1.73, 65, allergies, "normal", "testTopic", "testState");
-		// databaseEngine.writeUserInfo("testUserGoalLittle", 22, "male", 1.69, 69, allergies, "little_diet", "testTopic", "testState");
-		// databaseEngine.writeUserInfo("testUserGoalSerious", 23, "male", 1.71, 68, allergies, "serious_diet", "testTopic", "testState");
-		// databaseEngine.writeUserInfo("testUserCalories", 24, "male", 1.83, 77, allergies, "normal", "testTopic", "testState");
-		// databaseEngine.addMenu("testUser", menu);
-		// databaseEngine.addRecommendations("testUser");
+		databaseEngine.writeUserInfo("testUser", 20, "male", 1.75, 60, allergies, "normal", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserIntake", 19, "male", 2.15, 80, new ArrayList<String>(), "normal", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserAllergy", 18, "female", 1.63, 55, allergies, "normal", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserHistory", 21, "male", 1.73, 65, allergies, "normal", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserGoalLittle", 22, "male", 1.69, 69, allergies, "little_diet", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserGoalSerious", 23, "male", 1.71, 68, allergies, "serious_diet", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserCalories", 24, "male", 1.83, 77, allergies, "normal", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserInputImage", 22, "male", 1.70, 81, allergies, "normal", "standby", "standby");
+		databaseEngine.addMenu("testUser", menu);
+		databaseEngine.addRecommendations("testUser");
 	}
 
 	@AfterClass
 	public static void removeTestUser() {
-		// databaseEngine.reset("testUser", "userinfo");
-		// databaseEngine.reset("testUser", "menu");
-		// databaseEngine.reset("testUser", "recommendations");
-		// databaseEngine.reset("testUser", "userallergies");
-		// databaseEngine.reset("testUserIntake", "userinfo");
-		// databaseEngine.reset("testUserIntake", "userallergies");
-		// databaseEngine.reset("testUserAllergy", "userinfo");
-		// databaseEngine.reset("testUserAllergy", "userallergies");
-		// databaseEngine.reset("testUserHistory", "userinfo");
-		// databaseEngine.reset("testUserHistory", "userallergies");
-		// databaseEngine.reset("testUserGoalLittle", "userinfo");
-		// databaseEngine.reset("testUserGoalLittle", "userallergies");
-		// databaseEngine.reset("testUserGoalSerious", "userinfo");
-		// databaseEngine.reset("testUserGoalSerious", "userallergies");
-		// databaseEngine.reset("testUserCalories", "userinfo");
-		// databaseEngine.reset("testUserCalories", "userallergies");
+		databaseEngine.reset("testUser", "userinfo");
+		databaseEngine.reset("testUser", "menu");
+		databaseEngine.reset("testUser", "recommendations");
+		databaseEngine.reset("testUser", "userallergies");
+		databaseEngine.reset("testUserIntake", "userinfo");
+		databaseEngine.reset("testUserIntake", "userallergies");
+		databaseEngine.reset("testUserAllergy", "userinfo");
+		databaseEngine.reset("testUserAllergy", "userallergies");
+		databaseEngine.reset("testUserHistory", "userinfo");
+		databaseEngine.reset("testUserHistory", "userallergies");
+		databaseEngine.reset("testUserGoalLittle", "userinfo");
+		databaseEngine.reset("testUserGoalLittle", "userallergies");
+		databaseEngine.reset("testUserGoalSerious", "userinfo");
+		databaseEngine.reset("testUserGoalSerious", "userallergies");
+		databaseEngine.reset("testUserCalories", "userinfo");
+		databaseEngine.reset("testUserCalories", "userallergies");
+		databaseEngine.reset("testUserInputImage", "userinfo");
 
-		// for testCollectAndUpdateUserInformation function below
-		// databaseEngine.reset("testCollectAndUpdateUserInformation", "userinfo");
-		databaseEngine.reset("testHandleFollowEvent", "campaign_user");
+		// for testCollectUserInformation function below
+		databaseEngine.reset("testCollectUserInformation", "userinfo");
+		databaseEngine.reset("testCollectUserInformation", "userallergies");
 	}
+
 
 	@Test
 	public void writeUserInfoExisting() {
@@ -449,6 +457,24 @@ public class DietbotTester {
 
 
 	@Test
+	public void getAverageConsumptionInfo() {
+		ArrayList<Double> result = new ArrayList<Double>();
+
+		this.databaseEngine.addUserEatingHistory("testUserConsumptionInfo", "fried chicken, chocolate cake");
+		result = this.databaseEngine.getAverageConsumptionInfo("testUserConsumptionInfo", 1);
+		assertEquals(1050, result.get(0), 0.1);
+		assertEquals(291.1, result.get(1), 0.1);
+		assertEquals(4.3, result.get(2), 0.1);
+		this.databaseEngine.addUserEatingHistory("testUserConsumptionInfo", "fried chicken, chocolate cake");
+		result = this.databaseEngine.getAverageConsumptionInfo("testUserConsumptionInfo", 1);
+		assertEquals(2100, result.get(0), 0.1);
+		assertEquals(582.2, result.get(1), 0.1);
+		assertEquals(8.6, result.get(2), 0.1);
+		this.databaseEngine.reset("testUserConsumptionInfo", "eating_history");
+	}
+
+
+	@Test
 	public void getNutritionInfo() {
 		ArrayList<Double> result = new ArrayList<Double>();
 
@@ -669,7 +695,6 @@ public class DietbotTester {
 		assertThat(ans2.contains(realOutput2));
 	}
 
-
 	@Test
 	public void testCollectUserInformation() throws Exception {
 		boolean thrown = false;
@@ -873,8 +898,6 @@ public class DietbotTester {
 		assertThat(thrown).isEqualTo(false);
 		
 		try{
-
-
     		//user want to update their personal info
     		input = "update";
     		expectedResponse = "Do you want to update your personal information?";
@@ -936,8 +959,88 @@ public class DietbotTester {
 		assertThat(thrown).isEqualTo(false);
 
 		try{
-
     		assertThat(db.getUserInfo(userId, "age")).isEqualTo("30");
+
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+
+		try{
+
+    		//test inputMenuState
+    		input = "input";
+    		expectedResponse = "Please let me have a look at your menu first. You can take a photo, or share the menu url with me."
+    							+ "\nIf you want to input menu using text, pls input food only and separate them by a comma.";
+    		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
+    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+
+    		
+    		//confirm
+    		input = "orange";
+    		expectedResponse = "Alright!";
+    		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
+    		
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+
+		try{
+    		//test inputMenuState
+    		input = "input";
+    		expectedResponse = "Please let me have a look at your menu first. You can take a photo, or share the menu url with me."
+    							+ "\nIf you want to input menu using text, pls input food only and separate them by a comma.";
+    		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
+    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+
+    		
+    		//confirm
+    		input = "http://fake_url";
+    		expectedResponse = "Thanks, I'm looking at your url now! I'll try to give you some recommendations.";
+    		chatBotReponse = ((TextMessage)stateManager.chat(userId, input, false).get(0)).getText();
+    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+    		
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+
+	}
+
+	@Test
+	public void testInputImage() throws Exception{
+		// testUserInputImage
+		boolean thrown = false;
+		String ans1 = null;
+		String ans2 = null;
+		String ans2a = null;
+		String ans2b = null;
+
+		final Path path1 = Paths.get("test-reply-image-1.jpg");
+		final Path path2 = Paths.get("test-reply-image-2.jpg");
+
+		final String reply1 = "There is no useful information in your image!";
+		final String reply2a = "Thanks, I'm looking at your photo now! I'll try to give you some recommendations.";
+		final String reply2b = "Sweet and Sour Park";
+
+		try{
+			// Load image here, pass uri as null
+			DownloadedContent jpg1 = new DownloadedContent(path1, null);
+			DownloadedContent jpg2 = new DownloadedContent(path2, null);
+
+			InputMenuState obj = new InputMenuState();
+			ans1 = obj.replyImage("testUserInputImage", jpg1, bot);
+
+			ans2 = obj.replyImage("testUserInputImage", jpg2, bot);
+			String[] ans2Split = ans2.split("AAAAAAAAAA");
+			ans2a = ans2Split[0];
+			ans2b = ans2Split[1];
+			ans2b = ans2b.substring(1, ans2b.length() - 1);    // Slice the '[' and ']'
+
+			assertThat(reply1.contains(ans1));
+			assertThat(reply2a.contains(ans2a));
+			assertThat(reply2b.contains(ans2b));
 
 		} catch (Exception e) {
 			thrown = true;
@@ -945,7 +1048,27 @@ public class DietbotTester {
 		assertThat(thrown).isEqualTo(false);
 	}
 	
-		@Test
+	@Test
+	public void testInputImageLongString() throws Exception{
+		// testUserInputImage
+		ArrayList<String> ans = null;
+		boolean thrown = false;
+		String longString = "Image search is a traditional method to search for similar products based on"
+				+ "input keywords. Search engines like Google and Bing enable keyword search to obtain"
+				+ "similar products. Similarly, fashion search services like Shopstyle and Lyst focuses"
+				+ "in searching for fashionable products";
+
+		try{
+			OCRStringPreprocessing obj = new OCRStringPreprocessing();
+			ans = obj.processOcrRawString(longString);
+			assertThat(ans.size()).isEqualTo(0);
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+	}
+
+	@Test
 	public void testHandleFollowEvent() throws Exception {
 		boolean thrown = false;
 		try{
@@ -996,8 +1119,5 @@ public class DietbotTester {
 			thrown = true;
 		}
 		assertThat(thrown).isEqualTo(false);
-
 	}
-
-
  }
