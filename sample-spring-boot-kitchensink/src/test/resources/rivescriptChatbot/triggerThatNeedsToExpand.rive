@@ -1,0 +1,28 @@
+! local concat = newline
+
+> topic new_user
+
+	+ *
+	- Hi! I am your personal Dieting Chatbot!
+        ^ First, I need to ask you a few questions about your physical information.
+        ^ What is your name?<set state=collect_user_info><set img_received=false><set url_received=false>{topic=collect_user_name}
+
+< topic
+
+> topic post_eating
+
+	+ [*] leave [*]
+	- Okay. Tell me when you need help~~~{topic=standby}<set state=standby>
+
+    + *
+    - Okay. I have recorded that down. :D{topic=standby}<set state=standby>
+
+< topic
+
+> topic recommend
+
+    + [*] (talk [to you] later|leave) [*]
+    - Okay see you later.{topic=standby}<set state=standby>
+
+< topic
+
