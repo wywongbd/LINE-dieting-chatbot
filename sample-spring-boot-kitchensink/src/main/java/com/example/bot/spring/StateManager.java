@@ -68,13 +68,6 @@ public class StateManager {
     private final int INPUT_MENU_STATE = 3;
     private final int RECOMMEND_STATE = 4;
     private final String ADMIN_USER_ID = "Udfd2991f287cc5c75f6c1d2c30c58a3a";
-    // Must first go through InputMenuState before going to RecommendationState,
-    // so 4 is not included
-//    private final int[] FROM_STANDBY_STATE = {1, 2, 3, 5};
-
-    // Value to keep track current state
-    // private static Map<String, Integer> currentState; 
-    
     public static final Map<String, State> states; 
     private static RiveScript bot;    
     private static boolean adminAccessing;
@@ -100,7 +93,7 @@ public class StateManager {
     };
     
     /**
-     * Prints two messages indicating current state and topic of RiveScript bot for debugging purposes
+     * Constructor of StateManager
      * @param path A string indicating the path of RiveScript resources 
      */
     public StateManager(String path) {
@@ -138,14 +131,6 @@ public class StateManager {
             return "NEW USER";
         }
     }
-
-//    public void debugMessage(String userId, Vector<String> replyMessages, boolean debug){
-//        if(debug == true) {
-//            replyMessages.add("Current state is " + bot.getUservar(userId, "state"));
-//            replyMessages.add("Current topic is " + bot.getUservar(userId, "topic"));
-//        }
-//    }
-
 
     /**
      * Get a list of message objects 
@@ -203,7 +188,7 @@ public class StateManager {
                 }
             }
         }
-//        debugMessage(userId, replyMessages, debug);
+
         for (String message : replyMessages) {
         		log.info("In StateManager returns echo message, userId: {} message: {}", userId, message);
         		replyList.add(new TextMessage(message));
@@ -254,7 +239,7 @@ public class StateManager {
                 replyMessages.add("Sorry, I am lost and I don't know how to respond. Please continue with your previous activity first.");
             }
         }
-//        debugMessage(userId, replyMessages, debug);
+
         return replyMessages;
     }
     
