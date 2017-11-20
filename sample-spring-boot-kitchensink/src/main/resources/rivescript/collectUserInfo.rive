@@ -186,13 +186,13 @@
 >topic collect_user_goal
     
     + 1
-    - Great, thanks for cooperating. I have a better understanding of your physical condition now. I'll try my best to help you reach your health goal!<set state=standby><set diet=little_diet>{topic=standby}
+    - Great, thanks for cooperating. I have a better understanding of your physical condition now. I'll try my best to help you reach your health goal! <set state=standby><set diet=little_diet>{topic=standby}
 
     + 2
-    - Great, thanks for cooperating. I have a better understanding of your physical condition now. I'll try my best to help you reach your health goal!<set state=standby><set diet=normal>{topic=standby}
+    - Great, thanks for cooperating. I have a better understanding of your physical condition now. I'll try my best to help you reach your health goal! <set state=standby><set diet=normal>{topic=standby}
 
     + 3
-    - Great, thanks for cooperating. I have a better understanding of your physical condition now. I'll try my best to help you reach your health goals!<set state=standby><set diet=serious_diet>{topic=standby}
+    - Great, thanks for cooperating. I have a better understanding of your physical condition now. I'll try my best to help you reach your health goals! <set state=standby><set diet=serious_diet>{topic=standby}
 
     + *
     - Sorry, I do not understand, could you try again? From a scale of 1 to 3, how urgent are you in cutting down your weight? Please input 1, 2 or 3. 
