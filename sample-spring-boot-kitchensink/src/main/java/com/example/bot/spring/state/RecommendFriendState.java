@@ -30,13 +30,13 @@ public class RecommendFriendState extends State {
 			return "FRIEND";
 		}
         else{
-            String[] splitText = text.toLowerCase().split(":");
-            if(splitText.length == 2 && splitText[0].equals("code") && splitText[1].matches(DIGIT_REGEX)){
-                return "CODE";
+            String[] splitText = text.toLowerCase().split(" ");
+            if(splitText.length == 2){
+                if(splitText[0].equals("code") && splitText[1].matches(DIGIT_REGEX)){
+                    return "CODE";
+                }
             }
-            else{
-                return "nothing";
-            }
+            return "nothing";
         }
     }
 
