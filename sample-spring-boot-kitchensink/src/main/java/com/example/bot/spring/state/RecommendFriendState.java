@@ -15,7 +15,7 @@ import java.util.Vector;
 
 public class RecommendFriendState extends State {
     // Constant values
-    private static final String FRIEND_TRIGGER = "friend";
+    private static final String FRIEND_TRIGGER = "friend:generate";
     private static final String DIGIT_REGEX = "[0-9]+";
 
     /**
@@ -26,11 +26,11 @@ public class RecommendFriendState extends State {
     }
 
     public String matchTrigger(String text) {
-		if(text.equals(FRIEND_TRIGGER)) {
+		if(text.toLowerCase().equals(FRIEND_TRIGGER)) {
 			return "FRIEND";
 		}
         else{
-            String[] splitText = text.split(" ");
+            String[] splitText = text.toLowerCase().split(":");
             if(splitText.length == 2 && splitText[0].equals("code") && splitText[1].matches(DIGIT_REGEX)){
                 return "CODE";
             }
@@ -45,9 +45,15 @@ public class RecommendFriendState extends State {
     }
  
     public String replyForFriendCommand(String userId) {
-        int newCode = sql.generateAndStoreCode(userId);
-        String newCodeString = "Thank you, your code is " + Integer.toString(newCode);
-        return newCodeString;
+        String reply = null;
+        if(true/*there are still some coupon left*/){
+            int newCode = sql.generateAndStoreCode(userId);
+            reply = "Thank you, your code is " + Integer.toString(newCode);
+        }
+        else{
+            reply = "Sorry, all coupon has been claimed already!";
+        }
+        return reply;
     }
 
     public Vector<String> actionForCodeCommand(String userId, String code) {
@@ -73,6 +79,9 @@ public class RecommendFriendState extends State {
                 }
                 else if(requestUser.equals(userId)) {
                     vec.add("Sorry, You cannot claim your own code!");
+                }
+                else if(false/*there is no coupon left*/){
+                    vec.add("Sorry, all coupon has been claimed already!");
                 }
                 else{
                     // Can claim code

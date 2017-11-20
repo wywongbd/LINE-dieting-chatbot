@@ -11,7 +11,8 @@
         ^ * Input a food menu and get food recommendation
         ^ * Record what you have eaten last meal
         ^ * Update personal information
-        ^ * Ask for dieting history
+        ^ * Check your nutrient history or food nutrient
+        ^ * Claim your cheat day and enjoy eating whatever you wish for today!
 
     + [*] google *
     - Google results for "<star>": <a href="http://google.com/search?q=<star>">Click Here</a>
@@ -23,7 +24,7 @@
     // trigger to input_menu state (possibly go to recommend state later)
     + [*] (input|eating|restaurant|help me|look|check out|menu|recommend|recommendation|suggest|suggestion|decide|should|what to eat) [*]
     - Please let me have a look at your menu first. You can take a photo, or share the menu url with me.
-        ^ If you want to input menu in text, pls input food only and separate them by a comma.{topic=input_menu}<set state=input_menu>
+        ^ If you want to input menu using text, pls input food only and separate them by a comma.{topic=input_menu}<set state=input_menu>
 
     // trigger to record what the user ate
     + [*] (ate|have eaten|has eaten|had eaten|record|last meal|finished|finish|@meals) [*]
@@ -31,10 +32,9 @@
         ^ Separate each food by a comma if there are more than one.
         ^ Type "leave" if you don't want to record any food.{topic=post_eating}<set state=post_eating>
 
-// implement later
-//    // trigger to query dieting history
-//  + [*] (what [did|had] i (had|eat|eaten) (yesterday|just now|not long ago)|what is my (fat|carbohydrate|sodium|vitamin) intake) [*]
-//  - Please wait while I check your eating history.{topic=provide_info}<set state=provide_info>
+    // trigger to query dieting history
+    + [*] (check|intake[s]|[food ]nutrient|[food ]nutrients|[dieting ]history|@nutrients) [*]
+    - Which one do you want to choose? Nutrient history or food nutrient? Btw you can type "leave" to exit.{topic=provide_info_choose_history_or_nutrient}<set state=provide_info>
 
     + [*] (talk later|see you|bye) [*]
     - Okay see you later.
@@ -84,12 +84,23 @@
         ^ - weight
         ^ - height
         ^ - allergy
-        ^ Type "cancel" if you want to cancel the update
+        ^ - health goal
+        ^ Type "cancel" if you want to cancel this update activity
 
     + cancel
     - You have cancelled the update of information.<set state=standby>{topic=standby}
 < topic
 
+> topic input_menu 
+    + [*] (talk [to you] later|leave) [*]
+    - Okay see you later.{topic=standby}<set state=standby>
+    
+    + *
+    * <get img_received> == true => Thanks, I'm looking at your photo now! I'll try to give you some recommendations.
+    * <get url_received> == true => Thanks, I'm looking at your url now! I'll try to give you some recommendations.
+    * <get url_received> == false => Thanks, I'm looking at your text menu now! I'll try to give you some recommendations.
+
+< topic
 
 
 ///////////////////////////////////////standby
