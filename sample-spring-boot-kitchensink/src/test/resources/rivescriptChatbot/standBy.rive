@@ -1,0 +1,95 @@
+! local concat = newline
+
+///////////////////////////////////////standby
+
+> topic standby
+
+    // don't know what user said and tell them what can we do
+    + *
+    - Sorry, I'm not sure how to respond to that.
+        ^ Please tell me what you want to do :P
+        ^ * Input a food menu and get food recommendation
+        ^ * Record what you have eaten last meal
+        ^ * Update personal information
+        ^ * Check your nutrient history or food nutrient
+
+    + [*] google *
+    - Google results for "<star>": <a href="http://google.com/search?q=<star>">Click Here</a>
+
+    // trigger to collect_user_info state
+    + [*] ((tweak|change|alter|update|modify|adjust)|(info|information|details|particulars|name|age|gender|height|weight|allergy|allergies)) [*]
+    - Do you want to update your personal information?{topic=update_user_info_confirmation}<set state=update_user_info>
+
+    // trigger to input_menu state (possibly go to recommend state later)
+    + [*] (input|eating|restaurant|help me|look|check out|menu|recommend|recommendation|suggest|suggestion|decide|should|what to eat) [*]
+    - Please let me have a look at your menu first. You can take a photo, or share the menu url with me.
+        ^ If you want to input menu using text, pls input food only and separate them by a comma.{topic=input_menu}<set state=input_menu>
+
+    // trigger to record what the user ate
+    + [*] (ate|have eaten|has eaten|had eaten|record|last meal|finished|finish|@meals) [*]
+    - Please tell me what you ate.
+        ^ Separate each food by a comma if there are more than one.
+        ^ Type "leave" if you don't want to record any food.{topic=post_eating}<set state=post_eating>
+
+    // trigger to query dieting history
+    + [*] (check|intake[s]|[food ]nutrient|[food ]nutrients|[dieting ]history|@nutrients) [*]
+    - Which one do you want to choose? Nutrient history or food nutrient? Btw you can type "leave" to exit.{topic=provide_info_choose_history_or_nutrient}<set state=provide_info>
+
+    + [*] (talk later|see you|bye) [*]
+    - Okay see you later.
+< topic
+
+// still in standby state
+> topic update_user_info_confirmation
+
+    + @yes [*]
+    - OK. Which one do you want to update? Pick one.
+        ^ - name
+        ^ - age
+        ^ - gender
+        ^ - weight
+        ^ - height
+        ^ - allergy
+        ^ - health goal{topic=update_user_info_select_variable}
+
+    + @no [*]
+    - OK. Tell me when you need help~~~~{topic=standby}<set state=standby>
+
+    + *
+    - I don't understand. Do you want to update your personal information? (yes/no)
+< topic
+
+// still in standby state
+> topic update_user_info_select_variable
+
+    + [*] (name|age|gender|weight|height|allergy|health goal) [*]
+    * <star> == name    => What is your name?{topic=update_user_name}
+    * <star> == age     => What is your age?{topic=update_user_age}
+    * <star> == gender  => What is your gender?{topic=update_user_gender}
+    * <star> == weight  => What is your weight?{topic=update_user_weight}
+    * <star> == height  => What is your height?{topic=update_user_height}
+    * <star> == allergy => Are you allergic to milk? (Yes/No){topic=update_user_allergy_milk}
+    * <star> == health goal => From a scale of 1 to 3, how urgent are you in cutting down your weight? Please input 1, 2 or 3. 
+                                ^ - 1. I am ok with my current weight, but slimming down just a little would be perfect.
+                                ^ - 2. I am not satisfied with my current weight, I hope to lose weight significantly to be more healthy.
+                                ^ - 3. I am in an emergency and I need to lose weight immediately, the sooner the better!{topic=update_user_goal}
+    - This is a bug.
+
+    + *
+    - Sorry, I don't understand. Which one do you want to update? Pick one.
+        ^ - name
+        ^ - age
+        ^ - gender
+        ^ - weight
+        ^ - height
+        ^ - allergy
+        ^ - health goal
+        ^ Type "cancel" if you want to cancel this update activity
+
+    + cancel
+    - You have cancelled the update of information.<set state=standby>{topic=standby}
+< topic
+
+
+
+///////////////////////////////////////standby
