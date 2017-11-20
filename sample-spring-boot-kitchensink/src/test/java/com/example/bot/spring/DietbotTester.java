@@ -1,6 +1,5 @@
 package com.example.bot.spring;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -55,15 +54,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.jsoup.*;
-import org.jsoup.helper.*;
-import org.jsoup.nodes.*;
-import org.jsoup.select.*;
-
 
 import java.util.Arrays;
 
@@ -558,41 +548,55 @@ public class DietbotTester {
  		assertThat(reply1).isEqualTo("yes");
  	}
   	
-
+	
 	@Test
-	public void convertHTMLTabletoJson() throws Exception{
-		
+	public void testJSONUrl() throws Exception{
 		boolean thrown = false;
-		String output = null;
-		final String realOutput = "{\"Network\":[{\"2G bands\":\"GSM 900 / 1800 - SIM 1 & SIM 2\",\"Technology\":\"GSM\",\"GPRS\":\"Class 12\",\"EDGE\":\"Yes\"}]}";
-		try{
-			final String HTML = "<table cellspacing=\"0\" style=\"height: 24px;\">\r\n<tr class=\"tr-hover\">\r\n<th rowspan=\"15\" scope=\"row\">Network</th>\r\n<td class=\"ttl\"><a href=\"network-bands.php3\">Technology</a></td>\r\n<td class=\"nfo\"><a href=\"#\" class=\"link-network-detail collapse\">GSM</a></td>\r\n</tr>\r\n<tr class=\"tr-toggle\">\r\n<td class=\"ttl\"><a href=\"network-bands.php3\">2G bands</a></td>\r\n<td class=\"nfo\">GSM 900 / 1800 - SIM 1 & SIM 2</td>\r\n</tr>   \r\n<tr class=\"tr-toggle\">\r\n<td class=\"ttl\"><a href=\"glossary.php3?term=gprs\">GPRS</a></td>\r\n<td class=\"nfo\">Class 12</td>\r\n</tr>   \r\n<tr class=\"tr-toggle\">\r\n<td class=\"ttl\"><a href=\"glossary.php3?term=edge\">EDGE</a></td>\r\n<td class=\"nfo\">Yes</td>\r\n</tr>\r\n</table>";
-			HTMLStringPreprocessing h = new HTMLStringPreprocessing();
-			JSONObject jsonObj = h.parseHTMLTableToJson(HTML);
-			output = jsonObj.toString();
-		} catch (Exception e) {
+		
+		final String JSONUrl = "http://www.json-generator.com/api/json/get/cjTeRHAnfS?indent=2";
+		Dish[] actualDishes = new Dish[3];
+		String actualResponse = "";
+		
+		ArrayList<String> firstIngredients = new ArrayList<String>();
+		firstIngredients.add("Pork");
+		firstIngredients.add("Bean curd");
+		firstIngredients.add("Rice");   
+		
+		actualDishes[0] = new Dish(35, "Spicy Bean curd with Minced Pork served with Rice", firstIngredients);
+		 
+		ArrayList<String> secondIngredients = new ArrayList<String>();
+		firstIngredients.add("Pork"); 
+		firstIngredients.add("Sweet and Sour Sauce");
+		firstIngredients.add("Pork");
+		
+		actualDishes[1] = new Dish(36, "Sweet and Sour Pork served with Rice", secondIngredients);
+	
+		ArrayList<String> thirdIngredients = new ArrayList<String>();
+		firstIngredients.add("Chili");
+		firstIngredients.add("Chicken");
+		firstIngredients.add("Rice"); 
+		
+		actualDishes[2] = new Dish(28, "Chili Chicken on Rice", thirdIngredients);
+	
+		actualResponse += Arrays.toString(JSONPreprocessing.getDishName(actualDishes));
+		
+		String rawJSONString = "";
+		Dish[] dishObjects = null; 
+		String observedResponse = "";
+		
+		try {
+			rawJSONString += JSONPreprocessing.readJSONUrl(JSONUrl);
+			dishObjects = JSONPreprocessing.getDishFromJSON(rawJSONString);
+			observedResponse = Arrays.toString(JSONPreprocessing.getDishName(dishObjects));
+			 
+		}
+		catch (Exception e){ 
 			thrown = true;
 		}
-		assertThat(output).isEqualTo(realOutput);
-	}
-	
-
-	// @Test
-	// public void testURLtoJSON() throws Exception{
 		
-	// 	boolean thrown = false;
-	// 	String output = null;
-	// 	final String realOutput = "[apps snacks salads burgers sandwiches pairings desserts drinks, spinach queso dip, panseared pot stickers, chicken quesadilla, grilled salmon, flat iron steak, grilled salmon, flat iron steak, salads, soups, burger greenstyle, burgers sandwiches fries salad sweet potato fries instead, steaks ribs, pastas, chicken seafood, slushes, smoothies, freshly brewed teas, juices, handcrafted alcoholfree beverages made fruit pures natural flavors, refills freshly brewed teas slushes, fruit teas, slushes, drink options, casamigos strawberry rita, boba long island tea, sangria rita, peach sangria, crown apple cooler, tropical berry mojito shaker, tap drafts, happy tell what other local craft beers, bottles cans, red, white, bubbles, bottle selections, glutensensitive, tgi fridays franchisor llc drink responsibly locations see]";
-	// 	try{
-	// 		final String urlString = "https://tgifridays.com/menu/dine-in/";
-	// 		HTMLStringPreprocessing h = new HTMLStringPreprocessing();
-	// 		output =Arrays.toString(h.processURLRawContent((h.readFromUrl(urlString))).toArray());
-	// 	} catch (Exception e) {
-	// 		thrown = true;
-	// 	}
-	// 	assertThat(output).isEqualTo(realOutput);
-	// }
-
+		assertThat(observedResponse).isEqualTo(actualResponse);
+		
+	}
 
 	@Test
 	public void testOCR() throws Exception{

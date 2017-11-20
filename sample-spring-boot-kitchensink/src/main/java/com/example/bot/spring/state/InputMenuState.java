@@ -2,8 +2,8 @@ package com.example.bot.spring;
 
 import com.example.bot.spring.DietbotController.DownloadedContent;
 import com.example.bot.spring.OCRStringPreprocessing;
-import com.example.bot.spring.HTMLStringPreprocessing;
 import com.example.bot.spring.JSONPreprocessing;
+import com.example.bot.spring.Dish; 
 import com.rivescript.RiveScript;
 import com.asprise.ocr.Ocr;
 import java.io.File;
@@ -71,23 +71,17 @@ public class InputMenuState extends State {
      * @return A String data type
      */
     public String replyUrl(String text) throws Exception {
-    	// this is HTML content
-//    		try{
-//  			HTMLStringPreprocessing h = new HTMLStringPreprocessing();
-//  			ArrayList<String> URLRawContent = h.readFromUrl(text);
-//  			ArrayList<String> processedUrlContent = h.processURLRawContent(URLRawContent); 
-//  			
-//  			// Convert to string to be replied as message for testing
-//  			return Arrays.toString(processedUrlContent.toArray()); // this follows from proceddesURLRawContent
-//  			
-//  		  } catch(Exception e){ 
-//  			  //TODO: handle user input invalid url
-//  			  return "Your text has been well received! This URL is not reachable :(";
-//  		  }
-    	JSONPreprocessing j = new JSONPreprocessing();
+
+    	String rawJSONString = "";
+    	Dish[] dishObjects = null;  
     	String response = "";
+    	
     	try {
-    		response += j.getNameFromJSON(text);  
+    		rawJSONString += JSONPreprocessing.readJSONUrl(text);
+    		dishObjects = JSONPreprocessing.getDishFromJSON(rawJSONString);
+    		response = Arrays.toString(JSONPreprocessing.getDishName(dishObjects));
+    		
+    		 
     	}
     	catch (Exception e){ 
     		return "Not a JSON Website! :(";
