@@ -109,7 +109,7 @@ public class StateManager {
         bot.loadDirectory(resourcesDirectory.getAbsolutePath());
         bot.sortReplies();
         bot.setSubroutine("setVariableToDB", new setVariableToDB());
-        bot.setSubroutine("getNutritionOfFood", new getNutritionOfFood());
+        bot.setSubroutine("getNutritionHistory", new getNutritionHistory());
     }
 
     /**
@@ -139,19 +139,13 @@ public class StateManager {
         }
     }
 
-    /**
-     * Prints two messages indicating current state and topic of RiveScript bot for debugging purposes
-     * @param userId A String data type
-     * @param replyMessages A Vector of String 
-     * @param debug A boolean 
-     * @return nothing
-     */
-    public void debugMessage(String userId, Vector<String> replyMessages, boolean debug){
-        if(debug == true) {
-            replyMessages.add("Current state is " + bot.getUservar(userId, "state"));
-            replyMessages.add("Current topic is " + bot.getUservar(userId, "topic"));
-        }
-    }
+//    public void debugMessage(String userId, Vector<String> replyMessages, boolean debug){
+//        if(debug == true) {
+//            replyMessages.add("Current state is " + bot.getUservar(userId, "state"));
+//            replyMessages.add("Current topic is " + bot.getUservar(userId, "topic"));
+//        }
+//    }
+
 
     /**
      * Get output message after inputting text
@@ -205,23 +199,15 @@ public class StateManager {
                 	replyList.add(((ProvideInfoState)states.get("provide_info")).getButton());
                     return replyList;
                 }
-
-
             }
         }
-
-        if(replyMessages.size() > 0) {
-            debugMessage(userId, replyMessages, debug);
-
-            for (String message : replyMessages) {
-                log.info("In StateManager returns echo message, userId: {} message: {}", userId, message);
-                replyList.add(new TextMessage(message));
-            }
-            return replyList;
+//        debugMessage(userId, replyMessages, debug);
+        for (String message : replyMessages) {
+        		log.info("In StateManager returns echo message, userId: {} message: {}", userId, message);
+        		replyList.add(new TextMessage(message));
         }
-        else{
-            throw new Exception("NOT FOUND");
-        }
+
+        return replyList;
     }
 
     /**
@@ -240,7 +226,7 @@ public class StateManager {
         else if (userStatus.equals("REGISTERED USER")) {
             currentState = bot.getUservar(userId, "state");
 
-            if (adminAccessing == true && currentState.equals("standby")){
+            if (adminAccessing == true && currentState.equals("standby") && userId.equals(ADMIN_USER_ID)){
                 replyMessages.add(((AdminState) states.get("admin")).replyImage(userId, jpg, bot));
                 adminAccessing = false;
             }
@@ -260,21 +246,12 @@ public class StateManager {
             else if (currentState.equals("update_user_info")){
                 replyMessages.add("Please finish updating your personal information before sharing me photos!");
             }
-            else if (currentState.equals("post_eating")){
-                replyMessages.add("Please let me finish recording your food intake before sharing me photos!");
-            }
             else{
                 replyMessages.add("Sorry, I am lost and I don't know how to respond. Please continue with your previous activity first.");
             }
         }
-
-        if(replyMessages.size() > 0) {
-            debugMessage(userId, replyMessages, debug);
-            return replyMessages;
-        }
-        else{
-            throw new Exception("NOT FOUND");
-        }
+//        debugMessage(userId, replyMessages, debug);
+        return replyMessages;
     }
     
 
@@ -328,22 +305,21 @@ public class StateManager {
         }
     }
 
+    //use for query nutrient history
+    public class getNutritionHistory implements Subroutine {
 
-    //use for query nutrient of a food
-    public class getNutritionOfFood implements Subroutine {
-
-        // assume the order of parameter is: food name
+        // assume the order of parameter is: # of days, userId
         public String call(RiveScript rs, String[] args) {
-        	ArrayList<Double> result = null;
-        	String resultString = "";
-        	if (args.length > 0) {
-        		result = sql.getNutritionInfo(args[0]);
-				resultString = args[0] + "(per 100g) contains "
-								+ "\n*energy: " + Double.toString(result.get(0)) + "kcal"
-								+ "\n*sodium: " + Double.toString(result.get(1)) + "mg"
-								+ "\n*fat: " 	+ Double.toString(result.get(2)) + "g";
-				return resultString;
-        	}
+            ArrayList<Double> result = null;
+            String resultString = "";
+            if (args.length == 2) {
+                result = sql.getAverageConsumptionInfo(args[1], Integer.parseInt(args[0]));
+                resultString = "Your average nutrition comsumption per day over the past " + Integer.parseInt(args[0]) + " days:"
+                                + "\n*energy: " + Double.toString(result.get(0)) + "kcal"
+                                + "\n*sodium: " + Double.toString(result.get(1)) + "mg"
+                                + "\n*fat: "    + Double.toString(result.get(2)) + "g";
+                return resultString;
+            }
 
             return "";
         }
