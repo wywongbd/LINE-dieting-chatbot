@@ -1,6 +1,7 @@
 package com.example.bot.spring;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -441,6 +442,24 @@ public class DietbotTester {
 
 
 	@Test
+	public void getAverageConsumptionInfo() {
+		ArrayList<Double> result = new ArrayList<Double>();
+
+		this.databaseEngine.addUserEatingHistory("testUserConsumptionInfo", "fried chicken, chocolate cake");
+		result = this.databaseEngine.getAverageConsumptionInfo("testUserConsumptionInfo", 1);
+		assertEquals(1050, result.get(0), 0.1);
+		assertEquals(291.1, result.get(1), 0.1);
+		assertEquals(4.3, result.get(2), 0.1);
+		this.databaseEngine.addUserEatingHistory("testUserConsumptionInfo", "fried chicken, chocolate cake");
+		result = this.databaseEngine.getAverageConsumptionInfo("testUserConsumptionInfo", 1);
+		assertEquals(2100, result.get(0), 0.1);
+		assertEquals(582.2, result.get(1), 0.1);
+		assertEquals(8.6, result.get(2), 0.1);
+		this.databaseEngine.reset("testUserConsumptionInfo", "eating_history");
+	}
+
+
+	@Test
 	public void getNutritionInfo() {
 		ArrayList<Double> result = new ArrayList<Double>();
 
@@ -660,10 +679,6 @@ public class DietbotTester {
 		assertThat(ans1.contains(realOutput1));
 		assertThat(ans2.contains(realOutput2));
 	}
-
-	
- }
-
 
 
 	// @Test
