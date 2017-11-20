@@ -19,18 +19,6 @@
 
 < topic
 
-
-
-//> topic provide_info
-//    + [*] (talk [to you] later|leave) [*]
-//    - Okay see you later.{topic=standby}<set state=standby>
-//    
-//	+ *
-//	- provide_info
-//< topic
-
-
-
 > topic recommend
 
     + [*] (talk [to you] later|leave) [*]

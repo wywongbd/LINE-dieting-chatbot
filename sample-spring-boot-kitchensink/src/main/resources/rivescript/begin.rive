@@ -165,6 +165,7 @@
 
 // Set arrays
 ! array meals	   = meal breakfast lunch dinner supper snack tea
+! array nutrients  = fat carbohydrate sodium vitamin
 ! array malenoun   = m male guy boy dude man men gentleman
 ! array femalenoun = f female girl woman women lady 
 ! array mennoun    = males guys boys dudes bois men gentlemen
