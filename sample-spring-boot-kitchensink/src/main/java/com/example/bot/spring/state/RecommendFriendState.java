@@ -59,7 +59,6 @@ public class RecommendFriendState extends State {
 
     public Vector<String> actionForCodeCommand(String userId, String code) {
         Vector<String> vec = new Vector<String>(0);
-
         if(!sql.searchUser(userId, "campaign_user")){
             // The user cannot claim
             vec.add("Sorry, you cannot claim coupon!");
