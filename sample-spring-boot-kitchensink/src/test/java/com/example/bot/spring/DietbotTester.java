@@ -954,7 +954,6 @@ public class DietbotTester {
 		assertThat(thrown).isEqualTo(false);
 
 		try{
-
     		assertThat(db.getUserInfo(userId, "age")).isEqualTo("30");
 
 		} catch (Exception e) {
