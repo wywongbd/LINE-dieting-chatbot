@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HTMLStringPreprocessing.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-spring-boot-kitchensink</a> &gt; <a href="index.source.html" class="el_package">com.example.bot.spring</a> &gt; <span class="el_source">HTMLStringPreprocessing.java</span></div><h1>HTMLStringPreprocessing.java</h1><pre class="source lang-java linenums">package com.example.bot.spring;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.charset.Charset;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.jsoup.*;
+import org.jsoup.helper.*;
+import org.jsoup.nodes.*;
+import org.jsoup.select.*;
+
+
+<span class="fc" id="L20">public class HTMLStringPreprocessing extends StringPreprocessing{</span>
+	
+	
+	/**
+	 * This function is to convert a single string of HTML table
+	 * @param HTMLString is a concatenated after processing in readFromUrl
+	 * @return a JSONObject
+	 */
+	public JSONObject parseHTMLTableToJson(String HTMLString) {
+<span class="fc" id="L29">		Document document = Jsoup.parse(HTMLString);</span>
+<span class="fc" id="L30">		Element table = document.select(&quot;table&quot;).first();</span>
+<span class="fc" id="L31">		String arrayName = table.select(&quot;th&quot;).first().text();</span>
+<span class="fc" id="L32">		JSONObject jsonObj = new JSONObject();</span>
+<span class="fc" id="L33">		JSONArray jsonArr = new JSONArray();</span>
+		try {
+<span class="fc" id="L35">			Elements ttls = table.getElementsByClass(&quot;ttl&quot;);</span>
+<span class="fc" id="L36">			Elements nfos = table.getElementsByClass(&quot;nfo&quot;);</span>
+<span class="fc" id="L37">			JSONObject jo = new JSONObject();</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">			for (int i = 0, l = ttls.size(); i &lt; l; i++) {</span>
+<span class="fc" id="L39">			    String key = ttls.get(i).text();</span>
+<span class="fc" id="L40">			    String value = nfos.get(i).text();</span>
+<span class="fc" id="L41">			    jo.put(key, value);</span>
+			}
+<span class="fc" id="L43">			jsonArr.put(jo);</span>
+<span class="fc" id="L44">			jsonObj.put(arrayName, jsonArr);</span>
+<span class="nc" id="L45">		} catch(Exception e ) {</span>
+			// TODO: what to do here??
+<span class="fc" id="L47">		}</span>
+<span class="fc" id="L48">		return jsonObj;</span>
+	}
+	
+	
+	/**
+	 * This function is to get the unitContent within HTML Tags
+	 * @param htmlString A single line of HTML code
+	 * @return the unitContent of the HTML line
+	 * ie: &lt;tag1&gt;&lt;tag2&gt; GET_THIS_UNITCONTENT &lt;tag3&gt;
+	 */
+	public String getHTMLContents(String htmlString){
+<span class="nc" id="L59">		char[] htmlStringArr = htmlString.toCharArray(); // &quot;Working String&quot;</span>
+<span class="nc" id="L60">		String content = null;</span>
+<span class="nc" id="L61">		ArrayList&lt;Integer&gt; listOfSigns = new ArrayList&lt;Integer&gt;(); // also dummy tool. Odd num stores indexOf(&quot;&lt;&quot;), even stores indexOf(&quot;&gt;&quot;)</span>
+<span class="nc" id="L62">		int count = 0;</span>
+		
+<span class="nc bnc" id="L64" title="All 2 branches missed.">		for(int i=0; i&lt; htmlStringArr.length; i++){</span>
+<span class="nc bnc" id="L65" title="All 4 branches missed.">			if(htmlStringArr[i] == '&lt;' || htmlStringArr[i] == '&gt;'){</span>
+<span class="nc" id="L66">				listOfSigns.add(i);</span>
+			}
+		}
+		// now proceed to get the contents
+<span class="nc bnc" id="L70" title="All 2 branches missed.">		for(int j=1; j&lt;listOfSigns.size()-1; j += 2){</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">			if(count==2){</span>
+				// if htmlString = &lt;abc&gt;
+<span class="nc" id="L73">				break;</span>
+			}
+<span class="nc bnc" id="L75" title="All 2 branches missed.">			else if(listOfSigns.get(j) + 1 == listOfSigns.get(j+1)){</span>
+				// if &lt;abc&gt;&lt;abc&gt; get_content_here &lt;abc&gt;
+<span class="nc" id="L77">				continue;</span>
+			}
+			else{
+				// done get content, now need to preprocess
+<span class="nc" id="L81">				String unitContent = htmlString.substring(listOfSigns.get(j) + 1, listOfSigns.get(j+1)).toLowerCase();</span>
+
+				// need to remove the content contains rubbish like sign characters, numbers etc
+				
+<span class="nc bnc" id="L85" title="All 2 branches missed.">					if(content == null){</span>
+<span class="nc" id="L86">						content = unitContent; </span>
+					}
+					else{
+<span class="nc" id="L89">						content += &quot;, &quot; + unitContent; </span>
+					}
+			}
+		}
+<span class="nc" id="L93">		return content;</span>
+	}
+
+	
+	/**
+     * Return the unprocessed contents from one the entire HTML code
+     * @param url A String data type
+     * this is the url link passed by the user
+     * @return A ArrayList&lt;String&gt; data type
+     * This is the meaningful content inside the HTML line,
+     * which should be passed to getValidContent method
+     * before passing into database for query to recommend food 
+     */
+	  public ArrayList&lt;String&gt; readFromHTML(String url) throws IOException {
+<span class="nc" id="L107">		  	ArrayList&lt;String&gt; foodContent = new ArrayList&lt;String&gt;();</span>
+<span class="nc" id="L108">		    InputStream is = new URL(url).openStream();</span>
+
+		    try {
+		      // print all the html lines
+<span class="nc" id="L112">		    	BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName(&quot;UTF-8&quot;)));</span>
+		    	String temp;
+<span class="nc" id="L114">		      boolean isNull = false;</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">		      while (!isNull) {</span>
+<span class="nc" id="L116">		    	  temp = rd.readLine();</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">		    	  	if(temp == null){ isNull = true;}</span>
+		    	  	else {
+<span class="nc bnc" id="L119" title="All 2 branches missed.">		    			if(getHTMLContents(temp) == null){</span>
+<span class="nc" id="L120">		    				continue;</span>
+		    			}
+<span class="nc bnc" id="L122" title="All 4 branches missed.">		    			else if(temp.toLowerCase().contains(&quot;&lt;h&quot;) || temp.toLowerCase().contains(&quot;&lt;p&quot;)) {</span>
+    				
+<span class="nc" id="L124">		    				Document doc = Jsoup.parse(temp);</span>
+<span class="nc" id="L125">		    				foodContent.add(doc.body().text().toLowerCase());</span>
+
+<span class="nc" id="L127">		    			} </span>
+		    		}
+		    		// else throw no menu exception	  
+		      }
+		    } finally {
+<span class="nc" id="L132">		      is.close();</span>
+<span class="nc" id="L133">		    }</span>
+<span class="nc" id="L134">		    return foodContent;</span>
+	  	} 
+
+		public ArrayList&lt;String&gt; processURLRawContent(ArrayList&lt;String&gt; URLRawContent){
+<span class="nc" id="L138">			ArrayList&lt;String&gt; result = new ArrayList&lt;String&gt;();</span>
+<span class="nc" id="L139">			String processUnitContentString = null;    // Working variable</span>
+			  
+<span class="nc bnc" id="L141" title="All 2 branches missed.">			for(String unitContent: URLRawContent){</span>
+				// remove those with character &gt; 150
+<span class="nc bnc" id="L143" title="All 2 branches missed.">				if(unitContent.length()&gt; MAX_LINE_LENGTH) {continue;}</span>
+				
+<span class="nc" id="L145">				processUnitContentString = processUnitContent(unitContent);</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">				if(!processUnitContentString.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L147">					result.add(processUnitContentString); </span>
+				}
+<span class="nc" id="L149">			}</span>
+<span class="nc" id="L150">			return result;</span>
+		}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

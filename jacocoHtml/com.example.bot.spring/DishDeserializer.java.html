@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DishDeserializer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-spring-boot-kitchensink</a> &gt; <a href="index.source.html" class="el_package">com.example.bot.spring</a> &gt; <span class="el_source">DishDeserializer.java</span></div><h1>DishDeserializer.java</h1><pre class="source lang-java linenums">package com.example.bot.spring;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import com.example.bot.spring.Dish;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
+
+<span class="fc" id="L17">public class DishDeserializer implements JsonDeserializer&lt;Dish&gt; {</span>
+	
+	/**
+	 * This is an overriden function of the GSON class
+	 * The purpose of this is to tell the GSON parse function 
+	 * how to create the custom java objects 
+	 * which is defined by the Dish Class
+	 * @param JsonElement and JsonDeserializationContext 
+	 * @return A customized Dish Object
+	 * @throws IOException
+	 */
+	@Override 
+	public Dish deserialize(JsonElement arg0, Type arg1, JsonDeserializationContext arg2) throws JsonParseException {
+<span class="fc" id="L30">	    JsonObject decodeObj = arg0.getAsJsonObject();</span>
+<span class="fc" id="L31">	    Gson gson = new Gson();</span>
+<span class="fc" id="L32">	    Dish dish = gson.fromJson(arg0, Dish.class);</span>
+<span class="fc" id="L33">	    ArrayList&lt;String&gt; ingredients = null;</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">	    if (decodeObj.get(&quot;ingredients&quot;).isJsonArray()) {</span>
+<span class="fc" id="L35">	        ingredients = gson.fromJson(decodeObj.get(&quot;ingredients&quot;), new TypeToken&lt;ArrayList&lt;String&gt;&gt;() {</span>
+<span class="fc" id="L36">	        }.getType());</span>
+	    } 
+	    else {
+<span class="nc" id="L39">	        String single = gson.fromJson(decodeObj.get(&quot;ingredients&quot;), String.class);</span>
+<span class="nc" id="L40">	        ingredients = new ArrayList&lt;String&gt;();</span>
+<span class="nc" id="L41">	        ingredients.add(single);</span>
+	    }
+<span class="fc" id="L43">	    dish.setIngredients(ingredients); </span>
+<span class="fc" id="L44">	    return dish;</span>
+	 } 
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

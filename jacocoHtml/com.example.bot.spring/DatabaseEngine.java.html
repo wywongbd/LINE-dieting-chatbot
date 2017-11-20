@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DatabaseEngine.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-spring-boot-kitchensink</a> &gt; <a href="index.source.html" class="el_package">com.example.bot.spring</a> &gt; <span class="el_source">DatabaseEngine.java</span></div><h1>DatabaseEngine.java</h1><pre class="source lang-java linenums">package com.example.bot.spring;
+
+import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
+
+// sample-spring-boot-kitchensink/resources/static/database.txt.
+//
+// This file contains a few lines with the format &lt;input&gt;:&lt;output&gt;.
+// The program below wish to perform an exact word match the input text
+// against the &lt;input&gt; against each line. The bot should replys 
+// &quot;XXX says &lt;output&gt;&quot;
+// For instance, if the client sends &quot;abc&quot;, the bot should reply 
+// &quot;kevinw says def&quot; 
+// If you registered your ITSC login as kevinw.
+////
+
+<span class="nc" id="L20">@Slf4j</span>
+<span class="nc" id="L21">public class DatabaseEngine {</span>
+	String search(String text) throws Exception {
+<span class="nc" id="L23">		String result = null;</span>
+<span class="nc" id="L24">		BufferedReader br = null;</span>
+<span class="nc" id="L25">		InputStreamReader isr = null;</span>
+		try {
+<span class="nc" id="L27">			isr = new InputStreamReader(</span>
+<span class="nc" id="L28">                    this.getClass().getResourceAsStream(FILENAME));</span>
+<span class="nc" id="L29">			br = new BufferedReader(isr);</span>
+			String sCurrentLine;
+			
+<span class="nc bnc" id="L32" title="All 4 branches missed.">			while (result == null &amp;&amp; (sCurrentLine = br.readLine()) != null) {</span>
+<span class="nc" id="L33">				String[] parts = sCurrentLine.split(&quot;:&quot;);</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">				if (text.toLowerCase().contains(parts[0].toLowerCase())) {</span>
+<span class="nc" id="L35">					result = parts[1];</span>
+				}
+<span class="nc" id="L37">			}</span>
+<span class="nc" id="L38">		} catch (IOException e) {</span>
+<span class="nc" id="L39">			log.info(&quot;IOException while reading file: {}&quot;, e.toString());</span>
+		} finally {
+<span class="nc" id="L41">			try {</span>
+<span class="nc bnc" id="L42" title="All 6 branches missed.">				if (br != null)</span>
+<span class="nc" id="L43">					br.close();</span>
+<span class="nc bnc" id="L44" title="All 6 branches missed.">				if (isr != null)</span>
+<span class="nc" id="L45">					isr.close();</span>
+<span class="nc" id="L46">			} catch (IOException ex) {</span>
+<span class="nc" id="L47">				log.info(&quot;IOException while closing file: {}&quot;, ex.toString());</span>
+<span class="nc" id="L48">			}</span>
+<span class="nc" id="L49">		}</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">		if (result != null)</span>
+<span class="nc" id="L51">			return result;</span>
+<span class="nc" id="L52">		throw new Exception(&quot;NOT FOUND&quot;);</span>
+    }
+
+<span class="nc" id="L55">	private final String FILENAME = &quot;/static/database.txt&quot;;</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

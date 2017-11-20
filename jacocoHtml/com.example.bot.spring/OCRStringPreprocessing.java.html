@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OCRStringPreprocessing.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-spring-boot-kitchensink</a> &gt; <a href="index.source.html" class="el_package">com.example.bot.spring</a> &gt; <span class="el_source">OCRStringPreprocessing.java</span></div><h1>OCRStringPreprocessing.java</h1><pre class="source lang-java linenums">package com.example.bot.spring;
+
+import java.util.ArrayList;
+
+<span class="fc" id="L5">public class OCRStringPreprocessing extends StringPreprocessing{</span>
+    /**
+     * Process the raw string returned by Ocr API
+     * @param ocrRawString A String data type
+     * @param minLineLength A int data type
+     * @param minWordLength A int data type
+     * @param stopWordsSet A Set&lt;String&gt; data type
+     * @return A Set&lt;String&gt; data type
+     */
+	public ArrayList&lt;String&gt; processOcrRawString(String ocrRawString){
+<span class="fc" id="L15">		ArrayList&lt;String&gt; result = new ArrayList&lt;String&gt;();</span>
+
+<span class="fc" id="L17">		String[] splitOcrRawString = ocrRawString.split(&quot;\\r?\\n&quot;);</span>
+<span class="fc" id="L18">		ArrayList&lt;String&gt; longLowerCaseString = getLongLowerCaseString(splitOcrRawString, MIN_LINE_LENGTH);</span>
+
+<span class="fc" id="L20">		String processUnitContentString = null;    // Working variable</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">		for(String unitContent : longLowerCaseString) {</span>
+			// remove those with character &gt; 150
+<span class="fc bfc" id="L23" title="All 2 branches covered.">			if(unitContent.length()&gt; MAX_LINE_LENGTH) {continue;}</span>
+
+<span class="fc" id="L25">			processUnitContentString = processUnitContent(unitContent);</span>
+<span class="fc" id="L26">			result.add(processUnitContentString);</span>
+<span class="fc" id="L27">		}</span>
+<span class="fc" id="L28">		return result;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

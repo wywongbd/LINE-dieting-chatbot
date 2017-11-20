@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StringPreprocessing.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-spring-boot-kitchensink</a> &gt; <a href="index.source.html" class="el_package">com.example.bot.spring</a> &gt; <span class="el_source">StringPreprocessing.java</span></div><h1>StringPreprocessing.java</h1><pre class="source lang-java linenums">package com.example.bot.spring;
+
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+
+public class StringPreprocessing {
+<span class="fc" id="L8">	Set&lt;String&gt; stopWordsSet = null;</span>
+
+	// Constant values
+	protected static final int MIN_LINE_LENGTH = 4;
+	protected static final int MAX_LINE_LENGTH = 150;
+	protected static final int MIN_WORD_LENGTH = 3;
+
+<span class="fc" id="L15">	private final String[] STOPWORDS_ARRAY = {</span>
+			&quot;with&quot;, &quot;and&quot;, &quot;you&quot;, &quot;your&quot;, &quot;our&quot;, &quot;date&quot;, &quot;choice&quot;, &quot;served&quot;, &quot;served&quot;, &quot;get&quot;,
+			&quot;are&quot;, &quot;is&quot;, &quot;am&quot;, &quot;were&quot;, &quot;was&quot;,
+			&quot;breakfast&quot;, &quot;lunch&quot;, &quot;dinner&quot;,
+			&quot;special&quot;, &quot;restaurant&quot;, &quot;offer&quot;, &quot;order&quot;, &quot;free&quot;,
+			&quot;monday&quot;, &quot;tuesday&quot;, &quot;wednesday&quot;, &quot;thursday&quot;, &quot;friday&quot;,
+			&quot;january&quot;, &quot;february&quot;, &quot;march&quot;, &quot;april&quot;, &quot;may&quot;, &quot;june&quot;,
+			&quot;july&quot;, &quot;august&quot;, &quot;september&quot;, &quot;october&quot;, &quot;november&quot;, &quot;december&quot;,
+			&quot;main&quot;, &quot;dishes&quot;, &quot;more&quot;, &quot;cal&quot;, &quot;side&quot;, &quot;choice&quot;, &quot;come&quot;, &quot;charge&quot;, &quot;signature&quot;,
+			&quot;item&quot;, &quot;details&quot;, &quot;select&quot;, &quot;for&quot;, &quot;have&quot;, &quot;has&quot;, &quot;had&quot;, &quot;available&quot;,
+			&quot;premium&quot;, &quot;seasoned&quot;, &quot;less&quot;, &quot;additional&quot;, &quot;menus&quot;, &quot;ultimate&quot;,
+			&quot;terms&quot;, &quot;conditions&quot;, &quot;privacy&quot;, &quot;policy&quot;, &quot;condition&quot;,
+			&quot;tomorrow&quot;, &quot;today&quot;, &quot;yesterday&quot;, &quot;subject&quot;, &quot;based&quot;,
+			&quot;currently&quot;, &quot;viewing&quot;, &quot;website&quot;, &quot;book&quot;, &quot;stay&quot;, &quot;signup&quot;, &quot;find&quot;, &quot;the&quot;,
+			&quot;type&quot;, &quot;book&quot;, &quot;reserve&quot;, &quot;reservation&quot;, &quot;booking&quot;, &quot;desktop&quot;, &quot;version&quot;, &quot;website&quot;,
+			&quot;when&quot;, &quot;will&quot;, &quot;numbers&quot;, &quot;how&quot;, &quot;many&quot;, &quot;adults&quot;, &quot;children&quot;, &quot;guests&quot;, &quot;hotel&quot;,
+			&quot;season&quot;, &quot;seasons&quot;, &quot;hong&quot;, &quot;kong&quot;, &quot;nights&quot;, &quot;days&quot;,
+			&quot;one&quot;, &quot;two&quot;, &quot;three&quot;, &quot;four&quot;, &quot;five&quot;, &quot;six&quot;, &quot;seven&quot;, &quot;eight&quot;, &quot;nine&quot;, &quot;ten&quot;,
+			&quot;traditional&quot;, &quot;fresh&quot;, &quot;buffet&quot;, &quot;eat&quot;, &quot;meal&quot;, &quot;download&quot;, &quot;food&quot;, &quot;phone&quot;, &quot;specialties&quot;,
+			&quot;set&quot;, &quot;alacarte&quot;, &quot;table&quot;
+	};
+
+	/**
+     * Default constructor for StringPreprocessing
+     */
+<span class="fc" id="L40">	public StringPreprocessing() {</span>
+		// Convert to has set for faster search
+<span class="fc" id="L42">		stopWordsSet = new HashSet&lt;String&gt;();</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">		for(String stopWord : STOPWORDS_ARRAY) {</span>
+<span class="fc" id="L44">			stopWordsSet.add(stopWord);</span>
+		}
+<span class="fc" id="L46">	}</span>
+
+    /**
+     * Process the unitContent string
+     * @param unitContent A String data type
+     * @return A String data type
+     */
+	public String processUnitContent(String unitContent){
+<span class="fc" id="L54">		String processUnitContentString = null;    // Working variable</span>
+<span class="fc" id="L55">		processUnitContentString = removeSpecialCharacters(unitContent);</span>
+<span class="fc" id="L56">		processUnitContentString = removeShortAndStopWord(processUnitContentString, MIN_WORD_LENGTH, stopWordsSet);</span>
+<span class="fc" id="L57">		processUnitContentString = removeExtraSpace(processUnitContentString);</span>
+
+<span class="fc" id="L59">		return processUnitContentString;</span>
+	}
+
+    /**
+     * Get long string and convert to lower case
+     * @param unitContentArray A String[] data type
+     * @param minLineLength A int data type
+     * @return A ArrayList&lt;String&gt; data type
+     */
+	public ArrayList&lt;String&gt; getLongLowerCaseString(String[] unitContentArray, int minLineLength) {
+		// This function also converts to lower case
+<span class="fc" id="L70">		ArrayList&lt;String&gt; wordsList = new ArrayList&lt;String&gt;();</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">		for(String unitContent: unitContentArray){</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">	        if(unitContent.length() &gt;= minLineLength){</span>
+<span class="fc" id="L73">	        		wordsList.add(unitContent.toLowerCase());</span>
+	        }
+	    }
+<span class="fc" id="L76">	    return wordsList;</span>
+	}
+
+    /**
+     * Remove special characters in the string
+     * @param unitContent A String data type
+     * @return A String data type
+     */
+	public String removeSpecialCharacters(String unitContent){
+<span class="fc" id="L85">		return unitContent.replaceAll(&quot;[^a-zA-Z\\s]&quot;, &quot;&quot;);	  </span>
+	}
+
+    /**
+     * Remove short and stopwords in the string
+     * @param unitContent A String data type
+     * @param minWordLength A int data type
+     * @param stopWordsSet A Set&lt;String&gt; data type
+     * @return A String data type
+     */
+	public String removeShortAndStopWord(String unitContent, int minWordLength, Set&lt;String&gt; stopWordsSet) {
+<span class="fc" id="L96">		String result = &quot;&quot;;</span>
+<span class="fc" id="L97">		String[] words = unitContent.split(&quot; &quot;);</span>
+<span class="fc" id="L98">		ArrayList&lt;String&gt; wordsList = new ArrayList&lt;String&gt;();</span>
+
+<span class="fc bfc" id="L100" title="All 2 branches covered.">		for(String word : words){</span>
+<span class="pc bpc" id="L101" title="1 of 4 branches missed.">	        if(word.length() &gt;= minWordLength &amp;&amp; !stopWordsSet.contains(word)){</span>
+<span class="fc" id="L102">	            wordsList.add(word);</span>
+	        }
+	    }
+<span class="fc bfc" id="L105" title="All 2 branches covered.">	    for (String word : wordsList){</span>
+<span class="fc" id="L106">	        result += word + &quot; &quot;;</span>
+<span class="fc" id="L107">	    }	</span>
+<span class="fc" id="L108">		return result;</span>
+	}
+
+    /**
+    * Remove &gt;1 space to 1 space in the string
+    * @param unitContent A String data type
+    * @return A String data type
+    */
+	public String removeExtraSpace(String unitContent) {
+		// Remove &gt;1 space to 1 space
+<span class="fc" id="L118">		return unitContent.replaceAll(&quot;^ +| +$|( )+&quot;, &quot;$1&quot;);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DietbotController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-spring-boot-kitchensink</a> &gt; <a href="index.source.html" class="el_package">com.example.bot.spring</a> &gt; <span class="el_source">DietbotController.java</span></div><h1>DietbotController.java</h1><pre class="source lang-java linenums">package com.example.bot.spring;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
+import com.linecorp.bot.model.profile.UserProfileResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.google.common.io.ByteStreams;
+
+import com.linecorp.bot.client.LineMessagingClient;
+import com.linecorp.bot.client.MessageContentResponse;
+import com.linecorp.bot.model.ReplyMessage;
+import com.linecorp.bot.model.PushMessage;
+import com.linecorp.bot.model.action.MessageAction;
+import com.linecorp.bot.model.action.PostbackAction;
+import com.linecorp.bot.model.action.URIAction;
+import com.linecorp.bot.model.event.BeaconEvent;
+import com.linecorp.bot.model.event.Event;
+import com.linecorp.bot.model.event.FollowEvent;
+import com.linecorp.bot.model.event.JoinEvent;
+import com.linecorp.bot.model.event.MessageEvent;
+import com.linecorp.bot.model.event.PostbackEvent;
+import com.linecorp.bot.model.event.UnfollowEvent;
+import com.linecorp.bot.model.event.message.AudioMessageContent;
+import com.linecorp.bot.model.event.message.ImageMessageContent;
+import com.linecorp.bot.model.event.message.LocationMessageContent;
+import com.linecorp.bot.model.event.message.StickerMessageContent;
+import com.linecorp.bot.model.event.message.TextMessageContent;
+import com.linecorp.bot.model.event.source.GroupSource;
+import com.linecorp.bot.model.event.source.RoomSource;
+import com.linecorp.bot.model.event.source.Source;
+import com.linecorp.bot.model.message.AudioMessage;
+import com.linecorp.bot.model.message.ImageMessage;
+import com.linecorp.bot.model.message.ImagemapMessage;
+import com.linecorp.bot.model.message.LocationMessage;
+import com.linecorp.bot.model.message.Message;
+import com.linecorp.bot.model.message.StickerMessage;
+import com.linecorp.bot.model.message.TemplateMessage;
+import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.message.imagemap.ImagemapArea;
+import com.linecorp.bot.model.message.imagemap.ImagemapBaseSize;
+import com.linecorp.bot.model.message.imagemap.MessageImagemapAction;
+import com.linecorp.bot.model.message.imagemap.URIImagemapAction;
+import com.linecorp.bot.model.message.template.ButtonsTemplate;
+import com.linecorp.bot.model.message.template.CarouselColumn;
+import com.linecorp.bot.model.message.template.CarouselTemplate;
+import com.linecorp.bot.model.message.template.ConfirmTemplate;
+import com.linecorp.bot.model.response.BotApiResponse;
+import com.linecorp.bot.spring.boot.annotation.EventMapping;
+import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
+import com.linecorp.bot.model.event.source.Source;
+import com.linecorp.bot.model.event.source.UserSource;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
+import lombok.NonNull;
+import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
+
+<span class="fc" id="L75">@Slf4j</span>
+@LineMessageHandler
+public class DietbotController {
+	
+	@Autowired
+	private LineMessagingClient lineMessagingClient;
+	
+	private StateManager stateManager;
+    // To do: delete 'controller: '
+<span class="nc" id="L84">	private final String defaultString = &quot;Controller: I don't understand&quot;; </span>
+<span class="nc" id="L85">    private final String appreciateUsingCoupon = &quot;Thanks, this is your coupon!&quot;;</span>
+<span class="nc" id="L86">	private RecommendFriendState recommendFriendState = new RecommendFriendState();</span>
+	
+<span class="nc" id="L88">	protected DietbotController() {</span>
+<span class="nc" id="L89">		stateManager = new StateManager(&quot;sample-spring-boot-kitchensink/src/main/resources/rivescript&quot;);</span>
+<span class="nc" id="L90">	}</span>
+	
+	@EventMapping
+	public void handleTextMessageEvent(MessageEvent&lt;TextMessageContent&gt; event) throws Exception {
+<span class="nc" id="L94">		TextMessageContent message = event.getMessage();</span>
+<span class="nc" id="L95">		handleTextContent(event.getReplyToken(), event, message);</span>
+<span class="nc" id="L96">	}</span>
+
+	@EventMapping
+	public void handleImageMessageEvent(MessageEvent&lt;ImageMessageContent&gt; event) throws IOException {
+		final MessageContentResponse response;
+<span class="nc" id="L101">		String replyToken = event.getReplyToken();</span>
+<span class="nc" id="L102">		String messageId = event.getMessage().getId();</span>
+		
+		try {
+<span class="nc" id="L105">			response = lineMessagingClient.getMessageContent(messageId).get();</span>
+<span class="nc" id="L106">		} catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L107">			reply(replyToken, new TextMessage(&quot;Cannot get image: &quot; + e.getMessage()));</span>
+<span class="nc" id="L108">			throw new RuntimeException(e);</span>
+<span class="nc" id="L109">		}</span>
+		
+<span class="nc" id="L111">		DownloadedContent jpg = saveContent(&quot;jpg&quot;, response);</span>
+<span class="nc" id="L112">		handleImageContent(event.getReplyToken(), event, jpg);</span>
+
+<span class="nc" id="L114">	}</span>
+    
+    @EventMapping
+    public static void handleFollowEvent(FollowEvent event) {
+        // String replyToken = event.getReplyToken();
+<span class="fc" id="L119">        String userId = event.getSource().getUserId();</span>
+<span class="fc" id="L120">		SQLDatabaseEngine sql = new SQLDatabaseEngine();</span>
+
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">		if(!sql.searchUser(userId, &quot;userinfo&quot;)</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">			&amp;&amp; !sql.searchUser(userId, &quot;campaign_user&quot;)){</span>
+<span class="nc" id="L124">			sql.addCampaignUser(userId);</span>
+		}
+<span class="fc" id="L126">    }</span>
+
+    @EventMapping
+    public void handlePostbackEvent(PostbackEvent event) {
+<span class="nc" id="L130">        String replyToken = event.getReplyToken();</span>
+<span class="nc" id="L131">        String userId = event.getSource().getUserId();</span>
+<span class="nc" id="L132">        String data = event.getPostbackContent().getData();</span>
+<span class="nc" id="L133">        String date = event.getPostbackContent().getParams().toString();</span>
+<span class="nc" id="L134">        List&lt;Message&gt; replyList = null;</span>
+<span class="nc" id="L135">        date = date.replace(&quot;{date=&quot;, &quot;&quot;).replace(&quot;}&quot;, &quot;&quot;);</span>
+
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        if (date.length() &gt; 0) {</span>
+<span class="nc" id="L138">        	String[] temp = date.split(&quot;-&quot;);</span>
+<span class="nc" id="L139">        	LocalDate inputDate = LocalDate.of(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), Integer.parseInt(temp[2]));</span>
+<span class="nc" id="L140">        	LocalDate today = LocalDate.now().plusDays(1);</span>
+<span class="nc" id="L141">        	long daysBetween = ChronoUnit.DAYS.between(inputDate, today);</span>
+<span class="nc" id="L142">        	data = data + &quot; &quot; + Long.toString(daysBetween);</span>
+        }
+
+        try {
+
+<span class="nc" id="L147">			replyList = stateManager.chat(userId, data, true);</span>
+<span class="nc" id="L148">	        this.reply(replyToken, replyList);</span>
+
+<span class="nc" id="L150">    	} catch (Exception e) {</span>
+<span class="nc" id="L151">    		this.replyText(replyToken, defaultString);</span>
+<span class="nc" id="L152">    		return;</span>
+<span class="nc" id="L153">    	}</span>
+        // this.replyText(replyToken, &quot;Got postback data &quot; + event.getPostbackContent().getData()
+        // 	+ &quot;, param &quot; + event.getPostbackContent().getParams().toString());
+<span class="nc" id="L156">    }</span>
+
+	
+<span class="nc bnc" id="L159" title="All 4 branches missed.">	private void replyText(@NonNull String replyToken, @NonNull String message) {</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">		if (replyToken.isEmpty()) {</span>
+<span class="nc" id="L161">			throw new IllegalArgumentException(&quot;replyToken must not be empty&quot;);</span>
+		}
+<span class="nc bnc" id="L163" title="All 2 branches missed.">		if (message.length() &gt; 1000) {</span>
+<span class="nc" id="L164">			message = message.substring(0, 1000 - 2) + &quot;..&quot;;</span>
+		}
+<span class="nc" id="L166">		this.reply(replyToken, new TextMessage(message));</span>
+<span class="nc" id="L167">	}</span>
+
+<span class="nc bnc" id="L169" title="All 4 branches missed.">	private void replyImage(@NonNull String replyToken, @NonNull String url) {</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">		if (replyToken.isEmpty()) {</span>
+<span class="nc" id="L171">			throw new IllegalArgumentException(&quot;replyToken must not be empty&quot;);</span>
+		}
+<span class="nc" id="L173">		this.reply(replyToken, new ImageMessage(url, url));</span>
+<span class="nc" id="L174">	}</span>
+	
+<span class="nc bnc" id="L176" title="All 4 branches missed.">	private void reply(@NonNull String replyToken, @NonNull Message message) {</span>
+<span class="nc" id="L177">		reply(replyToken, Collections.singletonList(message));</span>
+<span class="nc" id="L178">	}</span>
+
+<span class="nc bnc" id="L180" title="All 4 branches missed.">	private void reply(@NonNull String replyToken, @NonNull List&lt;Message&gt; messages) {</span>
+		try {
+<span class="nc" id="L182">			BotApiResponse apiResponse = lineMessagingClient.replyMessage(new ReplyMessage(replyToken, messages)).get();</span>
+<span class="nc" id="L183">			log.info(&quot;Sent messages: {}&quot;, apiResponse);</span>
+<span class="nc" id="L184">		} catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L185">			throw new RuntimeException(e);</span>
+<span class="nc" id="L186">		}</span>
+<span class="nc" id="L187">	}</span>
+
+<span class="nc bnc" id="L189" title="All 4 branches missed.">	private void pushText(@NonNull String to, @NonNull String message) {</span>
+<span class="nc bnc" id="L190" title="All 2 branches missed.">		if (to.isEmpty()) {</span>
+<span class="nc" id="L191">			throw new IllegalArgumentException(&quot;user id must not be empty&quot;);</span>
+		}
+<span class="nc bnc" id="L193" title="All 2 branches missed.">		if (message.length() &gt; 1000) {</span>
+<span class="nc" id="L194">			message = message.substring(0, 1000 - 2) + &quot;..&quot;;</span>
+		}
+<span class="nc" id="L196">		this.push(to, new TextMessage(message));</span>
+<span class="nc" id="L197">	}</span>
+
+<span class="nc bnc" id="L199" title="All 4 branches missed.">	private void pushImage(@NonNull String to, @NonNull String url) {</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">		if (to.isEmpty()) {</span>
+<span class="nc" id="L201">			throw new IllegalArgumentException(&quot;user id must not be empty&quot;);</span>
+		}
+<span class="nc" id="L203">		this.push(to, new ImageMessage(url, url));</span>
+<span class="nc" id="L204">	}</span>
+
+<span class="nc bnc" id="L206" title="All 4 branches missed.">	private void push(@NonNull String to, @NonNull Message message) {</span>
+<span class="nc" id="L207">		push(to, Collections.singletonList(message));</span>
+<span class="nc" id="L208">	}</span>
+
+<span class="nc bnc" id="L210" title="All 4 branches missed.">	private void push(@NonNull String to, @NonNull List&lt;Message&gt; messages) {</span>
+		try {
+<span class="nc" id="L212">			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(to, messages)).get();</span>
+<span class="nc" id="L213">			log.info(&quot;Sent messages: {}&quot;, apiResponse);</span>
+<span class="nc" id="L214">		} catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L215">			throw new RuntimeException(e);</span>
+<span class="nc" id="L216">		}</span>
+<span class="nc" id="L217">	}</span>
+
+	private void handleTextContent(String replyToken, Event event, TextMessageContent content) {
+<span class="nc" id="L220">        String text = content.getText();</span>
+<span class="nc" id="L221">        log.info(&quot;Got text message from {}: {}&quot;, replyToken, text);</span>
+        
+<span class="nc" id="L223">        Vector&lt;String&gt; reply = null;</span>
+<span class="nc" id="L224">        List&lt;Message&gt; replyList = null;</span>
+<span class="nc" id="L225">        String userId = event.getSource().getUserId();</span>
+<span class="nc" id="L226">        SQLDatabaseEngine sql = new SQLDatabaseEngine();</span>
+<span class="nc" id="L227">            System.out.println(&quot;controller 1&quot;);</span>
+
+        try {
+<span class="nc" id="L230">			UserProfileResponse profile = lineMessagingClient.getProfile(userId).get();</span>
+
+			// text: &quot;code 123456&quot;
+			// Exception couponIsValid
+<span class="nc bnc" id="L234" title="All 4 branches missed.">			if (recommendFriendState.matchTrigger(text).equals(&quot;CODE&quot;) &amp;&amp; sql.searchUser(userId, &quot;userinfo&quot;)){</span>
+<span class="nc" id="L235">				String code = text.split(&quot;:&quot;)[1];</span>
+<span class="nc" id="L236">				reply = recommendFriendState.actionForCodeCommand(userId, code);</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">				if(reply.size() == 2) {</span>
+<span class="nc" id="L238">					String url = sql.getCouponUrl();</span>
+<span class="nc" id="L239">					String requestUser = reply.get(0);</span>
+            		// String temp = reply.get(1);	
+            		// Reply to claimUser
+<span class="nc" id="L242">                    this.pushText(userId, appreciateUsingCoupon);</span>
+<span class="nc" id="L243">            		this.pushImage(userId, url);</span>
+            		// Push image to requestUser
+<span class="nc" id="L245">                    this.pushText(requestUser, appreciateUsingCoupon);</span>
+<span class="nc" id="L246">            		this.pushImage(requestUser, url);</span>
+<span class="nc" id="L247">					return;</span>
+				}
+<span class="nc" id="L249">            System.out.println(&quot;controller 2&quot;);</span>
+
+				// create a List of Message object for this condition
+<span class="nc" id="L252">				replyList = new ArrayList&lt;Message&gt;(0);</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">		    	for (String replyMessage:reply) {</span>
+<span class="nc" id="L254">		         	log.info(&quot;Returns echo message {}: {}&quot;, replyToken, replyMessage);</span>
+<span class="nc" id="L255">		         	replyList.add(new TextMessage(replyMessage));</span>
+<span class="nc" id="L256">		        }</span>
+    	
+<span class="nc" id="L258">            System.out.println(&quot;controller 3&quot;);</span>
+<span class="nc" id="L259">			}</span>
+			else {
+<span class="nc" id="L261">            System.out.println(&quot;controller 4&quot;);</span>
+				// a general List of message
+<span class="nc" id="L263">				replyList = stateManager.chat(userId, text, true);</span>
+
+<span class="nc" id="L265">            System.out.println(&quot;controller 5&quot;);</span>
+			}
+<span class="nc" id="L267">    	} catch (Exception e) {</span>
+<span class="nc" id="L268">    		this.replyText(replyToken, defaultString);</span>
+<span class="nc" id="L269">    		return;</span>
+<span class="nc" id="L270">    	}</span>
+    	
+<span class="nc" id="L272">        this.reply(replyToken, replyList);</span>
+     
+<span class="nc" id="L274">    }</span>
+
+	private void handleImageContent(String replyToken, Event event, DownloadedContent jpg) {
+<span class="nc" id="L277">		Vector&lt;String&gt; reply = null;</span>
+<span class="nc" id="L278">		List&lt;Message&gt; replyList = new ArrayList&lt;Message&gt;(0);</span>
+	    	try {
+<span class="nc" id="L280">	    		reply = stateManager.chat(event.getSource().getUserId(), jpg, true);</span>
+<span class="nc" id="L281">	    	} catch (Exception e) {</span>
+<span class="nc" id="L282">	    		this.replyText(replyToken,defaultString);</span>
+<span class="nc" id="L283">	    		return;</span>
+<span class="nc" id="L284">	    	}</span>
+	        
+<span class="nc bnc" id="L286" title="All 2 branches missed.">	    	for (String replyMessage:reply) {</span>
+<span class="nc" id="L287">	         log.info(&quot;Returns echo message {}: {}&quot;, replyToken, replyMessage);</span>
+<span class="nc" id="L288">	         replyList.add(new TextMessage(replyMessage));</span>
+<span class="nc" id="L289">	    	}</span>
+<span class="nc" id="L290">	    this.reply(replyToken,replyList);</span>
+<span class="nc" id="L291">    }</span>
+	
+	public static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
+<span class="fc" id="L294">		log.info(&quot;Got content-type: {}&quot;, responseBody);</span>
+
+<span class="nc" id="L296">		DownloadedContent tempFile = createTempFile(ext);</span>
+<span class="nc" id="L297">		try (OutputStream outputStream = Files.newOutputStream(tempFile.path)) {</span>
+<span class="nc" id="L298">			ByteStreams.copy(responseBody.getStream(), outputStream);</span>
+<span class="nc" id="L299">			log.info(&quot;Saved {}: {}&quot;, ext, tempFile);</span>
+<span class="nc" id="L300">			return tempFile;</span>
+<span class="nc bnc" id="L301" title="All 8 branches missed.">		} catch (IOException e) {</span>
+<span class="nc" id="L302">			throw new UncheckedIOException(e);</span>
+		}
+	}
+	
+	public static DownloadedContent createTempFile(String ext) {
+<span class="fc" id="L307">		String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID().toString() + '.' + ext;</span>
+<span class="nc" id="L308">		Path tempFile = DietbotApplication.downloadedContentDir.resolve(fileName);</span>
+<span class="nc" id="L309">		tempFile.toFile().deleteOnExit();</span>
+<span class="nc" id="L310">		return new DownloadedContent(tempFile, createUri(&quot;/downloaded/&quot; + tempFile.getFileName()));</span>
+	}
+	
+	public static String createUri(String path) {
+<span class="fc" id="L314">		return ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();</span>
+	}
+
+	//The annontation @Value is from the package lombok.Value
+	//Basically what it does is to generate constructor and getter for the class below
+	//See https://projectlombok.org/features/Value
+<span class="pc bnc" id="L320" title="All 20 branches missed.">	@Value</span>
+	public static class DownloadedContent {
+<span class="nc" id="L322">		Path path;</span>
+<span class="nc" id="L323">		String uri;</span>
+
+		public String getPathString() {
+<span class="fc" id="L326">			return path.toString();</span>
+		}
+		public String getUrl() {
+<span class="fc" id="L329">			return uri;</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

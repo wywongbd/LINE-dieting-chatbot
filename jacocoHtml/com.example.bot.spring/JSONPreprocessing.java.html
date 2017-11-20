@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JSONPreprocessing.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-spring-boot-kitchensink</a> &gt; <a href="index.source.html" class="el_package">com.example.bot.spring</a> &gt; <span class="el_source">JSONPreprocessing.java</span></div><h1>JSONPreprocessing.java</h1><pre class="source lang-java linenums">package com.example.bot.spring;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.example.bot.spring.DishDeserializer; 
+
+import org.json.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.net.URL;
+import java.nio.charset.Charset;
+
+
+/** 
+*  This class will process JSON files from a given website
+*/
+
+<span class="nc" id="L24">public class JSONPreprocessing {</span>
+
+	/**
+	 * This function takes in a url that leads to json content hosted online
+	 * @param a String that is the url 
+	 * @return a JSON String
+	 * @throws IOException
+	 */
+		
+	public static String readJSONUrl(String url) throws IOException {
+<span class="fc" id="L34">	  	String jsonString = &quot;&quot; ;</span>
+<span class="fc" id="L35">	    InputStream is = new URL(url).openStream();</span>
+
+	    try {
+	      // print all the html lines
+<span class="fc" id="L39">	    	BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName(&quot;UTF-8&quot;)));</span>
+	    	String temp;
+<span class="fc" id="L41">	      boolean isNull = false;</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">	      while (!isNull) {</span>
+<span class="fc" id="L43">	    	  temp = rd.readLine();</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">	    	  	if(temp == null){ isNull = true;}</span>
+	    	  	else {
+<span class="fc" id="L46">	    			jsonString += temp.trim();</span>
+	    		}
+	    		// else throw no menu exception	  
+	      }
+	    } finally {
+<span class="pc" id="L51">	      is.close();</span>
+<span class="fc" id="L52">	    }</span>
+<span class="fc" id="L53">	    return jsonString;</span>
+  	} 
+	
+	/**
+	 * This function takes in a JSON string and converts it into Java objects
+	 * @param a String that is the JSON text
+	 * @return Dish[] array that containss dish objects defined by the Dish class
+	 */
+	
+	public static Dish[] getDishFromJSON(String rawJsonString){ 
+
+<span class="fc" id="L64">		GsonBuilder b = new GsonBuilder();</span>
+		
+		// set up custom deserializer
+		// this is needed because we need to parse Json objects with array member variable
+<span class="fc" id="L68">		b.registerTypeAdapter(Dish.class, new DishDeserializer()); </span>
+
+<span class="fc" id="L70">		Dish[] dishes = null;</span>
+
+		try{
+<span class="fc" id="L73">			dishes = b.create().fromJson(rawJsonString, Dish[].class);</span>
+<span class="nc" id="L74">		} catch (Exception e){</span>
+<span class="nc" id="L75">			System.out.println(e.getMessage());</span>
+<span class="fc" id="L76">		}</span>
+<span class="fc" id="L77">		return dishes;</span>
+	}
+
+	/**
+	 * This function takes array of dish objects and gets the dish name 
+	 * @param a Dish[] array of the dish objects
+	 * @return a String[] that contains the dish names
+	 * @throws IOException
+	 */
+	
+	public static String[] getDishName(Dish[] dishes){
+<span class="fc" id="L88">		String [] dishNames = new String[dishes.length];</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">		for(int i = 0; i &lt; dishNames.length; i++) {</span>
+<span class="fc" id="L90">			dishNames[i] = new String(dishes[i].getName());</span>
+		}
+<span class="fc" id="L92">		return dishNames;</span>
+	}
+	
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StateManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-spring-boot-kitchensink</a> &gt; <a href="index.source.html" class="el_package">com.example.bot.spring</a> &gt; <span class="el_source">StateManager.java</span></div><h1>StateManager.java</h1><pre class="source lang-java linenums">/**
+* StateManager.java - A class for managing different states and transitions
+*/
+
+package com.example.bot.spring;
+
+import com.rivescript.RiveScript;
+import com.rivescript.macro.Subroutine;
+import java.io.File;
+import java.util.*;
+
+import com.example.bot.spring.DietbotController.DownloadedContent;
+
+
+
+// line api
+import com.linecorp.bot.client.LineMessagingClient;
+import com.linecorp.bot.client.MessageContentResponse;
+import com.linecorp.bot.model.ReplyMessage;
+import com.linecorp.bot.model.PushMessage;
+import com.linecorp.bot.model.action.MessageAction;
+import com.linecorp.bot.model.action.PostbackAction;
+import com.linecorp.bot.model.action.URIAction;
+import com.linecorp.bot.model.event.BeaconEvent;
+import com.linecorp.bot.model.event.Event;
+import com.linecorp.bot.model.event.FollowEvent;
+import com.linecorp.bot.model.event.JoinEvent;
+import com.linecorp.bot.model.event.MessageEvent;
+import com.linecorp.bot.model.event.PostbackEvent;
+import com.linecorp.bot.model.event.UnfollowEvent;
+import com.linecorp.bot.model.event.message.AudioMessageContent;
+import com.linecorp.bot.model.event.message.ImageMessageContent;
+import com.linecorp.bot.model.event.message.LocationMessageContent;
+import com.linecorp.bot.model.event.message.StickerMessageContent;
+import com.linecorp.bot.model.event.message.TextMessageContent;
+import com.linecorp.bot.model.event.source.GroupSource;
+import com.linecorp.bot.model.event.source.RoomSource;
+import com.linecorp.bot.model.event.source.Source;
+import com.linecorp.bot.model.message.AudioMessage;
+import com.linecorp.bot.model.message.ImageMessage;
+import com.linecorp.bot.model.message.ImagemapMessage;
+import com.linecorp.bot.model.message.LocationMessage;
+import com.linecorp.bot.model.message.Message;
+import com.linecorp.bot.model.message.StickerMessage;
+import com.linecorp.bot.model.message.TemplateMessage;
+import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.message.imagemap.ImagemapArea;
+import com.linecorp.bot.model.message.imagemap.ImagemapBaseSize;
+import com.linecorp.bot.model.message.imagemap.MessageImagemapAction;
+import com.linecorp.bot.model.message.imagemap.URIImagemapAction;
+import com.linecorp.bot.model.message.template.ButtonsTemplate;
+import com.linecorp.bot.model.message.template.CarouselColumn;
+import com.linecorp.bot.model.message.template.CarouselTemplate;
+import com.linecorp.bot.model.message.template.ConfirmTemplate;
+import com.linecorp.bot.model.response.BotApiResponse;
+import com.linecorp.bot.spring.boot.annotation.EventMapping;
+import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
+
+import lombok.NonNull;
+import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
+
+<span class="fc" id="L63">@Slf4j</span>
+public class StateManager {
+    
+    // Constant values
+<span class="fc" id="L67">    private final int STANDBY_STATE = 0;</span>
+<span class="fc" id="L68">    private final int INPUT_MENU_STATE = 3;</span>
+<span class="fc" id="L69">    private final int RECOMMEND_STATE = 4;</span>
+<span class="fc" id="L70">    private final String ADMIN_USER_ID = &quot;Udfd2991f287cc5c75f6c1d2c30c58a3a&quot;;</span>
+    // Must first go through InputMenuState before going to RecommendationState,
+    // so 4 is not included
+//    private final int[] FROM_STANDBY_STATE = {1, 2, 3, 5};
+
+    // Value to keep track current state
+    // private static Map&lt;String, Integer&gt; currentState; 
+    
+    public static final Map&lt;String, State&gt; states; 
+    private static RiveScript bot;    
+    private static boolean adminAccessing;
+    private static SQLDatabaseEngine sql;
+
+    static
+    {
+<span class="fc" id="L85">        bot = new RiveScript();</span>
+<span class="fc" id="L86">        sql = new SQLDatabaseEngine();</span>
+        
+<span class="fc" id="L88">        states = new HashMap&lt;String, State&gt;();</span>
+<span class="fc" id="L89">        states.put(&quot;standby&quot;, new StandbyState());</span>
+<span class="fc" id="L90">        states.put(&quot;collect_user_info&quot;, new CollectUserInfoState());    </span>
+<span class="fc" id="L91">        states.put(&quot;recommend&quot;, new RecommendationState());</span>
+<span class="fc" id="L92">        states.put(&quot;input_menu&quot;, new InputMenuState());    </span>
+<span class="fc" id="L93">        states.put(&quot;provide_info&quot;, new ProvideInfoState());  </span>
+<span class="fc" id="L94">        states.put(&quot;post_eating&quot;, new PostEatingState());</span>
+<span class="fc" id="L95">        states.put(&quot;update_user_info&quot;, new UpdateUserInfoState());</span>
+<span class="fc" id="L96">        states.put(&quot;admin&quot;, new AdminState());</span>
+<span class="fc" id="L97">        states.put(&quot;recommend_friend&quot;, new RecommendFriendState());</span>
+
+<span class="fc" id="L99">        adminAccessing = false;</span>
+<span class="fc" id="L100">    };</span>
+    
+    /**
+     * Prints two messages indicating current state and topic of RiveScript bot for debugging purposes
+     * @param path A string indicating the path of RiveScript resources 
+     */
+<span class="fc" id="L106">    public StateManager(String path) {</span>
+        // Load rive files for Rivescript object
+<span class="fc" id="L108">        File resourcesDirectory = new File(path);</span>
+<span class="fc" id="L109">        bot.loadDirectory(resourcesDirectory.getAbsolutePath());</span>
+<span class="fc" id="L110">        bot.sortReplies();</span>
+<span class="fc" id="L111">        bot.setSubroutine(&quot;setVariableToDB&quot;, new setVariableToDB());</span>
+<span class="fc" id="L112">        bot.setSubroutine(&quot;getNutritionHistory&quot;, new getNutritionHistory());</span>
+<span class="fc" id="L113">    }</span>
+
+    /**
+     * Prints two messages indicating current state and topic of RiveScript bot for debugging purposes
+     * @param userId A String data type
+     * @return a String indicating whether the userId is a recognized by Database or not
+     */
+    public String syncRiveScriptWithSQL(String userId){
+<span class="fc" id="L121">        boolean isRegisteredUser = sql.searchUser(userId, &quot;userinfo&quot;);</span>
+        
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if(isRegisteredUser){</span>
+<span class="fc" id="L124">            bot.setUservar(userId, &quot;topic&quot;, sql.getUserInfo(userId, &quot;topic&quot;));</span>
+<span class="fc" id="L125">            bot.setUservar(userId, &quot;state&quot;, sql.getUserInfo(userId, &quot;state&quot;));</span>
+<span class="fc" id="L126">            bot.setUservar(userId, &quot;met&quot;, &quot;true&quot;);</span>
+
+<span class="fc" id="L128">            return &quot;REGISTERED USER&quot;;</span>
+        }
+        else{
+            // rivescript still recognize this uesr, but DB doesn't -&gt; set rivescript to default topic &amp; state
+<span class="fc bfc" id="L132" title="All 2 branches covered.">            if (bot.getUservar(userId, &quot;state&quot;) != null){</span>
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">                if (!bot.getUservar(userId, &quot;state&quot;).equals(&quot;collect_user_info&quot;)){</span>
+<span class="nc" id="L134">                    bot.setUservar(userId, &quot;state&quot;, &quot;collect_user_info&quot;);</span>
+<span class="nc" id="L135">                    bot.setUservar(userId, &quot;topic&quot;, &quot;new_user&quot;);</span>
+                }
+            }
+<span class="fc" id="L138">            return &quot;NEW USER&quot;;</span>
+        }
+    }
+
+//    public void debugMessage(String userId, Vector&lt;String&gt; replyMessages, boolean debug){
+//        if(debug == true) {
+//            replyMessages.add(&quot;Current state is &quot; + bot.getUservar(userId, &quot;state&quot;));
+//            replyMessages.add(&quot;Current topic is &quot; + bot.getUservar(userId, &quot;topic&quot;));
+//        }
+//    }
+
+
+    /**
+     * Get output message after inputting text
+     * @param text A String data type
+     * @return A String data type
+     */
+    public List&lt;Message&gt; chat(String userId, String text, boolean debug) throws Exception {
+<span class="fc" id="L156">    	Vector&lt;String&gt; replyMessages = new Vector&lt;String&gt;(0);</span>
+<span class="fc" id="L157">        String currentState = null;</span>
+<span class="fc" id="L158">        String currentTopic = null;</span>
+<span class="fc" id="L159">        String userStatus = syncRiveScriptWithSQL(userId);</span>
+<span class="fc" id="L160">        List&lt;Message&gt; replyList = new ArrayList&lt;Message&gt;(0);</span>
+
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        if (userStatus.equals(&quot;NEW USER&quot;)) {</span>
+<span class="fc" id="L163">            bot.setUservar(userId, &quot;state&quot;, &quot;collect_user_info&quot;);</span>
+<span class="fc" id="L164">            replyMessages.add(states.get(&quot;collect_user_info&quot;).reply(userId, text, bot));</span>
+        }
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        else if (userStatus.equals(&quot;REGISTERED USER&quot;)){</span>
+<span class="fc" id="L167">            currentState = bot.getUservar(userId, &quot;state&quot;);</span>
+
+<span class="pc bpc" id="L169" title="1 of 6 branches missed.">            if (currentState.equals(&quot;standby&quot;) &amp;&amp; (((AdminState) states.get(&quot;admin&quot;)).matchTrigger(text) == 1)  &amp;&amp; userId.equals(ADMIN_USER_ID)){</span>
+<span class="fc" id="L170">                adminAccessing = true;</span>
+<span class="fc" id="L171">                replyMessages.add(states.get(&quot;admin&quot;).reply(userId, text, bot));</span>
+            }
+<span class="fc bfc" id="L173" title="All 4 branches covered.">            else if (currentState.equals(&quot;standby&quot;) &amp;&amp; (((RecommendFriendState) states.get(&quot;recommend_friend&quot;)).matchTrigger(text).equals(&quot;FRIEND&quot;))){</span>
+<span class="fc" id="L174">                replyMessages.add(((RecommendFriendState) states.get(&quot;recommend_friend&quot;)).replyForFriendCommand(userId));</span>
+            }
+            else{
+                // normally will enter here
+<span class="fc" id="L178">                replyMessages.add(states.get(currentState).reply(userId, text, bot));</span>
+<span class="fc" id="L179">                currentState = bot.getUservar(userId, &quot;state&quot;);</span>
+<span class="fc" id="L180">                currentTopic = bot.getUservar(userId, &quot;topic&quot;);</span>
+
+<span class="fc bfc" id="L182" title="All 2 branches covered.">                if (currentState.equals(&quot;recommend&quot;)) {</span>
+<span class="fc" id="L183">                    String[] splitString = (replyMessages.lastElement()).split(&quot;AAAAAAAAAA&quot;);                                       </span>
+<span class="fc" id="L184">                    replyMessages.add(0, splitString[0]);                       </span>
+<span class="fc" id="L185">                    replyMessages.remove(replyMessages.size() - 1);</span>
+                
+<span class="fc" id="L187">                    String recommendation = states.get(&quot;recommend&quot;).reply(userId, splitString[1], bot);              </span>
+<span class="fc" id="L188">                    replyMessages.add(recommendation);</span>
+                }
+
+                // reply special message for special case
+<span class="fc bfc" id="L192" title="All 2 branches covered.">                if ( currentTopic.equals(&quot;provide_info_nutrient_history&quot;) ) {</span>
+                	// need to send the reply from Rivescript and create a datetime picker template
+
+                	// reply text
+<span class="fc" id="L196">                	replyList.add(new TextMessage(replyMessages.get(0)));</span>
+
+                	// reply datetime picker
+<span class="fc" id="L199">                	replyList.add(((ProvideInfoState)states.get(&quot;provide_info&quot;)).getButton());</span>
+<span class="fc" id="L200">                    return replyList;</span>
+                }
+            }
+        }
+//        debugMessage(userId, replyMessages, debug);
+<span class="fc bfc" id="L205" title="All 2 branches covered.">        for (String message : replyMessages) {</span>
+<span class="fc" id="L206">        		log.info(&quot;In StateManager returns echo message, userId: {} message: {}&quot;, userId, message);</span>
+<span class="fc" id="L207">        		replyList.add(new TextMessage(message));</span>
+<span class="fc" id="L208">        }</span>
+
+<span class="fc" id="L210">        return replyList;</span>
+    }
+
+    /**
+     * Get output message after inputting image
+     * @param jpg A DownloadedContent data type
+     * @return A String data type
+     */
+    public Vector&lt;String&gt; chat(String userId, DownloadedContent jpg, boolean debug) throws Exception {
+<span class="fc" id="L219">    	Vector&lt;String&gt; replyMessages = new Vector&lt;String&gt;(0);</span>
+<span class="fc" id="L220">    	String currentState = null;</span>
+<span class="fc" id="L221">        String userStatus = syncRiveScriptWithSQL(userId);        </span>
+        
+<span class="fc bfc" id="L223" title="All 2 branches covered.">        if (userStatus.equals(&quot;NEW USER&quot;)) {</span>
+<span class="fc" id="L224">            replyMessages.add(&quot;Please finish giving us your personal information before sharing photos!&quot;);</span>
+        }
+        else  {
+<span class="fc" id="L227">            currentState = bot.getUservar(userId, &quot;state&quot;);</span>
+
+<span class="pc bpc" id="L229" title="2 of 6 branches missed.">            if (adminAccessing == true &amp;&amp; currentState.equals(&quot;standby&quot;) &amp;&amp; userId.equals(ADMIN_USER_ID)){</span>
+<span class="fc" id="L230">                replyMessages.add(((AdminState) states.get(&quot;admin&quot;)).replyImage(userId, jpg, bot));</span>
+<span class="fc" id="L231">                adminAccessing = false;</span>
+            }
+<span class="pc bpc" id="L233" title="2 of 6 branches missed.">            else if (adminAccessing == false &amp;&amp; (currentState.equals(&quot;input_menu&quot;) || currentState.equals(&quot;standby&quot;))){</span>
+<span class="fc" id="L234">                replyMessages.add(((InputMenuState) states.get(&quot;input_menu&quot;)).replyImage(userId, jpg, bot));</span>
+<span class="fc" id="L235">                currentState = bot.getUservar(userId, &quot;state&quot;);</span>
+
+<span class="fc bfc" id="L237" title="All 2 branches covered.">                if(currentState.equals(&quot;recommend&quot;)) {               </span>
+<span class="fc" id="L238">                    String[] splitString = (replyMessages.lastElement()).split(&quot;AAAAAAAAAA&quot;);                                       </span>
+<span class="fc" id="L239">                    replyMessages.add(0, splitString[0]);                       </span>
+<span class="fc" id="L240">                    replyMessages.remove(replyMessages.size() - 1);</span>
+                
+<span class="fc" id="L242">                    String temp = states.get(currentState).reply(userId, splitString[1], bot);              </span>
+<span class="fc" id="L243">                    replyMessages.add(temp);</span>
+<span class="fc" id="L244">                }</span>
+            }
+<span class="fc bfc" id="L246" title="All 2 branches covered.">            else if (currentState.equals(&quot;update_user_info&quot;)){</span>
+<span class="fc" id="L247">                replyMessages.add(&quot;Please finish updating your personal information before sharing me photos!&quot;);</span>
+            }
+            else{
+<span class="fc" id="L250">                replyMessages.add(&quot;Sorry, I am lost and I don't know how to respond. Please continue with your previous activity first.&quot;);</span>
+            }
+        }
+//        debugMessage(userId, replyMessages, debug);
+<span class="fc" id="L254">        return replyMessages;</span>
+    }
+    
+
+<span class="fc" id="L258">    public class setVariableToDB implements Subroutine {</span>
+
+        /**
+        * Subroutine to be used within RiveScript to update user info 
+        * @param rs A RiveScript object
+        * @param args A String array
+        * @return a String 
+        */
+        public String call(RiveScript rs, String[] args) {
+
+<span class="pc bpc" id="L268" title="2 of 4 branches missed.">            if ( args[0].equals(&quot;weight&quot;) || args[0].equals(&quot;height&quot;) ) {</span>
+                // double
+<span class="nc bnc" id="L270" title="All 2 branches missed.">                if ( args.length == 3 ) {</span>
+<span class="nc" id="L271">                    sql.setUserInfo(args[2], args[0], Double.parseDouble(args[1]));</span>
+                }
+
+<span class="pc bpc" id="L274" title="1 of 2 branches missed.">            } else if ( args[0].equals(&quot;age&quot;) ) {</span>
+                // integer
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">                if ( args.length == 3 ) {</span>
+<span class="fc" id="L277">                    sql.setUserInfo(args[2], args[0], Integer.parseInt(args[1]));</span>
+                }
+                
+<span class="nc bnc" id="L280" title="All 2 branches missed.">            } else if ( args[0].equals(&quot;allergies&quot;) ) {</span>
+                // leave to be implemented later
+<span class="nc" id="L282">                ArrayList&lt;String&gt; temp = new ArrayList&lt;String&gt;();</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">                if ( args[1].equals(&quot;true&quot;) ) {</span>
+<span class="nc" id="L284">                    temp.add(&quot;milk&quot;);</span>
+                }
+<span class="nc bnc" id="L286" title="All 2 branches missed.">                if ( args[2].equals(&quot;true&quot;) ) {</span>
+<span class="nc" id="L287">                    temp.add(&quot;egg&quot;);</span>
+                }
+<span class="nc bnc" id="L289" title="All 2 branches missed.">                if ( args[3].equals(&quot;true&quot;) ) {</span>
+<span class="nc" id="L290">                    temp.add(&quot;nut&quot;);</span>
+                }
+<span class="nc bnc" id="L292" title="All 2 branches missed.">                if ( args[4].equals(&quot;true&quot;) ) {</span>
+<span class="nc" id="L293">                    temp.add(&quot;seafood&quot;);</span>
+                }
+<span class="nc" id="L295">                sql.setUserAllergies(args[5], temp);</span>
+
+<span class="nc" id="L297">            } else {</span>
+                // string
+<span class="nc bnc" id="L299" title="All 2 branches missed.">                if (args.length == 3) {</span>
+<span class="nc" id="L300">                    sql.setUserInfo(args[2], args[0], args[1]);</span>
+                }
+            }
+
+<span class="fc" id="L304">            return &quot;&quot;;</span>
+        }
+    }
+
+    //use for query nutrient history
+<span class="fc" id="L309">    public class getNutritionHistory implements Subroutine {</span>
+
+        // assume the order of parameter is: # of days, userId
+        public String call(RiveScript rs, String[] args) {
+<span class="nc" id="L313">            ArrayList&lt;Double&gt; result = null;</span>
+<span class="nc" id="L314">            String resultString = &quot;&quot;;</span>
+<span class="nc bnc" id="L315" title="All 2 branches missed.">            if (args.length == 2) {</span>
+<span class="nc" id="L316">                result = sql.getAverageConsumptionInfo(args[1], Integer.parseInt(args[0]));</span>
+<span class="nc" id="L317">                resultString = &quot;Your average nutrition comsumption per day over the past &quot; + Integer.parseInt(args[0]) + &quot; days:&quot;</span>
+<span class="nc" id="L318">                                + &quot;\n*energy: &quot; + Double.toString(result.get(0)) + &quot;kcal&quot;</span>
+<span class="nc" id="L319">                                + &quot;\n*sodium: &quot; + Double.toString(result.get(1)) + &quot;mg&quot;</span>
+<span class="nc" id="L320">                                + &quot;\n*fat: &quot;    + Double.toString(result.get(2)) + &quot;g&quot;;</span>
+<span class="nc" id="L321">                return resultString;</span>
+            }
+
+<span class="nc" id="L324">            return &quot;&quot;;</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>
