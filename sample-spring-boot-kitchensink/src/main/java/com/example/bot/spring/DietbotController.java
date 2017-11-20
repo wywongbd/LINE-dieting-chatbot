@@ -81,7 +81,7 @@ public class DietbotController {
 	
 	private StateManager stateManager;
     // To do: delete 'controller: '
-	private final String defaultString = "Controller: I don't understand"; 
+	private final String defaultString = "I don't understand"; 
     private final String appreciateUsingCoupon = "Thanks, this is your coupon!";
 	private RecommendFriendState recommendFriendState = new RecommendFriendState();
 	
