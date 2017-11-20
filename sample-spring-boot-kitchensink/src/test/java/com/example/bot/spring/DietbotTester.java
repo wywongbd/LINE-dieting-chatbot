@@ -689,7 +689,6 @@ public class DietbotTester {
 		assertThat(ans2.contains(realOutput2));
 	}
 
-
 	@Test
 	public void testCollectUserInformation() throws Exception {
 		boolean thrown = false;
