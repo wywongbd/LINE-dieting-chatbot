@@ -305,7 +305,7 @@ public class DietbotController {
 			throw new UncheckedIOException(e);
 		}
 	}
-	
+
 	private static DownloadedContent createTempFile(String ext) {
 		String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID().toString() + '.' + ext;
 		Path tempFile = DietbotApplication.downloadedContentDir.resolve(fileName);
