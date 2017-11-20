@@ -1006,7 +1006,7 @@ public class SQLDatabaseEngine {
 			// Set claimUser of code to be userId
 			stmtUpdate = connection.prepareStatement(
 				"UPDATE coupon_code " +
-				"SET claimUser = ? " +
+				"SET claimuser = ? " +
 				"WHERE code = ?"
 			);
 			stmtUpdate.setString(1, userId);
