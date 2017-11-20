@@ -79,7 +79,9 @@ public class DietbotController {
 	private LineMessagingClient lineMessagingClient;
 	
 	private StateManager stateManager;
+    // To do: delete 'controller: '
 	private final String defaultString = "Controller: I don't understand"; 
+    private final String appreciateUsingCoupon = "Thanks, this is your coupon!";
 	private RecommendFriendState recommendFriendState = new RecommendFriendState();
 	
 	protected DietbotController() {
@@ -94,7 +96,7 @@ public class DietbotController {
 		TextMessageContent message = event.getMessage();
 		handleTextContent(event.getReplyToken(), event, message);
 	}
-	
+
 	@EventMapping
 	public void handleImageMessageEvent(MessageEvent<ImageMessageContent> event) throws IOException {
 		final MessageContentResponse response;
@@ -228,7 +230,7 @@ public class DietbotController {
             System.out.println("controller 1");
 
         try {
-			UserProfileResponse profile = lineMessagingClient.getProfile(event.getSource().getUserId()).get();
+			UserProfileResponse profile = lineMessagingClient.getProfile(userId).get();
 
 			// text: "code 123456"
 			// Exception couponIsValid
@@ -238,10 +240,12 @@ public class DietbotController {
 				if(reply.size() == 2) {
 					String url = sql.getCouponUrl();
 					String requestUser = reply.get(0);
-            		// String temp = reply.get(1);			
-            		// Reply image to claimUser
-            		this.replyImage(replyToken, url);
+            		// String temp = reply.get(1);	
+            		// Reply to claimUser
+                    this.pushText(userId, appreciateUsingCoupon);
+            		this.pushImage(userId, url);
             		// Push image to requestUser
+                    this.pushText(requestUser, appreciateUsingCoupon);
             		this.pushImage(requestUser, url);
 					return;
 				}
