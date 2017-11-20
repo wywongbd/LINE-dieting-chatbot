@@ -2,12 +2,7 @@ package com.example.bot.spring;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
+import com.example.bot.spring.DishDeserializer; 
 
 import org.json.*;
 
@@ -22,17 +17,16 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 
-/**
-* 
+/** 
+*  This class will process JSON files from a given website
 */
 
 public class JSONPreprocessing {
 
 	/**
-	 * This function takes in a url that leads to json content
-	 * To process the result, the function 
+	 * This function takes in a url that leads to json content hosted online
 	 * @param a String that is the url 
-	 * @return the names of the dishes in the URL list
+	 * @return a JSON String
 	 * @throws IOException
 	 */
 		
@@ -59,6 +53,12 @@ public class JSONPreprocessing {
 	    return jsonString;
   	} 
 	
+	/**
+	 * This function takes in a JSON string and converts it into Java objects
+	 * @param a String that is the JSON text
+	 * @return Dish[] array that containss dish objects defined by the Dish class
+	 */
+	
 	public static Dish[] getDishFromJSON(String rawJsonString){ 
 
 		GsonBuilder b = new GsonBuilder();
@@ -77,6 +77,13 @@ public class JSONPreprocessing {
 		return dishes;
 	}
 
+	/**
+	 * This function takes array of dish objects and gets the dish name 
+	 * @param a Dish[] array of the dish objects
+	 * @return a String[] that contains the dish names
+	 * @throws IOException
+	 */
+	
 	public static String[] getDishName(Dish[] dishes){
 		String [] dishNames = new String[dishes.length];
 		for(int i = 0; i < dishNames.length; i++) {
@@ -87,30 +94,4 @@ public class JSONPreprocessing {
 	
 
 }
-
-/**
-* 
-*/
-
-class DishDeserializer implements JsonDeserializer<Dish> {
-@Override
-public Dish deserialize(JsonElement arg0, Type arg1, JsonDeserializationContext arg2) throws JsonParseException {
-    JsonObject decodeObj = arg0.getAsJsonObject();
-    Gson gson = new Gson();
-    Dish dish = gson.fromJson(arg0, Dish.class);
-    ArrayList<String> ingredients = null;
-    if (decodeObj.get("ingredients").isJsonArray()) {
-        ingredients = gson.fromJson(decodeObj.get("ingredients"), new TypeToken<ArrayList<String>>() {
-        }.getType());
-    } 
-    else {
-        String single = gson.fromJson(decodeObj.get("ingredients"), String.class);
-        ingredients = new ArrayList<String>();
-        ingredients.add(single);
-    }
-    dish.setIngredients(ingredients); 
-    return dish;
- }
-}
-
 

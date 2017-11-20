@@ -955,7 +955,7 @@ public class DietbotTester {
  //    		assertThat(db.getUserInfo(userId, "weight")).isEqualTo("80.0");
 
 	// 	} catch (Exception e) {
-	// 		thrown = true;
+	// 		thrown = true; 
 	// 	}
 	// 	assertThat(thrown).isEqualTo(false);
 	// }
