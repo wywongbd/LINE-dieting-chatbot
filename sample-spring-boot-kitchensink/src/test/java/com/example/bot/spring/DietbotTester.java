@@ -563,7 +563,7 @@ public class DietbotTester {
 		firstIngredients.add("Rice");
 		
 		actualDishes[0] = new Dish(35, "Spicy Bean curd with Minced Pork served with Rice", firstIngredients);
-		
+		 
 		ArrayList<String> secondIngredients = new ArrayList<String>();
 		firstIngredients.add("Pork"); 
 		firstIngredients.add("Sweet and Sour Sauce");
