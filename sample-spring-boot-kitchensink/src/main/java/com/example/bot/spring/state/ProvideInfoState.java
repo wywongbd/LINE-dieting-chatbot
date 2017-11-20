@@ -63,10 +63,11 @@ public class ProvideInfoState extends State {
 
 
     /**
-     * Reply a message for input text
-     * Inherited from abstract base class
+     * Reply a message for input text in this state
+     * @param userId A String data type
      * @param text A String data type
-     * @return A String data type
+     * @param bot A RiveScript data type 
+     * @return A String data type as the reply
      */
 	public String reply(String userId, String text, RiveScript bot) {
 		String currentState = bot.getUservar(userId, "state");
@@ -94,6 +95,10 @@ public class ProvideInfoState extends State {
 	}
 
 
+    /**
+     * Get button message
+     * @return A Message data type with date
+     */
     public Message getButton() {
         LocalDate today = LocalDate.now().plusDays(1);
         String date = today.toString();

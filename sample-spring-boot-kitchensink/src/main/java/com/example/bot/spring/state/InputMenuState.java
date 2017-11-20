@@ -27,9 +27,11 @@ public class InputMenuState extends State {
     }
 
     /**
-     * Reply a message for input text
-     * @param text A String data type
-     * @return A String data type
+     * Reply a message for input text in this state
+     * @param userId String data type
+     * @param text String data type
+     * @param bot RiveScript data type 
+     * @return String data type as the reply
      */
 	public String reply(String userId, String text, RiveScript bot) {
         String replyText = null;
@@ -65,10 +67,9 @@ public class InputMenuState extends State {
 	}
 
     /**
-     * Reply a message for input URL
-     * Inherited from abstract base class
-     * @param text A String data type
-     * @return A String data type
+     * Reply a message for input url in this state
+     * @param text String data type as the input url
+     * @return String data type as the reply
      */
     public String replyUrl(String text) throws Exception {
 
@@ -89,12 +90,13 @@ public class InputMenuState extends State {
     	 
     	return response;
     } 
-    
+
     /**
-     * Reply a message for input image
-     * Overload the function inherited from abstract base class
-     * @param jpg A DownloadedContent data type 
-     * @return A String data type
+     * Reply a message for input image in this state
+     * @param userId String data type 
+     * @param jpg DownloadedContent data type as the input image
+     * @param bot RiveScript data type 
+     * @return String data type
      */
     public String replyImage(String userId, DownloadedContent jpg, RiveScript bot) {
 	    ArrayList<String> processedOcrImage = processImage(jpg);
@@ -121,9 +123,9 @@ public class InputMenuState extends State {
     }
 
     /**
-     * Process and filter the content in the image
-     * @param jpg A DownloadedContent data type
-     * @return A Set<String> data type
+     * Process and filter the content in the image of JPG
+     * @param jpg DownloadedContent data type as the input image
+     * @return ArrayList<String> data type
      */
     public ArrayList<String> processImage(DownloadedContent jpg) {
         String ocrRawString = ocrImage(jpg);
@@ -133,19 +135,19 @@ public class InputMenuState extends State {
 
     
     /**
-     * Perform OCR on the image and return the raw string
-     * @param jpg A DownloadedContent data type
-     * @return A String data type
+     * Perform OCR on the image in JPG and return the raw string
+     * @param jpg DownloadedContent data type as the input image
+     * @return String data type
      */
     public String ocrImage(DownloadedContent jpg) {
-    		String pathString = jpg.getPathString();
+    	String pathString = jpg.getPathString();
         return ocrImagePath(pathString);
     }
 
     /**
-     * Perform OCR on the image and return the raw string
-     * @param jpg A DownloadedContent data type
-     * @return A String data type
+     * Perform OCR on the image by certain path and return the raw string
+     * @param pathString String data type as the path of image
+     * @return String data type
      */
     public String ocrImagePath(String pathString) {
         Ocr.setUp();    // One time setup
