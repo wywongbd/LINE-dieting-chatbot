@@ -130,9 +130,10 @@ public class DietbotTester {
 		// for testCollectUserInformation function below
 		databaseEngine.reset("testCollectUserInformation", "userinfo");
 		databaseEngine.reset("testCollectUserInformation", "userallergies");
+		databaseEngine.reset("testRecommendFriendState", "campaign_user");
 	}
 
-
+	
 	@Test
 	public void writeUserInfoExisting() {
 		ArrayList<String> allergies = null;
@@ -1120,4 +1121,44 @@ public class DietbotTester {
 		}
 		assertThat(thrown).isEqualTo(false);
 	}
+	
+
+	@Test
+	public void testRecommendFriendState() throws Exception{
+		boolean thrown = false;
+		try{
+			RecommendFriendState recommend = new RecommendFriendState();
+			String out = recommend.matchTrigger("friend:generate");
+
+			assertThat(out.equals("FRIEND")).isEqualTo(true);
+			out = recommend.matchTrigger("code:100000");
+			assertThat(out.equals("CODE")).isEqualTo(true);
+			out = recommend.matchTrigger("fdsjauewjknhfdsak");
+			assertThat(out.equals("nothing")).isEqualTo(true);
+
+			String userId = "ndjaydjg";
+			out = recommend.actionForCodeCommand("ndjaydjg", "1567").get(0);
+			assertThat(out).isEqualTo("Sorry, you cannot claim coupon!");
+
+			databaseEngine.addCampaignUser("testRecommendFriendState");
+			out = recommend.actionForCodeCommand("testRecommendFriendState", "52").get(0);
+			assertThat(out).isEqualTo("Sorry, this code does not exist!");
+
+			int code = databaseEngine.generateAndStoreCode("testRecommendFriendState");
+			out = recommend.actionForCodeCommand("testRecommendFriendState", Integer.toString(code)).get(0);
+			assertThat(out).isEqualTo("Sorry, You cannot claim your own code!");
+			this.databaseEngine.resetCoupon("testRecommendFriendState");
+
+			out = recommend.replyForFriendCommand("testRecommendFriendState");
+			assertThat(out != null).isEqualTo(true);
+			this.databaseEngine.resetCoupon("testRecommendFriendState");
+			
+		} catch (Exception e){
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+	}
+
+
+
  }
