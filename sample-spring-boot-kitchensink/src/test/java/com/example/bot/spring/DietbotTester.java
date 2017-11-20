@@ -1264,9 +1264,9 @@ public class DietbotTester {
 		String adminUserId = "Udfd2991f287cc5c75f6c1d2c30c58a3a";
 		ArrayList<String> allergies = new ArrayList<String>();
 		allergies.add("seafood");
-
 		databaseEngine.reset(adminUserId, "userinfo");
 		databaseEngine.reset(adminUserId, "userallergies");
+
 		databaseEngine.writeUserInfo(adminUserId, 20, "male", 1.75, 60, allergies, "normal", "standby", "standby");
 
 		try{
@@ -1274,6 +1274,13 @@ public class DietbotTester {
     		input = "admin:upload_coupon";
     		expectedResponse = "Hi admin, please input a coupon image!";
     		chatBotReponse = ((TextMessage)stateManager.chat(adminUserId, input, true).get(0)).getText();
+    		assertThat(chatBotReponse).isEqualTo(expectedResponse);
+
+    		String url = "https://dieting-chatbot.herokuapp.com/downloaded/2017-11-20T07:33:48.762-49f1625f-82f7-4c67-91cf-bb87586273b9.jpg";
+			DownloadedContent temp = new DownloadedContent(null, url);
+
+    		expectedResponse = "Hi Admin, your image has been well received!";
+    		chatBotReponse = stateManager.chat(adminUserId, temp, true).get(0);
     		assertThat(chatBotReponse).isEqualTo(expectedResponse);
 
 		} catch (Exception e) {
