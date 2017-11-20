@@ -175,6 +175,7 @@ public class DietbotController {
     }
 
 	/**
+	 * Push text message to user
 	 * @param replyToken String data type representing the reply token
 	 * @param message String representing message to be replied to user
      */	
@@ -189,6 +190,7 @@ public class DietbotController {
 	}
 
 	/**
+	 * Push image to user
 	 * @param replyToken String data type representing the reply token
 	 * @param message String representing url of image to be replied to user
      */	
@@ -200,6 +202,7 @@ public class DietbotController {
 	}
 	
 	/**
+	 * Push message to user
 	 * @param replyToken String data type representing the reply token
 	 * @param message String representing message to be replied to user
      */	
@@ -208,6 +211,7 @@ public class DietbotController {
 	}
 
 	/**
+	 * Push message to user
 	 * @param replyToken String data type representing the reply token
 	 * @param message List of Message objects to be replied to user
      */	
@@ -221,6 +225,7 @@ public class DietbotController {
 	}
 
 	/**
+	 * Push message to user
 	 * @param to String data type
 	 * @param message List of Message objects to be replied to user
      */	
@@ -235,6 +240,7 @@ public class DietbotController {
 	}
 
 	/**
+     * Push message to user
 	 * @param to String data type
 	 * @param url String representing url of image to be replied to user
      */	
@@ -246,6 +252,7 @@ public class DietbotController {
 	}
 
 	/**
+	 * Push message to user
 	 * @param to String data type
 	 * @param message Message data type
      */	
@@ -254,6 +261,7 @@ public class DietbotController {
 	}
 
 	/**
+	 * Push message to user
 	 * @param to String data type
 	 * @param message List of Message objects to be replied to user
      */
