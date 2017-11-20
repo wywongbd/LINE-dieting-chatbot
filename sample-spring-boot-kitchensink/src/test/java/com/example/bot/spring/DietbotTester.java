@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.google.common.io.ByteStreams;
+import java.time.Instant;
 
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.ReplyMessage;
@@ -44,6 +45,10 @@ import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
 import com.example.bot.spring.DietbotController.DownloadedContent;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.Message;
+import com.linecorp.bot.model.event.source.Source;
+import com.linecorp.bot.model.event.source.UserSource;
+import com.linecorp.bot.model.event.postback.PostbackContent;
+import com.linecorp.bot.model.event.PostbackEvent;
 
 
 import lombok.NonNull;
@@ -51,6 +56,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.example.bot.spring.RecommendationState;
 import com.example.bot.spring.InputMenuState;
+import com.example.bot.spring.OCRStringPreprocessing;
 
 import com.rivescript.Config;
 import com.rivescript.RiveScript;
@@ -685,7 +691,6 @@ public class DietbotTester {
 		assertThat(ans2.contains(realOutput2));
 	}
 
-
 	@Test
 	public void testCollectUserInformation() throws Exception {
 		boolean thrown = false;
@@ -1062,12 +1067,87 @@ public class DietbotTester {
 			ans2b = ans2Split[1];
 			ans2b = ans2b.substring(1, ans2b.length() - 1);    // Slice the '[' and ']'
 
+			assertThat(reply1.contains(ans1));
+			assertThat(reply2a.contains(ans2a));
+			assertThat(reply2b.contains(ans2b));
+
 		} catch (Exception e) {
 			thrown = true;
 		}
-		assertThat(reply1.contains(ans1));
-		assertThat(reply2a.contains(ans2a));
-		assertThat(reply2b.contains(ans2b));
+		assertThat(thrown).isEqualTo(false);
+	}
+	
+	@Test
+	public void testInputImageLongString() throws Exception{
+		// testUserInputImage
+		ArrayList<String> ans = null;
+		boolean thrown = false;
+		String longString = "Image search is a traditional method to search for similar products based on"
+				+ "input keywords. Search engines like Google and Bing enable keyword search to obtain"
+				+ "similar products. Similarly, fashion search services like Shopstyle and Lyst focuses"
+				+ "in searching for fashionable products";
+
+		try{
+			OCRStringPreprocessing obj = new OCRStringPreprocessing();
+			ans = obj.processOcrRawString(longString);
+			assertThat(ans.size()).isEqualTo(0);
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+	}
+
+	@Test
+	public void testHandleFollowEvent() throws Exception {
+		boolean thrown = false;
+		try{
+			String testUserId = "testHandleFollowEvent";
+			String testReplyToken = "testReplyToken";
+			Instant timestamp = Instant.now();
+			Source testSource = new UserSource("testHandleFollowEvent");
+			Event testFollowEvent = new FollowEvent(testReplyToken, testSource, timestamp);
+			DietbotController.handleFollowEvent(((FollowEvent) testFollowEvent));
+			assertThat(databaseEngine.searchUser(testSource.getUserId(), "campaign_user")).isEqualTo(true);
+
+		} catch (Exception e){
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
+	}
+
+
+	@Test
+	public void testCreateTempFile() throws Exception {
+		boolean thrown = false;
+		try{
+			 DietbotController.DownloadedContent dl = DietbotController.createTempFile("");
+		} catch (Exception e){
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(true);
+	}
+
+	@Test
+	public void testSaveContent() throws Exception{
+		boolean thrown = false;
+		try{
+			DietbotController.DownloadedContent dl = DietbotController.saveContent("jpg", null);
+		} catch (Exception e){
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(true);
+
+	}
+
+	@Test
+	public void testCreateUri() throws Exception{
+		boolean thrown = false;
+		try{
+			String out = DietbotController.createUri("jpg");
+		} catch (Exception e){
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(false);
 	}
 
 	@Test

@@ -69,7 +69,24 @@ public class ProvideInfoState extends State {
      * @return A String data type
      */
 	public String reply(String userId, String text, RiveScript bot) {
-		String currentState = bot.getUservar(userId, "state"); 
+		String currentState = bot.getUservar(userId, "state");
+        String currentTopic = bot.getUservar(userId, "topic");
+
+        // put the whole input from user to db to query
+        if (currentTopic.equals("provide_info_food_nutrient")) {
+            // dummy output to go to standby state
+            String output = bot.reply(userId, text);
+
+            ArrayList<Double> result = null;
+            String resultString = null;
+            result = sql.getNutritionInfo(text);
+            resultString = text + "(per 100g) contains "
+                            + "\n*energy: " + Double.toString(result.get(0)) + "kcal"
+                            + "\n*sodium: " + Double.toString(result.get(1)) + "mg"
+                            + "\n*fat: "    + Double.toString(result.get(2)) + "g";
+            return resultString;
+        }
+
 		String output = bot.reply(userId, text);
 		String afterState = bot.getUservar(userId, "state");
 		
