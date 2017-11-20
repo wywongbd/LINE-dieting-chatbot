@@ -39,10 +39,6 @@ public class RecommendFriendState extends State {
             return "nothing";
         }
     }
-
-    public String decodeCodeMessage(String text) {
-    	return text.split(":")[1];
-    }
  
     public String replyForFriendCommand(String userId) {
         String reply = null;

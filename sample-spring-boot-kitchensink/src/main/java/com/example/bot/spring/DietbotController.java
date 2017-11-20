@@ -232,7 +232,7 @@ public class DietbotController {
 			// text: "code 123456"
 			// Exception couponIsValid
 			if (recommendFriendState.matchTrigger(text).equals("CODE") && sql.searchUser(userId, "userinfo")){
-				String code = recommendFriendState.decodeCodeMessage(text);
+				String code = text.split(":")[1];
 				reply = recommendFriendState.actionForCodeCommand(userId, code);
 				if(reply.size() == 2) {
 					String url = sql.getCouponUrl();
