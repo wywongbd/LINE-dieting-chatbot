@@ -45,7 +45,6 @@ import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import com.example.bot.spring.DatabaseEngine;
 import com.example.bot.spring.RecommendationState;
 import com.example.bot.spring.InputMenuState;
 
@@ -100,6 +99,7 @@ public class DietbotTester {
 		databaseEngine.writeUserInfo("testUserHistory", 21, "male", 1.73, 65, allergies, "normal", "testTopic", "testState");
 		databaseEngine.writeUserInfo("testUserGoalLittle", 22, "male", 1.69, 69, allergies, "little_diet", "testTopic", "testState");
 		databaseEngine.writeUserInfo("testUserGoalSerious", 23, "male", 1.71, 68, allergies, "serious_diet", "testTopic", "testState");
+		databaseEngine.writeUserInfo("testUserCalories", 24, "male", 1.83, 77, allergies, "normal", "testTopic", "testState");
 		databaseEngine.addMenu("testUser", menu);
 		databaseEngine.addRecommendations("testUser");
 	}
@@ -120,6 +120,8 @@ public class DietbotTester {
 		databaseEngine.reset("testUserGoalLittle", "userallergies");
 		databaseEngine.reset("testUserGoalSerious", "userinfo");
 		databaseEngine.reset("testUserGoalSerious", "userallergies");
+		databaseEngine.reset("testUserCalories", "userinfo");
+		databaseEngine.reset("testUserCalories", "userallergies");
 	}
 
 	
@@ -455,6 +457,18 @@ public class DietbotTester {
 		this.databaseEngine.addUserEatingHistory("testUserCanClaimCheatDay", "cheat day");
 		assertThat(this.databaseEngine.canClaimCheatDay("testUserCanClaimCheatDay")).isEqualTo(false);
 		this.databaseEngine.reset("testUserCanClaimCheatDay", "eating_history");
+	}
+
+
+	@Test
+	public void exceedDailyCalorieQuota() {
+		this.databaseEngine.addUserEatingHistory("testUserCalories", "fried chicken, chocolate cake");
+		assertThat(this.databaseEngine.exceedDailyCalorieQuota("testUserCalories")).isEqualTo(false);
+		this.databaseEngine.addUserEatingHistory("testUserCalories", "fried chicken, chocolate cake");
+		assertThat(this.databaseEngine.exceedDailyCalorieQuota("testUserCalories")).isEqualTo(false);
+		this.databaseEngine.addUserEatingHistory("testUserCalories", "fried chicken, chocolate cake");
+		assertThat(this.databaseEngine.exceedDailyCalorieQuota("testUserCalories")).isEqualTo(true);
+		this.databaseEngine.reset("testUserCalories", "eating_history");
 	}
 
 
