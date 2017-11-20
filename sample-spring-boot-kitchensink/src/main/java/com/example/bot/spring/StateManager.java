@@ -283,6 +283,7 @@ public class StateManager {
                     sql.setUserInfo(args[2], args[0], Integer.parseInt(args[1]));
                 }
                 
+            } else if ( args[0].equals("allergies") ) {
                 // leave to be implemented later
                 ArrayList<String> temp = new ArrayList<String>();
                 if ( args[1].equals("true") ) {
