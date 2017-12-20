@@ -1,25 +1,10 @@
-# HKUST COMP 3111H Dieting Chatbot Project
+# HKUST COMP 3111H Fall 2017 Dieting Chatbot Project
 
-## Links
+## Description
+Open the file `hkust_cs3111h\description\milestone3.pdf`
 
-Link to PostgreSQL Database: `heroku pg:psql postgresql-cylindrical-28609 --app dieting-chatbot`  
-Link to Heroku repo: `https://git.heroku.com/dieting-chatbot.git` (push to this repo to deploy)  
+## JavaDoc
+Open the file `hkust_cs3111h\javodoc\index.html`
 
-## Test Coverage
-
-**Testing coverage must be above 70% to get full marks.**
-
-How to generate the test coverage report:
-
-```
-gradlew build
-gradlew jacocoTestReport
-```
-
+## Build Report
 Open the file `hkust_cs3111h\sample-spring-boot-kitchensink\build\jacocoHtml\index.html`
-
-You can click into "com.example.bot.spring" to see which branch has not been covered and write a test for it.
-
-The coverage for "missed branch" is the one we raise to 70%.
-
-Delete codes that are not used to raise the test coverage percentage!!!!!!!!
