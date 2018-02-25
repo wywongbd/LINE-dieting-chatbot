@@ -1,4 +1,4 @@
-# HKUST COMP 3111H Fall 2017 Dieting Chatbot Project
+# HKUST COMP 3111H - Honors Software Engineering - Fall 2017 - Dieting Chatbot Project
 
 ## Description
 Open the file `hkust_cs3111h\description\milestone3.pdf`
