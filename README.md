@@ -2,12 +2,12 @@
 We built a LINE chatbot to help users eat a more healthy diet. Further details can be found [here](https://github.com/wywongbd/hkust_cs3111h/blob/master/description/milestone3.pdf).
 
 ### Screenshot of chatbot
-![chatbot](/description/chatbot.png)
+![chatbot](/description/chatbot.png =300x)
 
 ### How to play with the Chatbot
 1. Download [LINE](https://line.me/en-US/download).
 2. Use the QR code scanner in the LINE app to scan the following QR code:
-![qrcode](/description/qrcode.png).
+![qrcode](/description/qrcode.png =300x).
 
 ### JavaDoc
 Documentation of the code can be found [here](/javodoc/index.html).`
