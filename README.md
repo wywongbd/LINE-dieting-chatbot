@@ -9,9 +9,6 @@ We built a LINE chatbot to help users eat a more healthy diet. Further details c
 2. Use the QR code scanner in the LINE app to scan the following QR code:
 <img src="/description/qrcode.png" width="220">
 
-### JavaDoc
-Documentation of the code can be found [here](/javadoc/index.html).
-
 ### Acknowledgements
 - This is a software engineering course project done at Hong Kong University of Science and Technology during the Fall 2017 semester.   
 - Contributors: [Wen Yan](https://github.com/wywongbd), [Andrew](https://github.com/bachang96), [Ignavier](https://github.com/ignavier), [Gordon](https://github.com/GordonCW), [Brendan](https://github.com/thambrendan)  
