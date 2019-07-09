@@ -10,10 +10,7 @@ We built a LINE chatbot to help users eat a more healthy diet. Further details c
 <img src="/description/qrcode.png" width="220">
 
 ### JavaDoc
-Documentation of the code can be found [here](/javodoc/index.html).
-
-### Build Report
-Build report can be found [here](/sample-spring-boot-kitchensink/build/jacocoHtml/index.html).
+Documentation of the code can be found [here](/javadoc/index.html).
 
 ### Acknowledgements
 - This is a software engineering course project done at Hong Kong University of Science and Technology during the Fall 2017 semester.   
